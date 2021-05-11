@@ -2,7 +2,7 @@
 name: Bug report
 about: 버그 또는 이슈 핸들링에 대한 내용을 작성해 주세요
 title: "[Bug] issue"
-labels: bug, Server
+labels: Server, bug
 assignees: ''
 
 ---
