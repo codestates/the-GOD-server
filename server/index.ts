@@ -2,6 +2,8 @@ import express from 'express';
 import fs from 'fs';
 import https from 'https';
 
+import { connect } from '../database';
+
 import { ENV } from '@config';
 import { defaultMiddleware } from '@middleware';
 import { authRouter } from '@router';
@@ -30,6 +32,8 @@ const server = https.createServer(
   },
   app
 );
+
+connect();
 
 // TODO : open server after DB connection
 server.listen(PORT, () => {

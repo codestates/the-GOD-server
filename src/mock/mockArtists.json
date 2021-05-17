@@ -1,0 +1,32 @@
+[
+  {
+    "id": "v1",
+    "name": "V",
+    "group": "BTS"
+  },
+  {
+    "id": "j1",
+    "name": "Jimin",
+    "group": "BTS"
+  },
+  {
+    "id": "s1",
+    "name": "sim",
+    "group": "theGOD"
+  },
+  {
+    "id": "tea",
+    "name": "태연",
+    "group": "소녀시대"
+  },
+  {
+    "id": "iu",
+    "name": "아이유",
+    "group": null
+  },
+  {
+    "id": "nha",
+    "name": "나훈아",
+    "group": null
+  }
+]
