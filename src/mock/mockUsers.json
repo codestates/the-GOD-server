@@ -5,7 +5,12 @@
     "email": "tester@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
-    "type": "mail"
+    "type": "mail",
+    "follow": [
+      "tea",
+      "iu"
+    ],
+    "bookmark": []
   },
   {
     "id": "124",
@@ -13,7 +18,11 @@
     "email": "tester@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
-    "type": "google"
+    "type": "google",
+    "follow": [
+      "iu"
+    ],
+    "bookmark": []
   },
   {
     "id": "125",
@@ -21,7 +30,12 @@
     "email": "tester@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
-    "type": "kakao"
+    "type": "kakao",
+    "follow": [
+      "v1",
+      "j1"
+    ],
+    "bookmark": []
   },
   {
     "id": "126",
@@ -29,6 +43,16 @@
     "email": "tester@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
-    "type": "twiiter"
+    "type": "twiiter",
+    "follow": [
+      "e1",
+      "e2",
+      "e3",
+      "e4",
+      "e5",
+      "e6",
+      "e7"
+    ],
+    "bookmark": []
   }
 ]
