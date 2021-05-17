@@ -1,1 +1,101 @@
-[]
+[
+  {
+    "id": "1",
+    "userId": "sim",
+    "title": "소녀시대 태연 음방 1위 축하 이벤트 카페",
+    "artistId": "tea",
+    "images": [
+      "https://images.unsplash.com/photo-1439405326854-014607f694d7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
+      "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80",
+      "https://images.unsplash.com/photo-1553570739-330b8db8a925?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80"
+    ],
+    "date": {
+      "start": "2021-05-17",
+      "end": "2021-05-18"
+    },
+    "time": {
+      "start": "09:00:00",
+      "end": "18:00:00"
+    },
+    "address": {
+      "storeName": "태연사랑카페",
+      "roadAddress": "서울시 용산구 용산2가동 남산공원길 105",
+      "lat": 37.5640455,
+      "lng": 126.8340014
+    },
+    "mobile": "010-1234-5678",
+    "description": "소녀시대 태연 음방 1위를 기념하여 태연 굿즈를 공유하고 축하는 자리를 마련하고자 합니다.",
+    "tegs": [
+      "소녀시대",
+      "태연",
+      "음방 1위",
+      "서울"
+    ],
+    "perks": {},
+    "created": "2021-05-17"
+  },
+  {
+    "id": "2",
+    "userId": "choi",
+    "title": "아이유 너무 좋아",
+    "artistId": "iu",
+    "images": [
+      "https://images.unsplash.com/photo-1554629947-334ff61d85dc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=676&q=80",
+      "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1055&q=80"
+    ],
+    "date": {
+      "start": "2021-05-17",
+      "end": "2021-05-18"
+    },
+    "time": {
+      "start": "09:00:00",
+      "end": "18:00:00"
+    },
+    "address": {
+      "storeName": "지은이가 지은 집",
+      "roadAddress": "제주특별자치도 제주시 공항로 2",
+      "lat": 33.5038361,
+      "lng": 126.4955118
+    },
+    "mobile": "010-1234-5678",
+    "description": "아이유 좋아하는 사람 다 모여라 ~ !",
+    "tegs": [
+      "아이유",
+      "IU"
+    ],
+    "perks": {},
+    "created": "2021-05-17"
+  },
+  {
+    "id": "3",
+    "userId": "Yoo",
+    "title": "대한민국 어게인 나훈아",
+    "artistId": "nha",
+    "images": [
+      "https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1030&q=80",
+      "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80"
+    ],
+    "date": {
+      "start": "2021-05-17",
+      "end": "2021-05-18"
+    },
+    "time": {
+      "start": "09:00:00",
+      "end": "18:00:00"
+    },
+    "address": {
+      "storeName": "나훈아는 전설이다",
+      "roadAddress": "부산광역시 해운대구 중1동 해운대해변로 264",
+      "lat": 35.1581498,
+      "lng": 129.1602969
+    },
+    "mobile": "010-1234-5678",
+    "description": "안녕하세요?",
+    "tegs": [
+      "트로트",
+      "나훈아"
+    ],
+    "perks": {},
+    "created": "2021-05-17"
+  }
+]
