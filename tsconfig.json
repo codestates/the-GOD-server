@@ -15,6 +15,7 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
     "types": ["node"],
     "paths": {
       "@config": ["config/index"],
@@ -23,7 +24,8 @@
       "@middleware": ["middleware/index"],
       "@apis": ["apis/*"],
       "@router": ["router/index"],
-      "@controller/*": ["controller/*"]
+      "@controller/*": ["controller/*"],
+      "@database/*": ["database/*"]
     }
   },
   "include": ["**/*.ts"],

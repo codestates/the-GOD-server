@@ -2,7 +2,7 @@ import express from 'express';
 import fs from 'fs';
 import https from 'https';
 
-import { connect } from '../database';
+import { connect } from '@database/index';
 
 import { ENV } from '@config';
 import { defaultMiddleware } from '@middleware';
@@ -33,7 +33,7 @@ const server = https.createServer(
   app
 );
 
-connect();
+connect(ENV.DATABASE_URL as string);
 
 // TODO : open server after DB connection
 server.listen(PORT, () => {

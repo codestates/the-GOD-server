@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "dev": "nodemon -r tsconfig-paths/register server/index.ts",
     "start": "ts-node -r tsconfig-paths/register server/index.ts",
+    "mock": "npx ts-node -r tsconfig-paths/register ./src/mock/index.ts ",
     "test": ""
   },
   "dependencies": {
