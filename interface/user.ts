@@ -1,6 +1,6 @@
 export enum USER_TYPE {
   Email = 'mail',
-  Google = 'googla',
+  Google = 'google',
   Kakao = 'kakao',
   Twitter = 'twitter',
 }
