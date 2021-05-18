@@ -9,9 +9,11 @@ import {
 
 import { USER_TYPE } from '@interface';
 
+type connectionCallback = (err: string | null) => void;
+
 let database: mongoose.Connection;
 
-export const connect = (uri: string): void => {
+export const connect = (uri: string, callback: connectionCallback): void => {
   if (database) {
     console.log('alreay connected database');
     return;
@@ -31,8 +33,7 @@ export const connect = (uri: string): void => {
 
   database = mongoose.connection;
   database.once('open', async () => {
-    console.log('Connected to database');
-
+    callback(null);
     // NOTE : test code
     // let testUser = await findUserById('123');
     // console.log('get test User : ', testUser);
@@ -58,7 +59,7 @@ export const connect = (uri: string): void => {
   });
 
   database.on('error', () => {
-    console.log('Error connecting to database');
+    callback('Error connecting to database');
   });
 };
 

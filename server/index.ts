@@ -33,11 +33,17 @@ const server = https.createServer(
   app
 );
 
-connect(ENV.DATABASE_URL as string);
+connect(ENV.DATABASE_URL as string, (err) => {
+  if (err) {
+    console.log('DB connection error : ', err);
+    return;
+  }
 
-// TODO : open server after DB connection
-server.listen(PORT, () => {
-  console.log(`https server listen on : ${PORT}`);
+  console.log('Connected to database');
+
+  server.listen(PORT, () => {
+    console.log(`https server listen on : ${PORT}`);
+  });
 });
 
 export default server;
