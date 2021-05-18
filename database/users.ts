@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Iuser } from '@interface';
 
-// user scheme
-const userScheme = new mongoose.Schema(
+// user schema
+const userSchema = new mongoose.Schema(
   {
     id: { type: String, required: true, unique: true },
     userName: { type: String, required: true },
@@ -16,7 +16,7 @@ const userScheme = new mongoose.Schema(
   }
 );
 
-const UserModel = mongoose.model('user', userScheme);
+const UserModel = mongoose.model('user', userSchema);
 
 export const createUser = async (user: Iuser): Promise<boolean> => {
   try {
@@ -31,27 +31,76 @@ export const createUser = async (user: Iuser): Promise<boolean> => {
   }
 };
 
-export const findUserById = (id: string): Iuser => {
-  // TOOD : make error handle routine
-  return UserModel.findOne({ id });
+export const findUserById = async (id: string): Promise<Iuser | null> => {
+  try {
+    return await UserModel.findOne({ id });
+  } catch (err) {
+    console.error('findUserById error : ', err.message);
+    return null;
+  }
 };
 
-export const findUserByEmail = ( email: string, password: string):Iuser => {
-  return UserModel.findOne({ email, password})
-}
-
-export const updateUserName = (id: string, userName: string) => {
-  // TOOD : make error handle routine
-  return UserModel.findOneAndUpdate({ id }, { userName });
+export const findUserByEmail = async (email: string): Promise<Iuser | null> => {
+  try {
+    return await UserModel.findOne({ email });
+  } catch (err) {
+    console.error('findUserByEmail error : ', err.message);
+    return null;
+  }
 };
 
-export const updateUserProfileImg = (id: string, profileImg: string) => {
-  // TOOD : make error handle routine
-  return UserModel.findOneAndUpdate({ id }, { profileImg });
+export const updateUserName = async (
+  id: string,
+  userName: string
+): Promise<boolean> => {
+  try {
+    await UserModel.findOneAndUpdate({ id }, { userName });
+    return true;
+  } catch (err) {
+    console.error('updateUserName error : ', err.message);
+    return false;
+  }
 };
 
-export const deleteUser = (id: string) => {
-  return UserModel.deleteOne({ id });
+export const updateUserProfileImg = async (
+  id: string,
+  profileImg: string
+): Promise<boolean> => {
+  try {
+    await UserModel.findOneAndUpdate({ id }, { profileImg });
+    return true;
+  } catch (err) {
+    console.error('updateUserProfileImg error : ', err.message);
+    return false;
+  }
+};
+
+export const updateUserPassword = async (
+  id: string,
+  password: string
+): Promise<boolean> => {
+  try {
+    await UserModel.findOneAndUpdate({ id }, { password });
+    return true;
+  } catch (err) {
+    console.error('updateUserPassword error : ', err.message);
+    return false;
+  }
+};
+
+export const deleteUser = async (id: string): Promise<boolean> => {
+  try {
+    const result = await UserModel.deleteOne({ id });
+    console.log('user delete : ', result.deletedCount);
+    if (result.deletedCount >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('deleteUser error : ', err.message);
+    return false;
+  }
 };
 
 
