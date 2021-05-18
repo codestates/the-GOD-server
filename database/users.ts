@@ -36,6 +36,10 @@ export const findUserById = (id: string): Iuser => {
   return UserModel.findOne({ id });
 };
 
+export const findUserByEmail = ( email: string, password: string):Iuser => {
+  return UserModel.findOne({ email, password})
+}
+
 export const updateUserName = (id: string, userName: string) => {
   // TOOD : make error handle routine
   return UserModel.findOneAndUpdate({ id }, { userName });
@@ -49,6 +53,7 @@ export const updateUserProfileImg = (id: string, profileImg: string) => {
 export const deleteUser = (id: string) => {
   return UserModel.deleteOne({ id });
 };
+
 
 export const createManyUser = async (users: Iuser[]) => {
   console.log('Write many users - Start');
