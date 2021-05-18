@@ -1,13 +1,14 @@
 import mockUser from './mockUsers.json';
-import mockAritists from './mockUsers.json';
-import mockCommnets from './mockUsers.json';
-import mockContetnts from './mockUsers.json';
-import mockSharedContents from './mockUsers.json';
+import mockAritists from './mockArtists.json';
+import mockCommnets from './mockComments.json';
+import mockContetnts from './mockContents.json';
+import mockSharedContents from './mockSharedContents.json';
 
 import mongoose from 'mongoose';
 
-import { Iuser } from '@interface';
+import { Iuser, Icontent } from '@interface';
 import { createManyUser } from '@database/users';
+import { createManyContent } from '@database/contents';
 
 import { ENV } from '@config';
 
@@ -36,6 +37,12 @@ const writeMockData = (uri: string): void => {
 
     await createManyUser(mockUser as Iuser[]);
     console.log('set users collections');
+
+    await database.dropCollection('contents');
+    console.log('clear contents collections');
+
+    await createManyContent(mockContetnts as Icontent[]);
+    console.log('set contents collections');
 
     console.log('END');
     mongoose.disconnect();

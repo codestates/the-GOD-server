@@ -24,7 +24,7 @@ export const connect = (uri: string): void => {
 
   mongoose.connect(uri, {
     useNewUrlParser: true,
-    useFindAndModify: true,
+    useFindAndModify: false,
     useUnifiedTopology: true,
     useCreateIndex: true,
   });
@@ -34,28 +34,27 @@ export const connect = (uri: string): void => {
     console.log('Connected to database');
 
     // NOTE : test code
-    let testUser = await findUserById('123');
-    console.log('get test User : ', testUser);
+    // let testUser = await findUserById('123');
+    // console.log('get test User : ', testUser);
 
-    if (!testUser) {
-      const result = await createUser({
-        id: '123',
-        userName: 'sim',
-        email: 'tester@test.com',
-        profileImg: 'https://bit.ly/3euIgJj',
-        password: '1234',
-        type: USER_TYPE.Email,
-      });
+    // if (!testUser) {
+    //   const result = await createUser({
+    //     id: '123',
+    //     userName: 'sim',
+    //     email: 'tester@test.com',
+    //     profileImg: 'https://bit.ly/3euIgJj',
+    //     password: '1234',
+    //     type: USER_TYPE.Email,
+    //   });
 
-      console.log('result : ', result);
-    } else {
-      let result = await updateUserName('123', 'EJ');
-      result = await updateUserProfileImg('123', 'testURL');
+    //   console.log('result : ', result);
+    // } else {
+    //   let result = await updateUserName('123', 'EJ');
+    //   result = await updateUserProfileImg('123', 'testURL');
 
-      result = await deleteUser('123');
-      console.log('delete result : ', result);
-    }
-    //
+    //   result = await deleteUser('1234');
+    //   console.log('delete result : ', result);
+    // }
   });
 
   database.on('error', () => {
@@ -63,8 +62,9 @@ export const connect = (uri: string): void => {
   });
 };
 
-export const disconnect = () => {
+export const disconnect = (): void => {
   if (!database) {
+    console.log('database was not connected');
     return;
   }
   mongoose.disconnect();
