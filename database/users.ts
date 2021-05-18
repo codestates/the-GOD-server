@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema(
     profileImg: { type: String },
     password: { type: String, required: true },
     type: { type: String, required: true },
+    follow: [String],
+    bookmark: [String],
   },
   {
     timestamps: true,
@@ -54,8 +56,13 @@ export const updateUserName = async (
   userName: string
 ): Promise<boolean> => {
   try {
-    await UserModel.findOneAndUpdate({ id }, { userName });
-    return true;
+    const result = await UserModel.findOneAndUpdate({ id }, { userName });
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (err) {
     console.error('updateUserName error : ', err.message);
     return false;
@@ -67,8 +74,12 @@ export const updateUserProfileImg = async (
   profileImg: string
 ): Promise<boolean> => {
   try {
-    await UserModel.findOneAndUpdate({ id }, { profileImg });
-    return true;
+    const result = await UserModel.findOneAndUpdate({ id }, { profileImg });
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (err) {
     console.error('updateUserProfileImg error : ', err.message);
     return false;
@@ -80,8 +91,13 @@ export const updateUserPassword = async (
   password: string
 ): Promise<boolean> => {
   try {
-    await UserModel.findOneAndUpdate({ id }, { password });
-    return true;
+    const result = await UserModel.findOneAndUpdate({ id }, { password });
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
   } catch (err) {
     console.error('updateUserPassword error : ', err.message);
     return false;
