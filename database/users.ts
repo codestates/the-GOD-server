@@ -119,6 +119,7 @@ export const deleteUser = async (id: string): Promise<boolean> => {
   }
 };
 
+
 export const createManyUser = async (users: Iuser[]) => {
   console.log('Write many users - Start');
   try {

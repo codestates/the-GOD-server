@@ -12,6 +12,8 @@ const PORT = ENV.SERVER_PORT || 4000;
 console.log(PORT);
 
 const app = express();
+//set secret key for jwt
+app.set('jwt-secret',ENV.SECRET)
 
 // moddleware
 app.use(...defaultMiddleware);
