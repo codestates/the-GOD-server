@@ -9,7 +9,6 @@ import { defaultMiddleware } from '@middleware';
 import { authRouter } from '@router';
 
 const PORT = ENV.SERVER_PORT || 4000;
-console.log(PORT);
 
 const app = express();
 

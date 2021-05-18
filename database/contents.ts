@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Icontent, IcontentUpdate } from '@interface';
 
-// user schema
+// content schema
 const contentScheme = new mongoose.Schema(
   {
     id: { type: String, required: true, unique: true },
@@ -58,6 +58,8 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
 };
 
 // TODO : make content searcing function by query -> artist || location || date time
+
+// TODO : make pagination
 
 export const findContentsByUserId = async (
   userId: string
