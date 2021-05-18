@@ -8,3 +8,7 @@ export interface iGoogleLoginResult {
   profileUrl: string;
   error?: string;
 }
+
+export interface payload {
+  email : string;
+}
