@@ -1,14 +1,4 @@
 import mongoose from 'mongoose';
-import {
-  createUser,
-  findUserById,
-  updateUserName,
-  updateUserProfileImg,
-  deleteUser,
-  updateAddUserBookmark,
-} from './users';
-
-import { USER_TYPE } from '@interface';
 
 type connectionCallback = (err: string | null) => void;
 
