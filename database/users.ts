@@ -81,6 +81,8 @@ export const updateUserName = async (
   }
 };
 
+
+
 export const updateUserProfileImg = async (
   id: string,
   profileImg: string
