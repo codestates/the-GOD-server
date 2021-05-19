@@ -1,0 +1,26 @@
+[
+  {
+    "id": "c1",
+    "userId": "125",
+    "comment": "Icetea+shot",
+    "contentId": "1"
+  },
+  {
+    "id": "c2",
+    "userId": "124",
+    "comment": "Americano",
+    "contentId": "1"
+  },
+  {
+    "id": "c3",
+    "userId": "123",
+    "comment": "Latte",
+    "contentId": "2"
+  },
+  {
+    "id": "c4",
+    "userId": "126",
+    "comment": "Caramel",
+    "contentId": "3"
+  }
+]

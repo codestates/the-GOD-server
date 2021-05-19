@@ -105,7 +105,7 @@ export const findContent = async (
       };
     }
   } catch (err) {
-    console.log();
+    console.log('findContent error : ', err.message);
     return null;
   }
 };
