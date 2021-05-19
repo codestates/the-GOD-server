@@ -51,6 +51,18 @@ export const findUserByEmail = async (email: string): Promise<Iuser | null> => {
   }
 };
 
+export const findValidUser = async (
+  email: string,
+  password: string
+): Promise<Iuser | null> => {
+  try {
+    return await UserModel.findOne({ email, password });
+  } catch (err) {
+    console.error('findValidUser error : ', err.message);
+    return null;
+  }
+};
+
 export const updateUserName = async (
   id: string,
   userName: string
@@ -68,6 +80,8 @@ export const updateUserName = async (
     return false;
   }
 };
+
+
 
 export const updateUserProfileImg = async (
   id: string,
