@@ -1,18 +1,19 @@
-import env from 'dotenv';
-const jwt = require('jsonwebtoken');
+import { ENV } from '@config';
+import jwt, { Secret } from 'jsonwebtoken'
 import {payload} from '../interface/auth'
-import { NextFunction, Request, Response } from 'express';
-import { nextTick } from 'process';
 
-env.config();
-const ENV = process.env;
-
-const envkey = ENV.JWT_KEY;
-
-export const createToken = (payload : payload) => {
-    const token = jwt.sign({ email : payload.toString()},envkey,{
+export const createAccessToken = (payload : payload) => {
+    const token = jwt.sign({ email : payload.toString()},ENV.ACCESS_KEY as Secret,{
         algorithm : 'HS256',
-        expiresIn : '30m'
+        expiresIn : '2h'
+    })
+    return token;
+}
+
+export const createRefreshToken = (payload : payload) => {
+    const token = jwt.sign({ email : payload.toString()},ENV.REFRESH_KEY as Secret,{
+        algorithm : 'HS256',
+        expiresIn : '15d'
     })
     return token;
 }

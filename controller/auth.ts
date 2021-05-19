@@ -1,16 +1,11 @@
 import { Request, Response } from 'express';
 import {v5 as uuidv5} from 'uuid';
-import env from 'dotenv';
 import { Iuser, USER_TYPE } from '../interface/user'
-import { access } from 'fs';
-import { userInfo } from 'os';
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-import { createToken } from './jwtFunctions';
-env.config();
+import jwt, { Secret } from 'jsonwebtoken';
+import crypto from 'crypto'
+import { createAccessToken, createRefreshToken } from './jwtFunctions';
+import { ENV } from '@config';
 
-const ENV = process.env;
-const envkey = ENV.JWT_KEY;
 import {
   createUser,
   findUserById,
@@ -24,7 +19,7 @@ import {
 export const login = async (req: Request, res: Response): Promise<void> => {
 
   const hashedPWD : string = crypto.createHash('sha512').update(req.body.password).digest('base64'); // 사용자가 입력한 비밀번호 해싱(크립토)               // 사용자가 입력한 이메일 솔팅
-    crypto.pbkdf2(req.body.password, req.body.email , 100000, 64, 'sha512', (err : string, key : Buffer) => {
+    crypto.pbkdf2(req.body.password, req.body.email , 100000, 64, 'sha512', (err : Error | null, key : Buffer) => {
       console.log(key.toString('base64'));
       return key.toString('base64');
     });
@@ -32,9 +27,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     let checkUser = await findValidUser( req.body.email, req.body.password + hashedPWD );
     
     if(checkUser){
-      const token = createToken(req.body.email);
-      console.log(token);
-      res.status(200).send(token);
+      const accessToken = createAccessToken(req.body.email);
+      const refrershToken = createRefreshToken(req.body.email);
+      res.cookie("refreshToken",refrershToken);
+      console.log('Refresh Token : ',refrershToken,{
+        httpOnly:true
+      });
+      console.log(accessToken);
+      res.status(200).send(accessToken);
   }
 }catch(err){
     console.error('User login error');
@@ -46,7 +46,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const signup = async (req : Request, res : Response): Promise<void> => {
   try{
     const hashedPWD : string = crypto.createHash('sha512').update(req.body.password).digest('base64'); // 사용자가 입력한 비밀번호 해싱(크립토)
-    crypto.pbkdf2(req.body.password, req.body.email, 100000, 64, 'sha512', (err : string, key : Buffer) => {
+    crypto.pbkdf2(req.body.password, req.body.email, 100000, 64, 'sha512', (err : Error | null, key : Buffer) => {
         console.log(key.toString('base64'));
         return key.toString('base64');
       });
@@ -70,12 +70,27 @@ export const signup = async (req : Request, res : Response): Promise<void> => {
   }
 }
 
+export const sendAccessToken = (res : Response, accessToken : string) => {
+  res.json({ data: { accessToken }, message: "ok" });
+}
+
+export const resendAccessToken = (res : Response, accessToken : string, email : string) => {
+  res.json({ data: { accessToken, userInfo: email }, message: "ok" });
+}
 
 export const authLogic = async ( req : Request, res : Response) => {
   {
-      const token = req.get('auth') ?? '';
-      const decoded = jwt.verify(token,envkey);
-      const email = decoded;
-      res.send(email);
+    const token = req.get('auth') ?? '';
+    const decoded = jwt.verify(token,ENV.ACCESS_KEY as Secret);
+    const email = decoded;
+    res.send(email);
+  }
+}
+export const checkRefeshToken = (refreshToken : string) => {
+  try {
+    return jwt.verify(refreshToken, process.env.REFRESH_SECRET as Secret);
+  } catch (err) {
+    // return null if refresh token is not valid
+    return null;
   }
 }
