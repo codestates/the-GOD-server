@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { v5 as uuidv5 } from 'uuid';
-import { payload } from '../interface/auth';
+import { payload, tokenInterface } from '../interface/auth';
 import { Iuser, USER_TYPE } from '../interface/user';
 import jwt, { Secret } from 'jsonwebtoken';
 import crypto from 'crypto';
@@ -97,8 +97,11 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 export const accessTokenRequest = async (req: Request, res: Response) => {
   try {
     const token = req.get('auth') ?? '';
-    const userData = jwt.verify(token, ENV.ACCESS_KEY as Secret).toString(); // 토큰의 주인 이메일이 userData
-    const checkToken = await findUserByEmail(userData);
+    const userData = jwt.verify(
+      token,
+      ENV.ACCESS_KEY as Secret
+    ) as tokenInterface; // 토큰의 주인 이메일이 userData
+    const checkToken = await findUserByEmail(userData.email);
     if (!checkToken) {
       res.json({
         data: null,
@@ -119,10 +122,11 @@ export const refreshTokenRequest = async (req: Request, res: Response) => {
       message: 'Token null',
     });
   }
-  const userData = jwt
-    .verify(refreshToken, process.env.REFRESH_KEY as Secret)
-    .toString();
-  const checkToken = await findUserByEmail(userData).then((data) => {
+  const userData = jwt.verify(
+    refreshToken,
+    process.env.REFRESH_KEY as Secret
+  ) as tokenInterface;
+  const checkToken = await findUserByEmail(userData.email).then((data) => {
     console.log(data);
     if (!data) {
       return res.json({
