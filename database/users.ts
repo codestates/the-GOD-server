@@ -51,6 +51,18 @@ export const findUserByEmail = async (email: string): Promise<Iuser | null> => {
   }
 };
 
+export const findValidUser = async (
+  email: string,
+  password: string
+): Promise<Iuser | null> => {
+  try {
+    return await UserModel.findOne({ email, password });
+  } catch (err) {
+    console.error('findValidUser error : ', err.message);
+    return null;
+  }
+};
+
 export const updateUserName = async (
   id: string,
   userName: string
@@ -103,6 +115,28 @@ export const updateUserPassword = async (
     return false;
   }
 };
+
+// export const updateAddUserBookmark = async (
+//   id: string,
+//   contentId: string
+// ): Promise<boolean> => {
+//   try {
+//     const result = await UserModel.findOneAndUpdate(
+//       { id },
+//       {
+//         $addToSet: { bookmark: [contentId] },
+//       }
+//     );
+//     if (result) {
+//       return true;
+//     } else {
+//       return false;
+//     }
+//   } catch (err) {
+//     console.error('updateAddUserBookmark error : ', err.message);
+//     return false;
+//   }
+// };
 
 export const deleteUser = async (id: string): Promise<boolean> => {
   try {

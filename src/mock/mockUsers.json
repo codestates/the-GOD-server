@@ -2,7 +2,7 @@
   {
     "id": "123",
     "userName": "sim",
-    "email": "tester@test.com",
+    "email": "sim@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "mail",
@@ -15,7 +15,7 @@
   {
     "id": "124",
     "userName": "choi",
-    "email": "tester@test.com",
+    "email": "choi@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "google",
@@ -27,7 +27,7 @@
   {
     "id": "125",
     "userName": "Lee",
-    "email": "tester@test.com",
+    "email": "Lee@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "kakao",
@@ -40,7 +40,7 @@
   {
     "id": "126",
     "userName": "Yoo",
-    "email": "tester@test.com",
+    "email": "Yoo@test.com",
     "profileImg": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "twiiter",
