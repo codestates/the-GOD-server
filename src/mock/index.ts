@@ -3,7 +3,6 @@ import mockAritists from './mockArtists.json';
 import mockCommnets from './mockComments.json';
 import mockContetnts from './mockContents.json';
 import mockSharedContents from './mockSharedContents.json';
-
 import mongoose from 'mongoose';
 
 import { Iuser, Icontent, Iartist } from '@interface';
