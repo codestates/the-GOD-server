@@ -1,5 +1,10 @@
 import mongoose from 'mongoose';
-import { Icontent, IcontentUpdate } from '@interface';
+import {
+  Icontent,
+  IcontentUpdate,
+  IcontentFind,
+  IcontentFindResult,
+} from '@interface';
 
 // content schema
 const contentScheme = new mongoose.Schema<Icontent>(
@@ -58,8 +63,52 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
 };
 
 // TODO : make content searcing function by query -> artist || location || date time
-
 // TODO : make pagination
+export const findContent = async (
+  query: IcontentFind
+): Promise<IcontentFindResult | null> => {
+  try {
+    const findQuery = {
+      'artistId': query.artistId,
+      'date.start': { $lte: query.date.end },
+      'date.end': { $gte: query.date.start },
+      'address.roadAddress': { $regex: query.location },
+    };
+
+    const totalCount = await ContentModel.count(findQuery);
+    const currentPage = query.page || 1;
+    const dataPerPage = 2;
+    const skip = (currentPage - 1) * dataPerPage;
+    const totalPage = Math.ceil(totalCount / dataPerPage);
+
+    console.log('totalCount : ', totalCount);
+    console.log('totalPage : ', totalPage);
+
+    if (totalCount === 0) {
+      return {
+        contents: [],
+        totalPage,
+        currentPage,
+        dataPerPage,
+      };
+    } else {
+      const contents = await ContentModel.find(findQuery, null, {
+        limit: dataPerPage,
+        skip,
+      });
+
+      return {
+        contents,
+        totalPage,
+        currentPage,
+        dataPerPage,
+      };
+    }
+  } catch (err) {
+    console.log();
+    return null;
+  }
+};
 
 export const findContentsByUserId = async (
   userId: string

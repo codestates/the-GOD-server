@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 
+import { findContent } from './contents';
+
 type connectionCallback = (err: string | null) => void;
 
 let database: mongoose.Connection;
@@ -25,6 +27,17 @@ export const connect = (uri: string, callback: connectionCallback): void => {
   database = mongoose.connection;
   database.once('open', async () => {
     callback(null);
+
+    let result = await findContent({
+      artistId: 'tea',
+      location: '서울',
+      date: {
+        start: '2021-05-16',
+        end: '2021-05-20',
+      },
+      // page: 1,
+    });
+    console.log(result);
   });
 
   database.on('error', () => {
