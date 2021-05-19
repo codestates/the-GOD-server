@@ -139,6 +139,75 @@ export const updateAddUserBookmark = async (
   }
 };
 
+export const updateDeleteUserBookmark = async (
+  email: string,
+  contentId: string
+): Promise<boolean> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        $pull: { bookmark: contentId },
+      }
+    );
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateDeleteUserBookmark error : ', err.message);
+    return false;
+  }
+};
+
+export const updateAddUserFollow = async (
+  email: string,
+  artistId: string
+): Promise<boolean> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        $addToSet: { follow: { $each: [artistId] } },
+      }
+    );
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateAddUserFollow error : ', err.message);
+    return false;
+  }
+};
+
+export const updateDeleteUserFollow = async (
+  email: string,
+  artistId: string
+): Promise<boolean> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        $pull: { follow: artistId },
+      }
+    );
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateDeleteUserFollow error : ', err.message);
+    return false;
+  }
+};
+
 export const deleteUser = async (id: string): Promise<boolean> => {
   try {
     const result = await UserModel.deleteOne({ id });
