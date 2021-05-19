@@ -10,5 +10,5 @@ export interface iGoogleLoginResult {
 }
 
 export interface payload {
-  email : string;
+  email: string;
 }
