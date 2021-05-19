@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { Iartist, IartistUpdate } from '@interface';
 
 // artist schema
-const artistSchema = new mongoose.Schema(
+const artistSchema = new mongoose.Schema<Iartist>(
   {
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
@@ -13,7 +13,7 @@ const artistSchema = new mongoose.Schema(
   }
 );
 
-const ArtistModel = mongoose.model('artist', artistSchema);
+const ArtistModel = mongoose.model<Iartist>('artist', artistSchema);
 
 export const createArtist = async (artist: Iartist): Promise<boolean> => {
   try {
@@ -70,8 +70,11 @@ export const updateArtist = async (
 export const deleteArtist = async (id: string): Promise<boolean> => {
   try {
     const result = await ArtistModel.deleteOne({ id });
-    console.log('artist delete : ', result.deletedCount);
-    if (result.deletedCount >= 1) {
+
+    let deleteCount = result.deletedCount || 0;
+    console.log('artist delete : ', deleteCount);
+
+    if (deleteCount >= 1) {
       return true;
     } else {
       return false;

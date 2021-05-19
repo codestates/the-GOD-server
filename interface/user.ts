@@ -12,4 +12,6 @@ export interface Iuser {
   profileImg: string;
   password: string;
   type: USER_TYPE;
+  follow: string[];
+  bookmark: string[];
 }
