@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { Iuser } from '@interface';
 
 // user schema
-const userSchema = new mongoose.Schema(
+const userSchema = new mongoose.Schema<Iuser>(
   {
     id: { type: String, required: true, unique: true },
     userName: { type: String, required: true },
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-const UserModel = mongoose.model('user', userSchema);
+const UserModel = mongoose.model<Iuser>('user', userSchema);
 
 export const createUser = async (user: Iuser): Promise<boolean> => {
   try {
@@ -118,11 +118,105 @@ export const updateUserPassword = async (
   }
 };
 
+export const updateAddUserBookmark = async (
+  email: string,
+  contentId: string
+): Promise<boolean> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        $addToSet: { bookmark: { $each: [contentId] } },
+      }
+    );
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateAddUserBookmark error : ', err.message);
+    return false;
+  }
+};
+
+export const updateDeleteUserBookmark = async (
+  email: string,
+  contentId: string
+): Promise<boolean> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        $pull: { bookmark: contentId },
+      }
+    );
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateDeleteUserBookmark error : ', err.message);
+    return false;
+  }
+};
+
+export const updateAddUserFollow = async (
+  email: string,
+  artistId: string
+): Promise<boolean> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        $addToSet: { follow: { $each: [artistId] } },
+      }
+    );
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateAddUserFollow error : ', err.message);
+    return false;
+  }
+};
+
+export const updateDeleteUserFollow = async (
+  email: string,
+  artistId: string
+): Promise<boolean> => {
+  try {
+    const result = await UserModel.findOneAndUpdate(
+      { email },
+      {
+        $pull: { follow: artistId },
+      }
+    );
+
+    if (result) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateDeleteUserFollow error : ', err.message);
+    return false;
+  }
+};
+
 export const deleteUser = async (id: string): Promise<boolean> => {
   try {
     const result = await UserModel.deleteOne({ id });
-    console.log('user delete : ', result.deletedCount);
-    if (result.deletedCount >= 1) {
+    let deleteCount = result.deletedCount || 0;
+
+    console.log('user delete : ', deleteCount);
+    if (deleteCount >= 1) {
       return true;
     } else {
       return false;
@@ -132,7 +226,6 @@ export const deleteUser = async (id: string): Promise<boolean> => {
     return false;
   }
 };
-
 
 export const createManyUser = async (users: Iuser[]) => {
   console.log('Write many users - Start');

@@ -4,9 +4,11 @@ import mockCommnets from './mockComments.json';
 import mockContetnts from './mockContents.json';
 import mockSharedContents from './mockSharedContents.json';
 import mongoose from 'mongoose';
-import { Iuser, Icontent } from '@interface';
+
+import { Iuser, Icontent, Iartist } from '@interface';
 import { createManyUser } from '@database/users';
 import { createManyContent } from '@database/contents';
+import { createManyArtist } from '@database/artists';
 
 import { ENV } from '@config';
 
@@ -41,6 +43,12 @@ const writeMockData = (uri: string): void => {
 
     await createManyContent(mockContetnts as Icontent[]);
     console.log('set contents collections');
+
+    await database.dropCollection('artists');
+    console.log('clear artists collections');
+
+    await createManyArtist(mockAritists as Iartist[]);
+    console.log('set artists collections');
 
     console.log('END');
     mongoose.disconnect();

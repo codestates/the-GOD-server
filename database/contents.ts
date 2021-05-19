@@ -1,8 +1,8 @@
 import mongoose from 'mongoose';
 import { Icontent, IcontentUpdate } from '@interface';
 
-// user schema
-const contentScheme = new mongoose.Schema(
+// content schema
+const contentScheme = new mongoose.Schema<Icontent>(
   {
     id: { type: String, required: true, unique: true },
     userId: { type: String, required: true },
@@ -33,7 +33,7 @@ const contentScheme = new mongoose.Schema(
   }
 );
 
-const ContentModel = mongoose.model('content', contentScheme);
+const ContentModel = mongoose.model<Icontent>('content', contentScheme);
 
 export const createContent = async (content: Icontent): Promise<boolean> => {
   try {
@@ -58,6 +58,8 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
 };
 
 // TODO : make content searcing function by query -> artist || location || date time
+
+// TODO : make pagination
 
 export const findContentsByUserId = async (
   userId: string
@@ -90,8 +92,11 @@ export const updateContent = async (
 export const deleteContent = async (id: string): Promise<boolean> => {
   try {
     const result = await ContentModel.deleteOne({ id });
-    console.log('contetnt delete : ', result.deletedCount);
-    if (result.deletedCount >= 1) {
+    let deleteCount = result.deletedCount || 0;
+
+    console.log('contetnt delete : ', deleteCount);
+
+    if (deleteCount >= 1) {
       return true;
     } else {
       return false;

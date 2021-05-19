@@ -82,6 +82,8 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
       password: req.body.password + hashedPWD,
       type: USER_TYPE.Email,
+      follow: [],
+      bookmark: [],
     });
 
     if (createId) {
