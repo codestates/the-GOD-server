@@ -47,3 +47,20 @@ export interface IcontentUpdate {
   tegs?: string[];
   perks?: any;
 }
+
+export interface IcontentFind {
+  artistId: string;
+  location: string;
+  date: {
+    start: string;
+    end: string;
+  };
+  page?: number;
+}
+
+export interface IcontentFindResult {
+  contents: Icontent[];
+  totalPage: number;
+  currentPage: number;
+  dataPerPage: number;
+}
