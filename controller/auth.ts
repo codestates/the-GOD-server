@@ -6,6 +6,7 @@ import jwt, { Secret } from 'jsonwebtoken';
 import crypto from 'crypto';
 import { createAccessToken, createRefreshToken } from './jwtFunctions';
 import { ENV } from '@config';
+import { createPWD } from './pwFunctions';
 
 import {
   createUser,
@@ -18,7 +19,7 @@ import {
 } from '../database/users';
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  const hashedPWD: string = crypto
+  /* const hashedPWD: string = crypto
     .createHash('sha512')
     .update(req.body.password)
     .digest('base64'); // 사용자가 입력한 비밀번호 해싱(크립토)               // 사용자가 입력한 이메일 솔팅
@@ -30,20 +31,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     'sha512',
     (err: Error | null, key: Buffer) => {
       console.log(key.toString('base64'));
-      return key.toString('base64');
+      key.toString('base64');
     }
-  );
+  ); */
+  const encodedPWD = createPWD(req.body.email, req.body.password);
   try {
-    let checkUser = await findValidUser(
-      req.body.email,
-      req.body.password + hashedPWD
-    );
+    let checkUser = await findValidUser(req.body.email, encodedPWD);
 
     if (checkUser) {
       const accessToken = createAccessToken(req.body.email);
-      const refrershToken = createRefreshToken(req.body.email);
-      res.cookie('refreshToken', refrershToken);
-      console.log('Refresh Token : ', refrershToken, {
+      const refreshToken = createRefreshToken(req.body.email);
+      console.log('refreshToken', refreshToken);
+      res.cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
       });
       console.log(accessToken);
@@ -125,7 +124,7 @@ export const refreshTokenRequest = async (req: Request, res: Response) => {
   const userData = jwt.verify(
     refreshToken,
     process.env.REFRESH_KEY as Secret
-  ) as tokenInterface;
+  ) as tokenInterface; //userData는 발급 받은 refresh 토큰으로 확인한 유저의 데이터
   const checkToken = await findUserByEmail(userData.email).then((data) => {
     console.log(data);
     if (!data) {
