@@ -12,3 +12,9 @@ export interface iGoogleLoginResult {
 export interface payload {
   email: string;
 }
+
+export interface tokenInterface {
+  email: string;
+  iat: number;
+  exp: number;
+}
