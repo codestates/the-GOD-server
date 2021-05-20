@@ -5,11 +5,18 @@ import mockContetnts from './mockContents.json';
 import mockSharedContents from './mockSharedContents.json';
 import mongoose from 'mongoose';
 
-import { Iuser, Icontent, Iartist, Icomment } from '@interface';
+import {
+  Iuser,
+  Icontent,
+  Iartist,
+  Icomment,
+  IsharedContents,
+} from '@interface';
 import { createManyUser } from '@database/users';
 import { createManyContent } from '@database/contents';
 import { createManyArtist } from '@database/artists';
 import { createManyComment } from '@database/comments';
+import { createManySharedContent } from '@database/sharedcontents';
 
 import { ENV } from '@config';
 
@@ -56,6 +63,12 @@ const writeMockData = (uri: string): void => {
 
     await createManyComment(mockComments as Icomment[]);
     console.log('set comments collections');
+
+    await database.dropCollection('sharedcontents');
+    console.log('clear shared contents collections');
+
+    await createManySharedContent(mockSharedContents as IsharedContents[]);
+    console.log('set shared contents collections');
 
     console.log('END');
     mongoose.disconnect();

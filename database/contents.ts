@@ -62,8 +62,9 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
   }
 };
 
-// TODO : make content searcing function by query -> artist || location || date time
+// TODO : make content searcing function by query -> artist && location && date time
 // TODO : make pagination
+// TODO : sorting by location
 export const findContent = async (
   query: IcontentFind
 ): Promise<IcontentFindResult | null> => {
