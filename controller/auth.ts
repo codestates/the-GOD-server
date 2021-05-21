@@ -7,7 +7,7 @@ import crypto from 'crypto';
 import { createAccessToken, createRefreshToken } from '../util/jwt';
 import { ENV } from '@config';
 import { createPWD } from '../util/pwFunctions';
-import { googleToken } from '../apis';
+import { googleToken, kakaoToken } from '../apis';
 
 import {
   createUser,
@@ -138,29 +138,30 @@ export const googleLogin = async (
   res: Response
 ): Promise<void> => {
   const userData = await googleToken(req, res);
-  const checkUser = await findUserByEmail(userData.email);
+  const { sub, name, email, profileImg } = userData;
+  const checkUser = await findUserByEmail(email);
   if (checkUser) {
-    const accessToken = createAccessToken(userData.email);
-    const refreshToken = createRefreshToken(userData.email);
+    const accessToken = createAccessToken(email);
+    const refreshToken = createRefreshToken(email);
     res
       .cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
       })
       .send({ accessToken });
   } else {
-    const googlePWD = createPWD(userData.email, userData.name);
+    const googlePWD = createPWD(email, name);
     createUser({
-      id: userData.sub,
-      userName: userData.name,
-      email: userData.email,
-      profileImg: userData.profileImg,
+      id: sub,
+      userName: name,
+      email: email,
+      profileImg: profileImg,
       password: googlePWD,
       type: 'google' as USER_TYPE,
       follow: [],
       bookmark: [],
     });
-    const accessToken = await createAccessToken(userData.email);
-    const refreshToken = await createRefreshToken(userData.email);
+    const accessToken = await createAccessToken(email);
+    const refreshToken = await createRefreshToken(email);
     res
       .cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
@@ -168,3 +169,42 @@ export const googleLogin = async (
       .send({ accessToken });
   }
 };
+
+export const kakaoLogin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userData = await kakaoToken(req, res);
+  const { id, userName, email, profileImg } = userData;
+  const checkUser = await findUserByEmail(email);
+  if (checkUser) {
+    const accessToken = createAccessToken(email);
+    const refreshToken = createRefreshToken(email);
+    res
+      .cookie('Refresh Token : ', refreshToken, {
+        httpOnly: true,
+      })
+      .send({ accessToken });
+  } else {
+    const googlePWD = createPWD(email, userName);
+    createUser({
+      id: id,
+      userName: userName,
+      email: email,
+      profileImg: profileImg,
+      password: googlePWD,
+      type: 'kakao' as USER_TYPE,
+      follow: [],
+      bookmark: [],
+    });
+    const accessToken = await createAccessToken(email);
+    const refreshToken = await createRefreshToken(email);
+    res
+      .cookie('Refresh Token : ', refreshToken, {
+        httpOnly: true,
+      })
+      .send({ accessToken });
+  }
+};
+//TODO : 간단한 클라이언트 코드 작성 후 확인
+//TODO : API문서에 의거하여 res 수정
