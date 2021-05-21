@@ -1,25 +1,32 @@
 // NOTE : sample interface
-export interface iGoogleLoginProps {
+export interface IgoogleLoginProps {
   token: string;
 }
 
-export interface iGoogleLoginResult {
-  userName: string;
-  profileUrl: string;
-  error?: string;
+export interface IgoogleLoginResult {
+  sub: string;
+  name: string;
+  email: string;
+  profileImg: string;
 }
 
-export interface payload {
+export interface IkakaoLoginProps {
+  token: string;
+}
+
+export interface IkakaoLoginResult {}
+
+export interface Payload {
   email: string;
 }
 
-export interface tokenInterface {
+export interface Itoken {
   email: string;
   iat: number;
   exp: number;
 }
 
-export interface iGoogleAuth {
+export interface IgoogleAuth {
   iss: string;
   sub: string;
   azp: string;
@@ -36,6 +43,6 @@ export interface iGoogleAuth {
   locale?: string;
 }
 
-export interface iPassword {
+export interface Ipassword {
   password: string;
 }

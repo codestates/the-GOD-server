@@ -1,8 +1,8 @@
 import { ENV } from '@config';
 import jwt, { Secret } from 'jsonwebtoken';
-import { payload } from '../interface/auth';
+import { Payload } from '@interface';
 
-export const createAccessToken = (payload: payload | string) => {
+export const createAccessToken = (payload: Payload | string) => {
   const token = jwt.sign(
     { email: payload.toString() },
     ENV.ACCESS_KEY as Secret,
@@ -14,7 +14,7 @@ export const createAccessToken = (payload: payload | string) => {
   return token;
 };
 
-export const createRefreshToken = (payload: payload | string) => {
+export const createRefreshToken = (payload: Payload | string) => {
   const token = jwt.sign(
     { email: payload.toString() },
     ENV.REFRESH_KEY as Secret,

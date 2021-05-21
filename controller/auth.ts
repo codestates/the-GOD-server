@@ -1,12 +1,13 @@
 import { Request, Response } from 'express';
 import { v5 as uuidv5 } from 'uuid';
-import { payload, tokenInterface } from '../interface/auth';
-import { Iuser, USER_TYPE } from '../interface/user';
+import { Payload, Itoken } from '../interface/auth';
+import { Iuser, USER_TYPE } from '@interface';
 import jwt, { Secret } from 'jsonwebtoken';
 import crypto from 'crypto';
-import { createAccessToken, createRefreshToken } from './jwtFunctions';
+import { createAccessToken, createRefreshToken } from '../util/jwt';
 import { ENV } from '@config';
-import { createPWD } from './pwFunctions';
+import { createPWD } from '../util/pwFunctions';
+import { googleToken } from '../apis';
 
 import {
   createUser,
@@ -19,21 +20,6 @@ import {
 } from '../database/users';
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  /* const hashedPWD: string = crypto
-    .createHash('sha512')
-    .update(req.body.password)
-    .digest('base64'); // 사용자가 입력한 비밀번호 해싱(크립토)               // 사용자가 입력한 이메일 솔팅
-  crypto.pbkdf2(
-    req.body.password,
-    req.body.email,
-    100000,
-    64,
-    'sha512',
-    (err: Error | null, key: Buffer) => {
-      console.log(key.toString('base64'));
-      key.toString('base64');
-    }
-  ); */
   const encodedPWD = createPWD(req.body.email, req.body.password);
   try {
     let checkUser = await findValidUser(req.body.email, encodedPWD);
@@ -93,13 +79,13 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const accessTokenRequest = async (req: Request, res: Response) => {
+export const accessTokenRequest = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   try {
     const token = req.get('auth') ?? '';
-    const userData = jwt.verify(
-      token,
-      ENV.ACCESS_KEY as Secret
-    ) as tokenInterface; // 토큰의 주인 이메일이 userData
+    const userData = jwt.verify(token, ENV.ACCESS_KEY as Secret) as Itoken; // 토큰의 주인 이메일이 userData
     const checkToken = await findUserByEmail(userData.email);
     if (!checkToken) {
       res.json({
@@ -113,7 +99,10 @@ export const accessTokenRequest = async (req: Request, res: Response) => {
   }
 };
 
-export const refreshTokenRequest = async (req: Request, res: Response) => {
+export const refreshTokenRequest = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
   const refreshToken = req.cookies.refreshToken;
   if (!refreshToken) {
     res.json({
@@ -124,7 +113,7 @@ export const refreshTokenRequest = async (req: Request, res: Response) => {
   const userData = jwt.verify(
     refreshToken,
     process.env.REFRESH_KEY as Secret
-  ) as tokenInterface; //userData는 발급 받은 refresh 토큰으로 확인한 유저의 데이터
+  ) as Itoken; //userData는 발급 받은 refresh 토큰으로 확인한 유저의 데이터
   const checkToken = await findUserByEmail(userData.email).then((data) => {
     console.log(data);
     if (!data) {
@@ -142,9 +131,40 @@ export const refreshTokenRequest = async (req: Request, res: Response) => {
       message: 'resend Access Token',
     });
   });
-  /* if (!checkToken) {
-    res.json({
-      data: null,
-      message: 'invalid refreshToken',
-    }); */
+};
+
+export const googleLogin = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  const userData = await googleToken(req, res);
+  const checkUser = await findUserByEmail(userData.email);
+  if (checkUser) {
+    const accessToken = createAccessToken(userData.email);
+    const refreshToken = createRefreshToken(userData.email);
+    res
+      .cookie('Refresh Token : ', refreshToken, {
+        httpOnly: true,
+      })
+      .send({ accessToken });
+  } else {
+    const googlePWD = createPWD(userData.email, userData.name);
+    createUser({
+      id: userData.sub,
+      userName: userData.name,
+      email: userData.email,
+      profileImg: userData.profileImg,
+      password: googlePWD,
+      type: 'google' as USER_TYPE,
+      follow: [],
+      bookmark: [],
+    });
+    const accessToken = await createAccessToken(userData.email);
+    const refreshToken = await createRefreshToken(userData.email);
+    res
+      .cookie('Refresh Token : ', refreshToken, {
+        httpOnly: true,
+      })
+      .send({ accessToken });
+  }
 };
