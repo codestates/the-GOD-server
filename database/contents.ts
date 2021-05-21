@@ -93,10 +93,19 @@ export const findContent = async (
         dataPerPage,
       };
     } else {
-      const contents = await ContentModel.find(findQuery, null, {
-        limit: dataPerPage,
-        skip,
-      });
+      const contents = await ContentModel.find(
+        findQuery,
+        {
+          id: 1,
+          address: 1,
+          title: 1,
+          images: 1,
+        },
+        {
+          limit: dataPerPage,
+          skip,
+        }
+      );
 
       return {
         contents,
