@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Iuser } from '@interface';
 
-import { createPWD } from '../controller/pwFunctions';
+import { createPWD } from '@util/pwFunctions';
 
 // user schema
 const userSchema = new mongoose.Schema<Iuser>(

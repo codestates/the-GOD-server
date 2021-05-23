@@ -1,6 +1,6 @@
 import { ENV } from '@config';
-import jwt, { Secret } from 'jsonwebtoken';
-import { Payload } from '@interface';
+import jwt, { Secret, verify } from 'jsonwebtoken';
+import { Payload, TOKEN_TYPE } from '@interface';
 
 export const createAccessToken = (payload: Payload | string) => {
   const token = jwt.sign(
@@ -24,4 +24,25 @@ export const createRefreshToken = (payload: Payload | string) => {
     }
   );
   return token;
+};
+
+export const verifyToken = (type: TOKEN_TYPE, token: string | null) => {
+  const secret = type === TOKEN_TYPE.ACCESS ? ENV.ACCESS_KEY : ENV.REFRESH_KEY;
+
+  if (!secret) {
+    console.warn('Not setting secret !');
+    return null;
+  }
+  if (!token) {
+    console.warn('invalid token');
+    return null;
+  }
+
+  try {
+    const { email } = verify(token, secret) as Payload;
+    return email;
+  } catch (err) {
+    console.error('verify token error : ', err.message);
+    return null;
+  }
 };

@@ -1,4 +1,8 @@
-// NOTE : sample interface
+export enum TOKEN_TYPE {
+  ACCESS = 'access',
+  REFRESH = 'refresh',
+}
+
 export interface IgoogleLoginProps {
   token: string;
 }

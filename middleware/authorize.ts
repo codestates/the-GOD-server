@@ -1,15 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { verify } from 'jsonwebtoken';
-import { ENV } from '@config';
-
-enum TOKEN_TYPE {
-  ACCESS = 'access',
-  REFRESH = 'refresh',
-}
-
-interface Ipayload {
-  email: string;
-}
+import { TOKEN_TYPE } from '@interface';
+import { verifyToken } from '@util/jwt';
 
 const parseaAuthorization = (header: string) => {
   const splitHeader = header.split(' ');
@@ -22,27 +13,6 @@ const parseaAuthorization = (header: string) => {
   const type = splitHeader[0].toUpperCase();
   const token = splitHeader[1];
   return [type, token];
-};
-
-const verifyToken = (type: TOKEN_TYPE, token: string | null) => {
-  const secret = type === TOKEN_TYPE.ACCESS ? ENV.ACCESS_KEY : ENV.REFRESH_KEY;
-
-  if (!secret) {
-    console.warn('Not setting secret !');
-    return null;
-  }
-  if (!token) {
-    console.warn('invalid token');
-    return null;
-  }
-
-  try {
-    const { email } = verify(token, secret) as Ipayload;
-    return email;
-  } catch (err) {
-    console.error('verify token error : ', err.message);
-    return null;
-  }
 };
 
 export default (req: Request, res: Response, next: NextFunction) => {
