@@ -3,7 +3,7 @@ import {
   IgoogleLoginProps,
   IgoogleLoginResult,
   IkakaoLoginProps,
-  IkakaoLoginResult,
+  ItwitterLoginProps,
 } from '@interface';
 import { Request, Response } from 'express';
 
@@ -32,7 +32,7 @@ export const googleToken = async (req: Request, res: Response) => {
   };
 };
 
-export const kakaoLogin = async (req: Request, res: Response) => {
+export const kakaoToken = async (req: Request, res: Response) => {
   const { token }: IkakaoLoginProps = req.body; //accessToken 받음
   const { data } = await api.get('https://kapi.kakao.com/v2/user/me', {
     // 클라이언트에서 받은 토큰을 kapi.kakao에 보내서 해당 토큰을 가진 유저에 대한 정보 얻기
@@ -52,3 +52,20 @@ export const kakaoLogin = async (req: Request, res: Response) => {
   };
 };
 // 컨트롤러 안에서만 req,res 처리를 할 수 있게
+
+export const twitterToken = async (req: Request, res: Response) => {
+  const { token }: ItwitterLoginProps = req.body;
+  const { data } = await api.get('https://api.twitter.com/2/users', {
+    headers: token,
+  });
+  if (!data) {
+    res.status(403).send('invalid token');
+  }
+  const { id, name, username, profile_image_url } = data;
+  return {
+    id: id,
+    name: name,
+    userName: username,
+    profile_image_url: profile_image_url ?? '',
+  };
+};
