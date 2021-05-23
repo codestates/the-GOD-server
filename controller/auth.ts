@@ -7,11 +7,12 @@ import crypto from 'crypto';
 import { createAccessToken, createRefreshToken } from '../util/jwt';
 import { ENV } from '@config';
 import { createPWD } from '../util/pwFunctions';
-import { googleToken, kakaoToken } from '../apis';
+import { googleToken, kakaoToken, twitterToken } from '../apis';
 
 import {
   createUser,
   findUserById,
+  findUserByUserName,
   updateUserName,
   updateUserProfileImg,
   deleteUser,
@@ -20,13 +21,14 @@ import {
 } from '../database/users';
 
 export const login = async (req: Request, res: Response): Promise<void> => {
-  const encodedPWD = createPWD(req.body.email, req.body.password);
+  const { email, password } = req.body;
+  const encodedPWD = createPWD(email, password);
   try {
-    let checkUser = await findValidUser(req.body.email, encodedPWD);
+    let checkUser = await findValidUser(email, encodedPWD);
 
     if (checkUser) {
-      const accessToken = createAccessToken(req.body.email);
-      const refreshToken = createRefreshToken(req.body.email);
+      const accessToken = createAccessToken(email);
+      const refreshToken = createRefreshToken(email);
       console.log('refreshToken', refreshToken);
       res.cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
@@ -41,14 +43,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
+  const { userName, email, password } = req.body;
   try {
     const hashedPWD: string = crypto
       .createHash('sha512')
       .update(req.body.password)
       .digest('base64'); // 사용자가 입력한 비밀번호 해싱(크립토)
     crypto.pbkdf2(
-      req.body.password,
-      req.body.email,
+      password,
+      email,
       100000,
       64,
       'sha512',
@@ -57,15 +60,19 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
         return key.toString('base64');
       }
     );
+    const validName = await findUserByUserName(userName);
+    if (validName) {
+      res.status;
+    }
 
     const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-    const uniqueID = uuidv5(req.body.email, MY_NAMESPACE);
+    const uniqueID = uuidv5(email, MY_NAMESPACE);
     const createId = await createUser({
       id: uniqueID,
-      userName: req.body.userName,
-      email: req.body.email,
+      userName: userName,
+      email: email,
       profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
-      password: req.body.password + hashedPWD,
+      password: password + hashedPWD,
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],
@@ -79,23 +86,21 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
-export const accessTokenRequest = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
+export const accessTokenRequest = async (req: Request) => {
   try {
     const token = req.get('auth') ?? '';
     const userData = jwt.verify(token, ENV.ACCESS_KEY as Secret) as Itoken; // 토큰의 주인 이메일이 userData
     const checkToken = await findUserByEmail(userData.email);
     if (!checkToken) {
-      res.json({
+      /* res.json({
         data: null,
         message: 'invalid accessToken',
-      });
+      }); */
+      console.error('invalid token');
     }
-    res.status(200).send(userData);
+    return userData;
   } catch (err) {
-    console.error('Token something wrong');
+    console.error('invalid token');
   }
 };
 
@@ -122,7 +127,7 @@ export const refreshTokenRequest = async (
         message: 'refresh token tempered',
       });
     }
-    res.status(200).send(userData);
+    //res.status(200).send(userData);
     const forNewToken = { email: data.email };
     const newAccessToken = createAccessToken(forNewToken);
     res.json({
@@ -208,3 +213,30 @@ export const kakaoLogin = async (
 };
 //TODO : 간단한 클라이언트 코드 작성 후 확인
 //TODO : API문서에 의거하여 res 수정
+
+export const twitterLogin = async (req: Request, res: Response) => {
+  const userData = await twitterToken(req, res);
+  const { id, name, userName, profile_image_url } = userData;
+  const checkUser = await findUserByUserName(userName);
+  if (checkUser) {
+    const accessToken = createAccessToken(userName);
+    const refreshToken = createRefreshToken(userName);
+    res
+      .cookie('Refresh Token : ', refreshToken, {
+        httpOnly: true,
+      })
+      .send({ accessToken });
+  } else {
+    const twitterPWD = createPWD(name, userName);
+    createUser({
+      id: id,
+      userName: userName,
+      email: `${userName}@twitter.com`,
+      profileImg: profile_image_url,
+      password: twitterPWD,
+      type: 'twitter' as USER_TYPE,
+      follow: [],
+      bookmark: [],
+    });
+  }
+};
