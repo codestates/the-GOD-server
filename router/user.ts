@@ -4,6 +4,7 @@ import {
   followArtist,
   bookmarkContent,
   updateUserProfile,
+  updateName,
 } from '@controller/user';
 import multer from 'multer';
 
@@ -15,7 +16,7 @@ const router = express.Router();
 router.get('/', getUser);
 router.put('/follow', followArtist);
 router.put('/bookmark', bookmarkContent);
-
 router.put('/profile', uplaodProfileImage, updateUserProfile);
+router.put('/username', updateName);
 
 export default router;
