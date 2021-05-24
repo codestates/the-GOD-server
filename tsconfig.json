@@ -25,7 +25,8 @@
       "@apis": ["apis/*"],
       "@router": ["router/index"],
       "@controller/*": ["controller/*"],
-      "@database/*": ["database/*"]
+      "@database/*": ["database/*"],
+      "@util/*": ["util/*"]
     }
   },
   "include": ["**/*.ts"],

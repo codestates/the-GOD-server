@@ -6,7 +6,7 @@ import { connect } from '@database/index';
 
 import { ENV } from '@config';
 import { defaultMiddleware } from '@middleware';
-import { authRouter } from '@router';
+import { authRouter, userRouter } from '@router';
 
 const PORT = ENV.SERVER_PORT || 4000;
 
@@ -19,6 +19,7 @@ app.use(...defaultMiddleware);
 
 // router
 app.use('/auth', authRouter);
+app.use('/user', userRouter);
 
 // NOTE : test funciton
 app.get('/', (req: express.Request, res: express.Response) => {

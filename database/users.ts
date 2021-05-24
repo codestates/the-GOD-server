@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import { Iuser } from '@interface';
 
+import { createPWD } from '@util/pwFunctions';
+
 // user schema
 const userSchema = new mongoose.Schema<Iuser>(
   {
@@ -236,8 +238,16 @@ export const deleteUser = async (id: string): Promise<boolean> => {
   }
 };
 
+// NOTE : for mock data
 export const createManyUser = async (users: Iuser[]) => {
   console.log('Write many users - Start');
+
+  users = users.map((user) => {
+    const newPwd = createPWD(user.email, user.password);
+    user.password = newPwd;
+    return user;
+  });
+
   try {
     const result = await UserModel.insertMany(users);
     console.log('result : ', result);
