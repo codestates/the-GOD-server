@@ -27,7 +27,9 @@ export const googleToken = async (token: string) => {
   };
 };
 
+
 export const kakaoToken = async (token: string) => {
+
   const { data } = await api.get('https://kapi.kakao.com/v2/user/me', {
     // 클라이언트에서 받은 토큰을 kapi.kakao에 보내서 해당 토큰을 가진 유저에 대한 정보 얻기
     headers: token,
@@ -44,10 +46,12 @@ export const kakaoToken = async (token: string) => {
 };
 // 컨트롤러 안에서만 req,res 처리를 할 수 있게
 
+
 export const twitterToken = async (token: string) => {
   const { data } = await api.get('https://api.twitter.com/2/users', {
     headers: token,
   });
+
 
   const { id, name, username, profile_image_url } = data;
   return {
