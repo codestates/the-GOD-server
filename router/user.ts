@@ -1,10 +1,5 @@
 import express from 'express';
-import {
-  getUser,
-  followArtist,
-  bookmarkContent,
-  updateUserInfo,
-} from '@controller/user';
+import { getUser, followArtist, bookmarkContent } from '@controller/user';
 
 const router = express.Router();
 
