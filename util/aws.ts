@@ -30,14 +30,10 @@ export const uploadImage = async (
       return null;
     }
 
-    console.log(data);
-
     const fileExtension = path.extname(data.originalname);
     let imageName = path.basename(data.originalname, fileExtension);
     imageName = uuidv5(imageName, UUID_NAMESPACE as string);
     const fileName = `${imageName}${fileExtension}`;
-
-    console.log(fileName);
 
     if (AWS_S3_BUCKET_NAME) {
       await BUCKET.putObject({

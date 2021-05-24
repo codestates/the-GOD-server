@@ -5,9 +5,11 @@ import {
   updateDeleteUserFollow,
   updateAddUserBookmark,
   updateDeleteUserBookmark,
+  updateUserProfileImg,
 } from '@database/users';
 import { findArtistById } from '@database/artists';
 import { findContentById } from '@database/contents';
+import { uploadImage, deleteImage } from '@util/aws';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -174,6 +176,69 @@ export const bookmarkContent = async (
     }
   } catch (err) {
     console.error('bookmarkContent error');
+    res.status(404).send({
+      message: 'invlaid request',
+    });
+  }
+};
+
+export const updateUserProfile = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const profileImage = req.file;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!user || !profileImage) {
+      console.log('updateUserProfile invalid input');
+      res
+        .status(404)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const imageUrl = await uploadImage(profileImage);
+
+      if (!imageUrl) {
+        console.log('S3 Image update error');
+        res
+          .status(400)
+          .send({
+            message: 'invlaid request',
+          })
+          .end();
+      } else {
+        const updateResult = await updateUserProfileImg(
+          user.id,
+          imageUrl as string
+        );
+
+        if (updateResult) {
+          await deleteImage(user.profileImg);
+          res
+            .status(201)
+            .send({
+              result: {
+                profileImg: imageUrl,
+              },
+              message: 'ok',
+            })
+            .end();
+        } else {
+          res
+            .status(404)
+            .send({
+              message: 'invlaid request',
+            })
+            .end();
+        }
+      }
+    }
+  } catch (err) {
+    console.error('updateUserProfile error');
     res.status(404).send({
       message: 'invlaid request',
     });
