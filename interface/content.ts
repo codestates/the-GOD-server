@@ -9,8 +9,8 @@ export interface Icontent {
     end: string;
   };
   time: {
-    start: string;
-    end: string;
+    open: string;
+    close: string;
   };
   address: {
     storeName: string;
@@ -33,8 +33,8 @@ export interface IcontentUpdate {
     end: string;
   };
   time?: {
-    start: string;
-    end: string;
+    open: string;
+    close: string;
   };
   address?: {
     storeName: string;
