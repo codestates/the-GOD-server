@@ -23,18 +23,21 @@ import {
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
+  const type = 'mail' as USER_TYPE;
   try {
     let checkUser = await findValidUser(email, encodedPWD);
 
     if (checkUser) {
-      const accessToken = createAccessToken(email);
-      const refreshToken = createRefreshToken(email);
+      const accessToken = createAccessToken({ email, type });
+      const refreshToken = createRefreshToken({ email, type });
       console.log('refreshToken', refreshToken);
       res.cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
       });
       console.log(accessToken);
       res.status(200).send(accessToken);
+    } else {
+      res.status(400).send('invalid input');
     }
   } catch (err) {
     console.error('User login error');
@@ -45,21 +48,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const signup = async (req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
   try {
-    const hashedPWD: string = crypto
-      .createHash('sha512')
-      .update(req.body.password)
-      .digest('base64'); // 사용자가 입력한 비밀번호 해싱(크립토)
-    crypto.pbkdf2(
-      password,
-      email,
-      100000,
-      64,
-      'sha512',
-      (err: Error | null, key: Buffer) => {
-        console.log(key.toString('base64'));
-        return key.toString('base64');
-      }
-    );
+    const hashedPWD = await createPWD(email, password);
     const validName = await findUserByUserName(userName);
     if (validName) {
       res.status;
@@ -72,7 +61,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       userName: userName,
       email: email,
       profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
-      password: password + hashedPWD,
+      password: hashedPWD,
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],
@@ -80,22 +69,24 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 
     if (createId) {
       res.status(201).send('ok');
+    } else {
+      res.status(400).send('invalid input');
     }
   } catch (err) {
     console.error('User save error by server');
   }
 };
 
-export const accessTokenRequest = async (req: Request) => {
+/* export const accessTokenRequest = async (req: Request) => {
   try {
     const token = req.get('auth') ?? '';
     const userData = jwt.verify(token, ENV.ACCESS_KEY as Secret) as Itoken; // 토큰의 주인 이메일이 userData
     const checkToken = await findUserByEmail(userData.email);
     if (!checkToken) {
-      /* res.json({
+       res.json({
         data: null,
         message: 'invalid accessToken',
-      }); */
+      }); 
       console.error('invalid token');
     }
     return userData;
@@ -136,42 +127,49 @@ export const refreshTokenRequest = async (
       message: 'resend Access Token',
     });
   });
-};
+}; */
 
 export const googleLogin = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const userData = await googleToken(req, res);
+  const token = req.body;
+  const type = 'google' as USER_TYPE;
+  const userData = await googleToken(token);
   const { sub, name, email, profileImg } = userData;
-  const checkUser = await findUserByEmail(email);
-  if (checkUser) {
-    const accessToken = createAccessToken(email);
-    const refreshToken = createRefreshToken(email);
-    res
-      .cookie('Refresh Token : ', refreshToken, {
-        httpOnly: true,
-      })
-      .send({ accessToken });
-  } else {
-    const googlePWD = createPWD(email, name);
-    createUser({
-      id: sub,
-      userName: name,
-      email: email,
-      profileImg: profileImg,
-      password: googlePWD,
-      type: 'google' as USER_TYPE,
-      follow: [],
-      bookmark: [],
-    });
-    const accessToken = await createAccessToken(email);
-    const refreshToken = await createRefreshToken(email);
-    res
-      .cookie('Refresh Token : ', refreshToken, {
-        httpOnly: true,
-      })
-      .send({ accessToken });
+  try {
+    const checkUser = await findUserByEmail(email);
+    if (checkUser) {
+      const accessToken = createAccessToken({ email, type });
+      const refreshToken = createRefreshToken({ email, type });
+      res
+        .cookie('Refresh Token : ', refreshToken, {
+          httpOnly: true,
+        })
+        .send({ accessToken });
+    } else {
+      const googlePWD = createPWD(email, name);
+      createUser({
+        id: sub + type,
+        userName: name,
+        email: email,
+        profileImg: profileImg,
+        password: googlePWD,
+        type: 'google' as USER_TYPE,
+        follow: [],
+        bookmark: [],
+      });
+      const accessToken = await createAccessToken({ email, type });
+      const refreshToken = await createRefreshToken({ email, type });
+      res
+        .cookie('Refresh Token : ', refreshToken, {
+          httpOnly: true,
+        })
+        .send({ accessToken });
+    }
+  } catch (err) {
+    console.error('google login error');
+    console.log(err.message);
   }
 };
 
@@ -179,64 +177,81 @@ export const kakaoLogin = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const userData = await kakaoToken(req, res);
+  const token = req.body;
+  const type = 'kakao' as USER_TYPE;
+  const userData = await kakaoToken(token);
   const { id, userName, email, profileImg } = userData;
-  const checkUser = await findUserByEmail(email);
-  if (checkUser) {
-    const accessToken = createAccessToken(email);
-    const refreshToken = createRefreshToken(email);
-    res
-      .cookie('Refresh Token : ', refreshToken, {
-        httpOnly: true,
-      })
-      .send({ accessToken });
-  } else {
-    const googlePWD = createPWD(email, userName);
-    createUser({
-      id: id,
-      userName: userName,
-      email: email,
-      profileImg: profileImg,
-      password: googlePWD,
-      type: 'kakao' as USER_TYPE,
-      follow: [],
-      bookmark: [],
-    });
-    const accessToken = await createAccessToken(email);
-    const refreshToken = await createRefreshToken(email);
-    res
-      .cookie('Refresh Token : ', refreshToken, {
-        httpOnly: true,
-      })
-      .send({ accessToken });
+  try {
+    const checkUser = await findUserByEmail(email);
+    if (checkUser) {
+      const accessToken = createAccessToken({ email, type });
+      const refreshToken = createRefreshToken({ email, type });
+      res
+        .cookie('Refresh Token : ', refreshToken, {
+          httpOnly: true,
+        })
+        .send({ accessToken });
+    } else {
+      const googlePWD = createPWD(email, userName);
+      createUser({
+        id: id + type,
+        userName: userName,
+        email: email,
+        profileImg: profileImg,
+        password: googlePWD,
+        type: 'kakao' as USER_TYPE,
+        follow: [],
+        bookmark: [],
+      });
+      const accessToken = await createAccessToken({ email, type });
+      const refreshToken = await createRefreshToken({ email, type });
+      res
+        .cookie('Refresh Token : ', refreshToken, {
+          httpOnly: true,
+        })
+        .send({ accessToken });
+    }
+  } catch (err) {
+    console.error('kakao login error');
+    console.log(err.message);
   }
 };
 //TODO : 간단한 클라이언트 코드 작성 후 확인
 //TODO : API문서에 의거하여 res 수정
 
 export const twitterLogin = async (req: Request, res: Response) => {
-  const userData = await twitterToken(req, res);
+  const token = req.body;
+  const type = 'twitter' as USER_TYPE;
+  const userData = await twitterToken(token);
   const { id, name, userName, profile_image_url } = userData;
-  const checkUser = await findUserByUserName(userName);
-  if (checkUser) {
-    const accessToken = createAccessToken(userName);
-    const refreshToken = createRefreshToken(userName);
-    res
-      .cookie('Refresh Token : ', refreshToken, {
-        httpOnly: true,
-      })
-      .send({ accessToken });
-  } else {
-    const twitterPWD = createPWD(name, userName);
-    createUser({
-      id: id,
-      userName: userName,
-      email: `${userName}@twitter.com`,
-      profileImg: profile_image_url,
-      password: twitterPWD,
-      type: 'twitter' as USER_TYPE,
-      follow: [],
-      bookmark: [],
-    });
+  const email = userName + '@twitter.com';
+  try {
+    const checkUser = await findUserByEmail(email);
+    if (checkUser) {
+      const accessToken = createAccessToken({ email, type });
+      const refreshToken = createRefreshToken({ email, type });
+      res
+        .cookie('Refresh Token : ', refreshToken, {
+          httpOnly: true,
+        })
+        .send({ accessToken });
+    } else {
+      const twitterPWD = createPWD(name, email);
+      createUser({
+        id: id,
+        userName: userName,
+        email: email,
+        profileImg: profile_image_url,
+        password: twitterPWD,
+        type: 'twitter' as USER_TYPE,
+        follow: [],
+        bookmark: [],
+      });
+    }
+  } catch (err) {
+    console.error('twitter login error');
+    console.log(err.message);
   }
 };
+
+//TODO : 회원탈퇴 , 비밀번호 변경, 로그아웃

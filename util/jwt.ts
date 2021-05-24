@@ -2,9 +2,9 @@ import { ENV } from '@config';
 import jwt, { Secret, verify } from 'jsonwebtoken';
 import { Payload, TOKEN_TYPE } from '@interface';
 
-export const createAccessToken = (payload: Payload | string) => {
+export const createAccessToken = (payload: Payload) => {
   const token = jwt.sign(
-    { email: payload.toString() },
+    { email: payload.email, type: payload.type },
     ENV.ACCESS_KEY as Secret,
     {
       algorithm: 'HS256',
@@ -14,9 +14,9 @@ export const createAccessToken = (payload: Payload | string) => {
   return token;
 };
 
-export const createRefreshToken = (payload: Payload | string) => {
+export const createRefreshToken = (payload: Payload) => {
   const token = jwt.sign(
-    { email: payload.toString() },
+    { email: payload.email, type: payload.type },
     ENV.REFRESH_KEY as Secret,
     {
       algorithm: 'HS256',
