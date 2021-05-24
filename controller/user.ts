@@ -172,5 +172,10 @@ export const bookmarkContent = async (
         });
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('bookmarkContent error');
+    res.status(404).send({
+      message: 'invlaid request',
+    });
+  }
 };

@@ -19,8 +19,8 @@ const contentScheme = new mongoose.Schema<Icontent>(
       end: { type: String, required: true },
     },
     time: {
-      start: { type: String, required: true },
-      end: { type: String, required: true },
+      open: { type: String, required: true },
+      close: { type: String, required: true },
     },
     address: {
       storeName: { type: String, required: true },
