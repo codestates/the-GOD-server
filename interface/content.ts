@@ -44,7 +44,7 @@ export interface IcontentUpdate {
   };
   mobile?: string;
   description?: string;
-  tegs?: string[];
+  tags?: string[];
   perks?: any;
 }
 
