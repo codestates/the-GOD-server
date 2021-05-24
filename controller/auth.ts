@@ -23,13 +23,17 @@ import {
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
+
   const type = 'mail' as USER_TYPE;
+
   try {
     let checkUser = await findValidUser(email, encodedPWD);
 
     if (checkUser) {
+
       const accessToken = createAccessToken({ email, type });
       const refreshToken = createRefreshToken({ email, type });
+
       console.log('refreshToken', refreshToken);
       res.cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
@@ -48,7 +52,9 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const signup = async (req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
   try {
+
     const hashedPWD = await createPWD(email, password);
+
     const validName = await findUserByUserName(userName);
     if (validName) {
       res.status;
@@ -61,7 +67,9 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       userName: userName,
       email: email,
       profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
+
       password: hashedPWD,
+
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],
@@ -77,16 +85,20 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+
 /* export const accessTokenRequest = async (req: Request) => {
+
   try {
     const token = req.get('auth') ?? '';
     const userData = jwt.verify(token, ENV.ACCESS_KEY as Secret) as Itoken; // 토큰의 주인 이메일이 userData
     const checkToken = await findUserByEmail(userData.email);
     if (!checkToken) {
+
        res.json({
         data: null,
         message: 'invalid accessToken',
       }); 
+
       console.error('invalid token');
     }
     return userData;
@@ -220,6 +232,7 @@ export const kakaoLogin = async (
 //TODO : API문서에 의거하여 res 수정
 
 export const twitterLogin = async (req: Request, res: Response) => {
+
   const token = req.body;
   const type = 'twitter' as USER_TYPE;
   const userData = await twitterToken(token);
@@ -255,3 +268,4 @@ export const twitterLogin = async (req: Request, res: Response) => {
 };
 
 //TODO : 회원탈퇴 , 비밀번호 변경, 로그아웃
+
