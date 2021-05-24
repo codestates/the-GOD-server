@@ -7,7 +7,7 @@ const artistSchema = new mongoose.Schema<Iartist>(
     id: { type: String, required: true, unique: true },
     name: { type: String, required: true },
     group: { type: String },
-    profileImg: { type: String },
+    profileImage: { type: String },
   },
   {
     timestamps: true,

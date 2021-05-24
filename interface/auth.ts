@@ -11,7 +11,7 @@ export interface IgoogleLoginResult {
   sub: string;
   name: string;
   email: string;
-  profileImg: string;
+  profileImage: string;
 }
 
 export interface IkakaoLoginProps {

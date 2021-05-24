@@ -3,7 +3,7 @@
     "id": "123",
     "userName": "sim",
     "email": "sim@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "mail",
     "follow": [
@@ -17,7 +17,7 @@
     "id": "124",
     "userName": "choi",
     "email": "choi@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "google",
     "follow": [
@@ -30,7 +30,7 @@
     "id": "125",
     "userName": "Lee",
     "email": "Lee@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "kakao",
     "follow": [
@@ -44,7 +44,7 @@
     "id": "126",
     "userName": "Yoo",
     "email": "Yoo@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "twiiter",
     "follow": [

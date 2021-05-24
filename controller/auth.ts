@@ -14,7 +14,7 @@ import {
   findUserById,
   findUserByUserName,
   updateUserName,
-  updateUserProfileImg,
+  updateUserProfileImage,
   deleteUser,
   findUserByEmail,
   findValidUser,
@@ -71,7 +71,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       id: uniqueID,
       userName: userName,
       email: email,
-      profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
+      profileImage: req.body.profileImage || 'https://bit.ly/3euIgJj',
       password: password + hashedPWD,
       type: USER_TYPE.Email,
       follow: [],
@@ -143,7 +143,7 @@ export const googleLogin = async (
   res: Response
 ): Promise<void> => {
   const userData = await googleToken(req, res);
-  const { sub, name, email, profileImg } = userData;
+  const { sub, name, email, profileImage } = userData;
   const checkUser = await findUserByEmail(email);
   if (checkUser) {
     const accessToken = createAccessToken(email);
@@ -159,7 +159,7 @@ export const googleLogin = async (
       id: sub,
       userName: name,
       email: email,
-      profileImg: profileImg,
+      profileImage: profileImage,
       password: googlePWD,
       type: 'google' as USER_TYPE,
       follow: [],
@@ -180,7 +180,7 @@ export const kakaoLogin = async (
   res: Response
 ): Promise<void> => {
   const userData = await kakaoToken(req, res);
-  const { id, userName, email, profileImg } = userData;
+  const { id, userName, email, profileImage } = userData;
   const checkUser = await findUserByEmail(email);
   if (checkUser) {
     const accessToken = createAccessToken(email);
@@ -196,7 +196,7 @@ export const kakaoLogin = async (
       id: id,
       userName: userName,
       email: email,
-      profileImg: profileImg,
+      profileImage: profileImage,
       password: googlePWD,
       type: 'kakao' as USER_TYPE,
       follow: [],
@@ -216,7 +216,7 @@ export const kakaoLogin = async (
 
 export const twitterLogin = async (req: Request, res: Response) => {
   const userData = await twitterToken(req, res);
-  const { id, name, userName, profile_image_url } = userData;
+  const { id, name, userName, profileImage } = userData;
   const checkUser = await findUserByUserName(userName);
   if (checkUser) {
     const accessToken = createAccessToken(userName);
@@ -232,7 +232,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
       id: id,
       userName: userName,
       email: `${userName}@twitter.com`,
-      profileImg: profile_image_url,
+      profileImage: profileImage,
       password: twitterPWD,
       type: 'twitter' as USER_TYPE,
       follow: [],

@@ -5,7 +5,7 @@ import {
   updateDeleteUserFollow,
   updateAddUserBookmark,
   updateDeleteUserBookmark,
-  updateUserProfileImg,
+  updateUserProfileImage,
 } from '@database/users';
 import { findArtistById } from '@database/artists';
 import { findContentById } from '@database/contents';
@@ -23,7 +23,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
         })
         .end();
     } else {
-      const { id, userName, email, profileImg, type } = user;
+      const { id, userName, email, profileImage, type } = user;
       res
         .status(200)
         .send({
@@ -31,7 +31,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
             id,
             userName,
             email,
-            profileImg,
+            profileImage,
             type,
           },
           message: 'ok',
@@ -200,9 +200,9 @@ export const updateUserProfile = async (
         })
         .end();
     } else {
-      const imageUrl = await uploadImage(profileImage);
+      const profileImageUrl = await uploadImage(profileImage);
 
-      if (!imageUrl) {
+      if (!profileImageUrl) {
         console.log('S3 Image update error');
         res
           .status(400)
@@ -211,18 +211,18 @@ export const updateUserProfile = async (
           })
           .end();
       } else {
-        const updateResult = await updateUserProfileImg(
+        const updateResult = await updateUserProfileImage(
           user.id,
-          imageUrl as string
+          profileImageUrl as string
         );
 
         if (updateResult) {
-          await deleteImage(user.profileImg);
+          await deleteImage(user.profileImage);
           res
             .status(201)
             .send({
               result: {
-                profileImg: imageUrl,
+                profileImage: profileImageUrl,
               },
               message: 'ok',
             })
