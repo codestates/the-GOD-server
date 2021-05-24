@@ -18,7 +18,9 @@ export interface IkakaoLoginProps {
   token: string;
 }
 
-export interface IkakaoLoginResult {}
+/* export interface IkakaoLoginResult {
+
+} */
 
 export interface Payload {
   email: string;
@@ -49,4 +51,8 @@ export interface IgoogleAuth {
 
 export interface Ipassword {
   password: string;
+}
+
+export interface ItwitterLoginProps {
+  token: string;
 }
