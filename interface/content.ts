@@ -20,7 +20,7 @@ export interface Icontent {
   };
   mobile: string;
   description: string;
-  tegs: string[];
+  tags: string[];
   perks: any;
 }
 

@@ -30,7 +30,7 @@ const contentScheme = new mongoose.Schema<Icontent>(
     },
     mobile: { type: String },
     description: { type: String },
-    tegs: [String],
+    tags: [String],
     perks: { type: Object },
   },
   {

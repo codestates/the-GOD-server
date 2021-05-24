@@ -53,6 +53,17 @@ export const findUserByEmail = async (email: string): Promise<Iuser | null> => {
   }
 };
 
+export const findUserByUserName = async (
+  userName: string
+): Promise<Iuser | null> => {
+  try {
+    return await UserModel.findOne({ userName });
+  } catch (err) {
+    console.error('findUserByEmail error : ', err.message);
+    return null;
+  }
+};
+
 export const findValidUser = async (
   email: string,
   password: string
