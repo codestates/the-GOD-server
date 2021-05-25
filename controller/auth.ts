@@ -30,7 +30,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
     let checkUser = await findValidUser(email, encodedPWD);
 
     if (checkUser) {
-
       const accessToken = createAccessToken({ email, type });
       const refreshToken = createRefreshToken({ email, type });
 
@@ -57,7 +56,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const signup = async (req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
   try {
-
     const hashedPWD = await createPWD(email, password);
 
     const validName = await findUserByUserName(userName);
@@ -71,7 +69,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       id: uniqueID,
       userName: userName,
       email: email,
-      profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
+      profileImage: req.body.profileImage || 'https://bit.ly/3euIgJj',
       password: hashedPWD,
       type: USER_TYPE.Email,
       follow: [],
@@ -87,7 +85,6 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     console.error('User save error by server');
   }
 };
-
 
 /* export const accessTokenRequest = async (req: Request) => {
 
@@ -151,7 +148,7 @@ export const googleLogin = async (
   const token = req.body;
   const type = 'google' as USER_TYPE;
   const userData = await googleToken(token);
-  const { sub, name, email, profileImg } = userData;
+  const { sub, name, email, profileImage } = userData;
   try {
     const checkUser = await findUserByEmail(email);
     if (checkUser) {
@@ -168,7 +165,7 @@ export const googleLogin = async (
         id: sub + type,
         userName: name,
         email: email,
-        profileImg: profileImg,
+        profileImage: profileImage,
         password: googlePWD,
         type: 'google' as USER_TYPE,
         follow: [],
@@ -195,7 +192,7 @@ export const kakaoLogin = async (
   const token = req.body;
   const type = 'kakao' as USER_TYPE;
   const userData = await kakaoToken(token);
-  const { id, userName, email, profileImg } = userData;
+  const { id, userName, email, profileImage } = userData;
   try {
     const checkUser = await findUserByEmail(email);
     if (checkUser) {
@@ -212,7 +209,7 @@ export const kakaoLogin = async (
         id: id + type,
         userName: userName,
         email: email,
-        profileImg: profileImg,
+        profileImage: profileImage,
         password: googlePWD,
         type: 'kakao' as USER_TYPE,
         follow: [],
@@ -238,7 +235,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
   const token = req.body;
   const type = 'twitter' as USER_TYPE;
   const userData = await twitterToken(token);
-  const { id, name, userName, profile_image_url } = userData;
+  const { id, name, userName, profileImage } = userData;
   const email = userName + '@twitter.com';
   try {
     const checkUser = await findUserByEmail(email);
@@ -256,7 +253,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
         id: id,
         userName: userName,
         email: email,
-        profileImg: profile_image_url,
+        profileImage: profileImage,
         password: twitterPWD,
         type: USER_TYPE.Twitter,
         follow: [],
@@ -270,4 +267,3 @@ export const twitterLogin = async (req: Request, res: Response) => {
 };
 
 //TODO : 회원탈퇴 , 비밀번호 변경, 로그아웃
-
