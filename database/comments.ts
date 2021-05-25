@@ -137,6 +137,7 @@ export const createManyComment = async (comments: Icomment[]) => {
     console.log('result : ', result);
     return result;
   } catch (err) {
+    console.log('createManyComment error : ', err.message);
     return null;
   }
 };

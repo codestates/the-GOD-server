@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema<Iuser>(
     type: { type: String, required: true },
     follow: [String],
     bookmark: [String],
-    passwordUpdate: { type: String, required: true },
+    passwordUpdate: { type: String },
   },
   {
     timestamps: true,
@@ -254,6 +254,7 @@ export const createManyUser = async (users: Iuser[]) => {
     console.log('result : ', result);
     return result;
   } catch (err) {
+    console.log('createManyUser error : ', err.message);
     return null;
   }
 };

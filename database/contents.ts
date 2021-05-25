@@ -175,6 +175,7 @@ export const createManyContent = async (contents: Icontent[]) => {
     console.log('result : ', result);
     return result;
   } catch (err) {
+    console.log('createManyContent error : ', err.message);
     return null;
   }
 };
