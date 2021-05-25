@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { Itoken } from '@interface';
+import { Iartist, Itoken } from '@interface';
 import { v5 as uuidv5 } from 'uuid';
 import { findArtists } from '@database/artists';
 import {
@@ -23,7 +23,7 @@ export const createContents = async (
       res.status(401).send({ message: 'unauthorized' }).end();
     } else {
       const {
-        artist,
+        artistId,
         title,
         tags,
         description,
@@ -36,41 +36,41 @@ export const createContents = async (
         mobile,
         perks,
       } = req.body;
-      const tokenUser = await findUserByEmail(parsedToken as string); //헤더 토큰의 주인(유저)
+
       const MY_NAMESPACE = '1df13-aiuweo-31rbu-1ouowef';
-      const artistId = await findArtists(artist); //검색한 아티스트의 아디디입니다.
+      //검색한 아티스트의 아디디입니다.
       const contentsId = uuidv5(parsedToken as string, MY_NAMESPACE);
-      if (tokenUser) {
-        const newContent = await createContent({
-          id: contentsId,
-          userId: parsedToken as string,
-          title: title,
-          artistId: artist,
-          images: images,
-          date: {
-            start: date.start,
-            end: date.end,
+      const newContent = await createContent({
+        id: contentsId,
+        userId: parsedToken as string,
+        title: title,
+        artistId: artistId,
+        images: images,
+        date: {
+          start: date.start,
+          end: date.end,
+        },
+        time: {
+          open: time.open,
+          close: time.close,
+        },
+        address: {
+          storeName: storeName,
+          roadAddress: roadAddress,
+          location: {
+            lat: location.lat,
+            lng: location.lng,
           },
-          time: {
-            open: time.open,
-            close: time.close,
-          },
-          address: {
-            storeName: storeName,
-            roadAddress: roadAddress,
-            location: {
-              lat: location.lat,
-              lng: location.lng,
-            },
-          },
-          mobile: mobile,
-          description: description,
-          tags: tags, //TODO: teg 변수명 일치 필요
-          perks: perks,
-        });
+        },
+        mobile: mobile,
+        description: description,
+        tags: tags,
+        perks: perks,
+      });
+      if (newContent) {
         res.status(201).send(newContent);
       } else {
-        res.status(400).send('invalid input');
+        res.status(400).send({ message: 'invalid input' });
       }
     }
   } catch (err) {
@@ -104,6 +104,72 @@ export const deleteContents = async (
     }
   } catch (err) {
     console.error('delete contents error');
+    console.log(err.message);
+  }
+};
+
+export const updateContents = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const {
+      artistId,
+      title,
+      tags,
+      description,
+      images,
+      date,
+      time,
+      storeName,
+      roadAddress,
+      location,
+      mobile,
+      perks,
+    } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+    if (!user) {
+      res
+        .status(401)
+        .send({
+          message: 'unauthorized',
+        })
+        .end();
+    } else {
+      const updateResult = await updateContent(req.body.contentId, {
+        title: title,
+        artistId: artistId,
+        images: images,
+        date: {
+          start: date.start,
+          end: date.end,
+        },
+        time: {
+          open: time.open,
+          close: time.close,
+        },
+        address: {
+          storeName: storeName,
+          roadAddress: roadAddress,
+          location: {
+            lat: location.lat,
+            lng: location.lng,
+          },
+        },
+        mobile: mobile,
+        description: description,
+        tags: tags,
+        perks: perks,
+      });
+      if (!updateResult) {
+        res.status(400).send('invalid input');
+      } else {
+        res.status(201).send(updateResult);
+      }
+    }
+  } catch (err) {
+    console.error('update content error');
     console.log(err.message);
   }
 };

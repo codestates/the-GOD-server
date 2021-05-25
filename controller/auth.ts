@@ -24,9 +24,9 @@ import {
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
-
   const type = USER_TYPE.Email;
 
+  
   try {
     let checkUser = await findValidUser(email, encodedPWD);
 
