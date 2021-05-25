@@ -20,9 +20,23 @@ export interface IkakaoLoginProps {
   token: string;
 }
 
-/* export interface IkakaoLoginResult {
+export interface IkakaoLoginResult {
+  id: string;
+  userName: string;
+  email: string;
+  profileImg: string;
+}
 
-} */
+export interface ItwitterLoginProps {
+  token: string;
+}
+
+export interface ItwitterLoginResult {
+  id: string;
+  name: string;
+  userName: string;
+  profile_image_url: string;
+}
 
 export interface Payload {
   email: string;
@@ -35,27 +49,6 @@ export interface Itoken {
   exp: number;
 }
 
-export interface IgoogleAuth {
-  iss: string;
-  sub: string;
-  azp: string;
-  aud: string;
-  iat: string;
-  exp: string;
-
-  email?: string;
-  email_verified?: string;
-  name?: string;
-  picture?: string;
-  given_name?: string;
-  family_name?: string;
-  locale?: string;
-}
-
 export interface Ipassword {
   password: string;
-}
-
-export interface ItwitterLoginProps {
-  token: string;
 }

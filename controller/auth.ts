@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import { Request, response, Response } from 'express';
 import { v5 as uuidv5 } from 'uuid';
 import { Payload, Itoken } from '../interface/auth';
 import { Iuser, USER_TYPE } from '@interface';
@@ -8,7 +8,11 @@ import { createAccessToken, createRefreshToken } from '../util/jwt';
 import { ENV } from '@config';
 import { createPWD } from '../util/pwFunctions';
 import { googleToken, kakaoToken, twitterToken } from '../apis';
-
+import {
+  IgoogleLoginResult,
+  IkakaoLoginResult,
+  ItwitterLoginResult,
+} from '@interface';
 import {
   createUser,
   findUserById,
@@ -26,16 +30,18 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const type = USER_TYPE.Email;
   try {
     let checkUser = await findValidUser(email, encodedPWD);
+    //console.log(checkUser);
 
     if (checkUser) {
       const accessToken = createAccessToken({ email, type });
+      //console.log('access Token : ', accessToken);
       const refreshToken = createRefreshToken({ email, type });
 
-      console.log('refreshToken', refreshToken);
+      //console.log('refreshToken', refreshToken);
       res.cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
       });
-      console.log(accessToken);
+      //console.log(accessToken);
       res.status(201).send({
         result: {
           accessToken: accessToken,
@@ -43,11 +49,13 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         message: 'ok',
       });
     } else {
-      res.status(404).send('invalid input');
+      res.status(400).send({ message: 'invalid request' });
     }
   } catch (err) {
     console.error('User login error');
-    console.log(err.message);
+    res.status(404).send({
+      message: 'invalid request',
+    });
   }
 };
 
@@ -57,12 +65,11 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     const hashedPWD = await createPWD(email, password);
 
     const validName = await findUserByUserName(userName);
-    if (validName) {
-      res.status;
+    if (!validName) {
+      res.status(401).send({ message: '' });
     }
 
-    const MY_NAMESPACE = '1b671a64-40d5-491e-99b0-da01ff1f3341';
-    const uniqueID = uuidv5(email, MY_NAMESPACE);
+    const uniqueID = uuidv5(email, ENV.MY_NAMESPACE as string);
     const createId = await createUser({
       id: uniqueID,
       userName: userName,
@@ -77,77 +84,25 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (createId) {
-      res.status(201).send('ok');
+      res.status(201).send({ message: 'ok' });
     } else {
       res.status(400).send('invalid input');
     }
   } catch (err) {
     console.error('User save error by server');
-  }
-};
-
-/* export const accessTokenRequest = async (req: Request) => {
-
-  try {
-    const token = req.get('auth') ?? '';
-    const userData = jwt.verify(token, ENV.ACCESS_KEY as Secret) as Itoken; // 토큰의 주인 이메일이 userData
-    const checkToken = await findUserByEmail(userData.email);
-    if (!checkToken) {
-
-       res.json({
-        data: null,
-        message: 'invalid accessToken',
-      }); 
-
-      console.error('invalid token');
-    }
-    return userData;
-  } catch (err) {
-    console.error('invalid token');
-  }
-};
-
-export const refreshTokenRequest = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) {
-    res.json({
-      data: null,
-      message: 'Token null',
+    res.status(401).send({
+      message: 'fail signup',
     });
   }
-  const userData = jwt.verify(
-    refreshToken,
-    process.env.REFRESH_KEY as Secret
-  ) as Itoken; //userData는 발급 받은 refresh 토큰으로 확인한 유저의 데이터
-  const checkToken = await findUserByEmail(userData.email).then((data) => {
-    console.log(data);
-    if (!data) {
-      return res.json({
-        data: null,
-        message: 'refresh token tempered',
-      });
-    }
-    //res.status(200).send(userData);
-    const forNewToken = { email: data.email };
-    const newAccessToken = createAccessToken(forNewToken);
-    res.json({
-      data: newAccessToken,
-      userInfo: data,
-      message: 'resend Access Token',
-    });
-  });
-}; */
+};
 
 export const googleLogin = async (
   req: Request,
   res: Response
 ): Promise<void> => {
   const token = req.body;
-  const type = 'google' as USER_TYPE;
-  const userData = await googleToken(token);
+  const type = USER_TYPE.Google;
+  const userData = (await googleToken(token)) as IgoogleLoginResult;
   const { sub, name, email, profileImg } = userData;
   try {
     const checkUser = await findUserByEmail(email);
@@ -161,7 +116,7 @@ export const googleLogin = async (
         .send({ accessToken });
     } else {
       const googlePWD = createPWD(email, name);
-      createUser({
+      const googleSignup = await createUser({
         id: sub + type,
         userName: name,
         email: email,
@@ -171,17 +126,25 @@ export const googleLogin = async (
         follow: [],
         bookmark: [],
       });
-      const accessToken = await createAccessToken({ email, type });
-      const refreshToken = await createRefreshToken({ email, type });
-      res
-        .cookie('Refresh Token : ', refreshToken, {
-          httpOnly: true,
-        })
-        .send({ accessToken });
+      if (googleSignup) {
+        const accessToken = await createAccessToken({ email, type });
+        const refreshToken = await createRefreshToken({ email, type });
+        res
+          .cookie('Refresh Token : ', refreshToken, {
+            httpOnly: true,
+          })
+          .send({ result: accessToken, message: 'ok' });
+      } else {
+        res.status(400).send({
+          message: 'invalid request',
+        });
+      }
     }
   } catch (err) {
     console.error('google login error');
-    console.log(err.message);
+    res.status(401).send({
+      message: 'unauthorized',
+    });
   }
 };
 
@@ -190,9 +153,9 @@ export const kakaoLogin = async (
   res: Response
 ): Promise<void> => {
   const token = req.body;
-  const type = 'kakao' as USER_TYPE;
+  const type = USER_TYPE.Kakao;
   const userData = await kakaoToken(token);
-  const { id, userName, email, profileImg } = userData;
+  const { id, userName, email, profileImg } = userData as IkakaoLoginResult;
   try {
     const checkUser = await findUserByEmail(email);
     if (checkUser) {
@@ -205,7 +168,7 @@ export const kakaoLogin = async (
         .send({ accessToken });
     } else {
       const googlePWD = createPWD(email, userName);
-      createUser({
+      const kakaoSignup = await createUser({
         id: id + type,
         userName: userName,
         email: email,
@@ -215,17 +178,25 @@ export const kakaoLogin = async (
         follow: [],
         bookmark: [],
       });
-      const accessToken = await createAccessToken({ email, type });
-      const refreshToken = await createRefreshToken({ email, type });
-      res
-        .cookie('Refresh Token : ', refreshToken, {
-          httpOnly: true,
-        })
-        .send({ accessToken });
+      if (kakaoSignup) {
+        const accessToken = await createAccessToken({ email, type });
+        const refreshToken = await createRefreshToken({ email, type });
+        res
+          .cookie('Refresh Token : ', refreshToken, {
+            httpOnly: true,
+          })
+          .send({ result: accessToken, message: 'ok' });
+      } else {
+        res.status(400).send({
+          message: 'invalid input',
+        });
+      }
     }
   } catch (err) {
     console.error('kakao login error');
-    console.log(err.message);
+    res.status(401).send({
+      message: 'invalid data',
+    });
   }
 };
 //TODO : 간단한 클라이언트 코드 작성 후 확인
@@ -235,7 +206,8 @@ export const twitterLogin = async (req: Request, res: Response) => {
   const token = req.body;
   const type = 'twitter' as USER_TYPE;
   const userData = await twitterToken(token);
-  const { id, name, userName, profile_image_url } = userData;
+  const { id, name, userName, profile_image_url } =
+    userData as ItwitterLoginResult;
   const email = userName + '@twitter.com';
   try {
     const checkUser = await findUserByEmail(email);
@@ -249,7 +221,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
         .send({ accessToken });
     } else {
       const twitterPWD = createPWD(name, email);
-      createUser({
+      const twitterSignup = await createUser({
         id: id,
         userName: userName,
         email: email,
@@ -259,10 +231,25 @@ export const twitterLogin = async (req: Request, res: Response) => {
         follow: [],
         bookmark: [],
       });
+      if (twitterSignup) {
+        const accessToken = await createAccessToken({ email, type });
+        const refreshToken = await createRefreshToken({ email, type });
+        res
+          .cookie('Refresh Token : ', refreshToken, {
+            httpOnly: true,
+          })
+          .send({ result: accessToken, message: 'ok' });
+      } else {
+        res.status(400).send({
+          message: 'invalid request',
+        });
+      }
     }
   } catch (err) {
     console.error('twitter login error');
-    console.log(err.message);
+    res.status(401).send({
+      message: 'invalid data',
+    });
   }
 };
 

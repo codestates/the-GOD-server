@@ -64,3 +64,8 @@ export interface IcontentFindResult {
   currentPage: number;
   dataPerPage: number;
 }
+
+export interface Iauthor {
+  userName: string;
+  profileImg: string;
+}
