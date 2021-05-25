@@ -23,14 +23,13 @@ import {
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
-
   const type = USER_TYPE.Email;
 
+  
   try {
     let checkUser = await findValidUser(email, encodedPWD);
 
     if (checkUser) {
-
       const accessToken = createAccessToken({ email, type });
       const refreshToken = createRefreshToken({ email, type });
 
@@ -57,7 +56,6 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const signup = async (req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
   try {
-
     const hashedPWD = await createPWD(email, password);
 
     const validName = await findUserByUserName(userName);
@@ -87,7 +85,6 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     console.error('User save error by server');
   }
 };
-
 
 /* export const accessTokenRequest = async (req: Request) => {
 
@@ -270,4 +267,3 @@ export const twitterLogin = async (req: Request, res: Response) => {
 };
 
 //TODO : 회원탈퇴 , 비밀번호 변경, 로그아웃
-
