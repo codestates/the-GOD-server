@@ -1,3 +1,5 @@
+import { USER_TYPE } from './user';
+
 export enum TOKEN_TYPE {
   ACCESS = 'access',
   REFRESH = 'refresh',
@@ -24,6 +26,7 @@ export interface IkakaoLoginProps {
 
 export interface Payload {
   email: string;
+  type: USER_TYPE;
 }
 
 export interface Itoken {
