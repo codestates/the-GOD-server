@@ -6,6 +6,7 @@ import {
   updateAddUserBookmark,
   updateDeleteUserBookmark,
   updateUserProfileImage,
+  updateUserName,
 } from '@database/users';
 import { findArtistById } from '@database/artists';
 import { findContentById } from '@database/contents';
@@ -194,7 +195,7 @@ export const updateUserProfile = async (
     if (!user || !profileImage) {
       console.log('updateUserProfile invalid input');
       res
-        .status(404)
+        .status(400)
         .send({
           message: 'invlaid request',
         })
@@ -239,6 +240,42 @@ export const updateUserProfile = async (
     }
   } catch (err) {
     console.error('updateUserProfile error');
+    res.status(404).send({
+      message: 'invlaid request',
+    });
+  }
+};
+
+export const updateName = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { userName } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!user || !userName) {
+      res
+        .status(400)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const result = await updateUserName(user.id, userName);
+      if (result) {
+        res.status(201).send({
+          message: 'ok',
+        });
+      } else {
+        res.status(404).send({
+          message: 'invlaid request',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('updateUserName error');
     res.status(404).send({
       message: 'invlaid request',
     });
