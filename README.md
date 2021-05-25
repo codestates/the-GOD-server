@@ -12,7 +12,7 @@
 
 ## VS Code
 
-1. github로부터 코드를 클론 한 뒤, yarn install로 필요한 모듈 설치
+1. github로부터 코드를 클론 한 뒤, `yarn install`로 필요한 모듈 설치
 2. .env파일 -> DATABASE_URL에 복사한 string 저장하기
-3. yarn mock 실행하여 목데이터 저장
-4. yarn start 실행하여 기능 확인
+3. `yarn mock` 실행하여 목데이터 저장
+4. `yarn start` 실행하여 기능 확인
