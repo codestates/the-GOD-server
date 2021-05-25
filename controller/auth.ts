@@ -15,6 +15,7 @@ import {
   findUserByUserName,
   updateUserName,
   updateUserProfileImage,
+  updateUserPassword,
   deleteUser,
   findUserByEmail,
   findValidUser,
@@ -74,6 +75,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],
+      passwordUpdate: null,
     });
 
     if (createId) {
@@ -170,6 +172,7 @@ export const googleLogin = async (
         type: 'google' as USER_TYPE,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
       const accessToken = await createAccessToken({ email, type });
       const refreshToken = await createRefreshToken({ email, type });
@@ -214,6 +217,7 @@ export const kakaoLogin = async (
         type: 'kakao' as USER_TYPE,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
       const accessToken = await createAccessToken({ email, type });
       const refreshToken = await createRefreshToken({ email, type });
@@ -258,6 +262,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
         type: USER_TYPE.Twitter,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
     }
   } catch (err) {
@@ -266,4 +271,77 @@ export const twitterLogin = async (req: Request, res: Response) => {
   }
 };
 
-//TODO : 회원탈퇴 , 비밀번호 변경, 로그아웃
+//TODO : 회원탈퇴 , 비밀번호 변경
+
+export const checkPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { password } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!password || !user) {
+      res
+        .status(401)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const hashedPWD = createPWD(user.email, password);
+      if (user.password === hashedPWD) {
+        res.status(201).send({
+          message: 'ok',
+        });
+      } else {
+        res.status(401).send({
+          message: 'unauthorized',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('checkPassword error');
+    res.status(400).send({
+      message: 'invlaid request',
+    });
+  }
+};
+
+export const setPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { password } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!password || !user) {
+      res
+        .status(400)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const hashedPWD = createPWD(user.email, password);
+      const result = await updateUserPassword(user.id, hashedPWD);
+      if (result) {
+        res.status(201).send({
+          message: 'ok',
+        });
+      } else {
+        res.status(400).send({
+          message: 'invlaid request',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('setPassword error');
+    res.status(400).send({
+      message: 'invlaid request',
+    });
+  }
+};

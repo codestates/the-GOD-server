@@ -93,6 +93,7 @@ export const createManyArtist = async (artists: Iartist[]) => {
     console.log('result : ', result);
     return result;
   } catch (err) {
+    console.log('createManyArtist error : ', err.message);
     return null;
   }
 };

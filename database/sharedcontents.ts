@@ -102,6 +102,7 @@ export const createManySharedContent = async (
     console.log('result : ', result);
     return result;
   } catch (err) {
+    console.log('createManySharedContent error : ', err.message);
     return null;
   }
 };

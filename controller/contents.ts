@@ -57,12 +57,14 @@ export const createContents = async (
         address: {
           storeName: storeName,
           roadAddress: roadAddress,
-          lat: location.lat,
-          lng: location.lng,
+          location: {
+            lat: location.lat,
+            lng: location.lng,
+          },
         },
         mobile: mobile,
         description: description,
-        tags: tags, //TODO: teg 변수명 일치 필요
+        tags: tags,
         perks: perks,
       });
       if (newContent) {
@@ -150,8 +152,10 @@ export const updateContents = async (
         address: {
           storeName: storeName,
           roadAddress: roadAddress,
-          lat: location.lat,
-          lng: location.lng,
+          location: {
+            lat: location.lat,
+            lng: location.lng,
+          },
         },
         mobile: mobile,
         description: description,

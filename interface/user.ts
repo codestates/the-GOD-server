@@ -14,4 +14,5 @@ export interface Iuser {
   type: USER_TYPE;
   follow: string[];
   bookmark: string[];
+  passwordUpdate: string | null;
 }
