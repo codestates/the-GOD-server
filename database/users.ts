@@ -14,6 +14,7 @@ const userSchema = new mongoose.Schema<Iuser>(
     type: { type: String, required: true },
     follow: [String],
     bookmark: [String],
+    passwordUpdate: { type: String, required: true },
   },
   {
     timestamps: true,

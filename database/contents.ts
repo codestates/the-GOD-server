@@ -25,8 +25,10 @@ const contentScheme = new mongoose.Schema<Icontent>(
     address: {
       storeName: { type: String, required: true },
       roadAddress: { type: String, required: true },
-      lat: { type: Number, required: true },
-      lng: { type: Number, required: true },
+      location: {
+        lat: { type: Number, required: true },
+        lng: { type: Number, required: true },
+      },
     },
     mobile: { type: String },
     description: { type: String },

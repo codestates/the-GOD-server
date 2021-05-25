@@ -58,8 +58,10 @@ export const createContents = async (
           address: {
             storeName: storeName,
             roadAddress: roadAddress,
-            lat: location.lat,
-            lng: location.lng,
+            location: {
+              lat: location.lat,
+              lng: location.lng,
+            },
           },
           mobile: mobile,
           description: description,

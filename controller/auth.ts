@@ -74,6 +74,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],
+      passwordUpdate: null,
     });
 
     if (createId) {
@@ -170,6 +171,7 @@ export const googleLogin = async (
         type: 'google' as USER_TYPE,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
       const accessToken = await createAccessToken({ email, type });
       const refreshToken = await createRefreshToken({ email, type });
@@ -214,6 +216,7 @@ export const kakaoLogin = async (
         type: 'kakao' as USER_TYPE,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
       const accessToken = await createAccessToken({ email, type });
       const refreshToken = await createRefreshToken({ email, type });
@@ -258,6 +261,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
         type: USER_TYPE.Twitter,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
     }
   } catch (err) {

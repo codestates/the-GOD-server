@@ -20,8 +20,10 @@
     "address": {
       "storeName": "태연사랑카페",
       "roadAddress": "서울시 용산구 용산2가동 남산공원길 105",
-      "lat": 37.5640455,
-      "lng": 126.8340014
+      "location": {
+        "lat": 37.5640455,
+        "lng": 126.8340014
+      }
     },
     "mobile": "010-1234-5678",
     "description": "소녀시대 태연 음방 1위를 기념하여 태연 굿즈를 공유하고 축하는 자리를 마련하고자 합니다.",
@@ -31,7 +33,14 @@
       "음방 1위",
       "서울"
     ],
-    "perks": {}
+    "perks": {
+      "bus": true,
+      "subway": true,
+      "train": true,
+      "elevator": true,
+      "baby": true,
+      "parking": true
+    }
   },
   {
     "id": "2",
@@ -53,8 +62,10 @@
     "address": {
       "storeName": "지은이가 지은 집",
       "roadAddress": "제주특별자치도 제주시 공항로 2",
-      "lat": 33.5038361,
-      "lng": 126.4955118
+      "location": {
+        "lat": 33.5038361,
+        "lng": 126.4955118
+      }
     },
     "mobile": "010-1234-5678",
     "description": "아이유 좋아하는 사람 다 모여라 ~ !",
@@ -62,7 +73,14 @@
       "아이유",
       "IU"
     ],
-    "perks": {}
+    "perks": {
+      "bus": false,
+      "subway": true,
+      "train": false,
+      "elevator": true,
+      "baby": false,
+      "parking": true
+    }
   },
   {
     "id": "3",
@@ -84,8 +102,10 @@
     "address": {
       "storeName": "나훈아는 전설이다",
       "roadAddress": "부산광역시 해운대구 중1동 해운대해변로 264",
-      "lat": 35.1581498,
-      "lng": 129.1602969
+      "location": {
+        "lat": 35.1581498,
+        "lng": 129.1602969
+      }
     },
     "mobile": "010-1234-5678",
     "description": "안녕하세요?",
@@ -93,6 +113,13 @@
       "트로트",
       "나훈아"
     ],
-    "perks": {}
+    "perks": {
+      "bus": true,
+      "subway": false,
+      "train": true,
+      "elevator": false,
+      "baby": false,
+      "parking": true
+    }
   }
 ]

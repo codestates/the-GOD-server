@@ -15,8 +15,10 @@ export interface Icontent {
   address: {
     storeName: string;
     roadAddress: string;
-    lat: number;
-    lng: number;
+    location: {
+      lat: number;
+      lng: number;
+    };
   };
   mobile: string;
   description: string;
@@ -39,8 +41,10 @@ export interface IcontentUpdate {
   address?: {
     storeName: string;
     roadAddress: string;
-    lat: number;
-    lng: number;
+    location: {
+      lat: number;
+      lng: number;
+    };
   };
   mobile?: string;
   description?: string;
