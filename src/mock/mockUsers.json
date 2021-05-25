@@ -3,45 +3,48 @@
     "id": "123",
     "userName": "sim",
     "email": "sim@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "mail",
     "follow": [
       "tea",
       "iu"
     ],
-    "bookmark": []
+    "bookmark": [],
+    "passwordUpdate": null
   },
   {
     "id": "124",
     "userName": "choi",
     "email": "choi@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "google",
     "follow": [
       "iu"
     ],
-    "bookmark": []
+    "bookmark": [],
+    "passwordUpdate": "2021-05-24 11:42:00"
   },
   {
     "id": "125",
     "userName": "Lee",
     "email": "Lee@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "kakao",
     "follow": [
       "v1",
       "j1"
     ],
-    "bookmark": []
+    "bookmark": [],
+    "passwordUpdate": null
   },
   {
     "id": "126",
     "userName": "Yoo",
     "email": "Yoo@test.com",
-    "profileImg": "https://bit.ly/3euIgJj",
+    "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
     "type": "twiiter",
     "follow": [
@@ -53,6 +56,7 @@
       "e6",
       "e7"
     ],
-    "bookmark": []
+    "bookmark": [],
+    "passwordUpdate": null
   }
 ]

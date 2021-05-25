@@ -9,7 +9,7 @@ export interface Iuser {
   id: string;
   userName: string;
   email: string;
-  profileImg: string;
+  profileImage: string;
   password: string;
   type: USER_TYPE;
   follow: string[];

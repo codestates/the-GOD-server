@@ -5,9 +5,11 @@ import {
   updateDeleteUserFollow,
   updateAddUserBookmark,
   updateDeleteUserBookmark,
+  updateUserProfileImage,
 } from '@database/users';
 import { findArtistById } from '@database/artists';
 import { findContentById } from '@database/contents';
+import { uploadImage, deleteImage } from '@util/aws';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -21,7 +23,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
         })
         .end();
     } else {
-      const { id, userName, email, profileImg, type } = user;
+      const { id, userName, email, profileImage, type } = user;
       res
         .status(200)
         .send({
@@ -29,7 +31,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
             id,
             userName,
             email,
-            profileImg,
+            profileImage,
             type,
           },
           message: 'ok',
@@ -172,5 +174,73 @@ export const bookmarkContent = async (
         });
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('bookmarkContent error');
+    res.status(404).send({
+      message: 'invlaid request',
+    });
+  }
+};
+
+export const updateUserProfile = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const profileImage = req.file;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!user || !profileImage) {
+      console.log('updateUserProfile invalid input');
+      res
+        .status(404)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const profileImageUrl = await uploadImage(profileImage);
+
+      if (!profileImageUrl) {
+        console.log('S3 Image update error');
+        res
+          .status(400)
+          .send({
+            message: 'invlaid request',
+          })
+          .end();
+      } else {
+        const updateResult = await updateUserProfileImage(
+          user.id,
+          profileImageUrl as string
+        );
+
+        if (updateResult) {
+          await deleteImage(user.profileImage);
+          res
+            .status(201)
+            .send({
+              result: {
+                profileImage: profileImageUrl,
+              },
+              message: 'ok',
+            })
+            .end();
+        } else {
+          res
+            .status(404)
+            .send({
+              message: 'invlaid request',
+            })
+            .end();
+        }
+      }
+    }
+  } catch (err) {
+    console.error('updateUserProfile error');
+    res.status(404).send({
+      message: 'invlaid request',
+    });
+  }
 };

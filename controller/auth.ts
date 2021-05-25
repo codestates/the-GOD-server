@@ -14,7 +14,7 @@ import {
   findUserById,
   findUserByUserName,
   updateUserName,
-  updateUserProfileImg,
+  updateUserProfileImage,
   deleteUser,
   findUserByEmail,
   findValidUser,
@@ -72,9 +72,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       userName: userName,
       email: email,
       profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
-
       password: hashedPWD,
-
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],
@@ -237,7 +235,6 @@ export const kakaoLogin = async (
 //TODO : API문서에 의거하여 res 수정
 
 export const twitterLogin = async (req: Request, res: Response) => {
-
   const token = req.body;
   const type = 'twitter' as USER_TYPE;
   const userData = await twitterToken(token);

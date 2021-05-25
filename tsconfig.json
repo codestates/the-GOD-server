@@ -22,7 +22,7 @@
       "@interface": ["interface/index"],
       "@src/*": ["src/*"],
       "@middleware": ["middleware/index"],
-      "@apis": ["apis/*"],
+      "@apis": ["apis/index"],
       "@router": ["router/index"],
       "@controller/*": ["controller/*"],
       "@database/*": ["database/*"],
