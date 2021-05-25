@@ -14,7 +14,7 @@ import {
   findUserById,
   findUserByUserName,
   updateUserName,
-  updateUserProfileImg,
+  updateUserProfileImage,
   deleteUser,
   findUserByEmail,
   findValidUser,
@@ -24,6 +24,8 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
   const type = USER_TYPE.Email;
+
+  
   try {
     let checkUser = await findValidUser(email, encodedPWD);
 
@@ -68,9 +70,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       userName: userName,
       email: email,
       profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
-
       password: hashedPWD,
-
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],

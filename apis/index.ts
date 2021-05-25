@@ -23,7 +23,7 @@ export const googleToken = async (token: string) => {
     sub: data.sub,
     name: data.name,
     email: data.email,
-    profileImg: data.picture,
+    profileImage: data.picture,
   };
 };
 
@@ -41,7 +41,7 @@ export const kakaoToken = async (token: string) => {
     id: id,
     userName: kakao_account.profile.nickname,
     email: kakao_account.email,
-    profileImg: kakao_account.profile.profile_image_url,
+    profileImage: kakao_account.profile.profile_image_url,
   };
 };
 // 컨트롤러 안에서만 req,res 처리를 할 수 있게
@@ -58,6 +58,6 @@ export const twitterToken = async (token: string) => {
     id: id,
     name: name,
     userName: username,
-    profile_image_url: profile_image_url ?? '',
+    profileImage: profile_image_url ?? '',
   };
 };
