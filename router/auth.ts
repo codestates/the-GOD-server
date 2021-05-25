@@ -1,11 +1,11 @@
 import express from 'express';
-import { login, signup } from '@controller/auth';
+import { login, signup, checkPassword, setPassword } from '@controller/auth';
 
 const router = express.Router();
 
 router.post('/login', login);
 router.post('/signup', signup);
-/* router.get('/accesstoken', accessTokenRequest);
-router.get('/refreshtoken', refreshTokenRequest); */
+router.post('/password', checkPassword);
+router.put('/password', setPassword);
 
 export default router;

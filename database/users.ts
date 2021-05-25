@@ -9,11 +9,12 @@ const userSchema = new mongoose.Schema<Iuser>(
     id: { type: String, required: true, unique: true },
     userName: { type: String, required: true },
     email: { type: String, required: true },
-    profileImg: { type: String },
+    profileImage: { type: String },
     password: { type: String, required: true },
     type: { type: String, required: true },
     follow: [String],
     bookmark: [String],
+    passwordUpdate: { type: String },
   },
   {
     timestamps: true,
@@ -94,19 +95,19 @@ export const updateUserName = async (
   }
 };
 
-export const updateUserProfileImg = async (
+export const updateUserProfileImage = async (
   id: string,
-  profileImg: string
+  profileImage: string
 ): Promise<boolean> => {
   try {
-    const result = await UserModel.findOneAndUpdate({ id }, { profileImg });
+    const result = await UserModel.findOneAndUpdate({ id }, { profileImage });
     if (result) {
       return true;
     } else {
       return false;
     }
   } catch (err) {
-    console.error('updateUserProfileImg error : ', err.message);
+    console.error('updateUserProfileImage eerror : ', err.message);
     return false;
   }
 };
@@ -253,6 +254,7 @@ export const createManyUser = async (users: Iuser[]) => {
     console.log('result : ', result);
     return result;
   } catch (err) {
+    console.log('createManyUser error : ', err.message);
     return null;
   }
 };

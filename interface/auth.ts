@@ -13,7 +13,7 @@ export interface IgoogleLoginResult {
   sub: string;
   name: string;
   email: string;
-  profileImg: string;
+  profileImage: string;
 }
 
 export interface IkakaoLoginProps {
@@ -24,7 +24,7 @@ export interface IkakaoLoginResult {
   id: string;
   userName: string;
   email: string;
-  profileImg: string;
+  profileImage: string;
 }
 
 export interface ItwitterLoginProps {

@@ -18,7 +18,8 @@ import {
   findUserById,
   findUserByUserName,
   updateUserName,
-  updateUserProfileImg,
+  updateUserProfileImage,
+  updateUserPassword,
   deleteUser,
   findUserByEmail,
   findValidUser,
@@ -28,6 +29,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
   const type = USER_TYPE.Email;
+
   try {
     let checkUser = await findValidUser(email, encodedPWD);
     //console.log(checkUser);
@@ -74,13 +76,12 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       id: uniqueID,
       userName: userName,
       email: email,
-      profileImg: req.body.profileImg || 'https://bit.ly/3euIgJj',
-
+      profileImage: req.body.profileImage || 'https://bit.ly/3euIgJj',
       password: hashedPWD,
-
       type: USER_TYPE.Email,
       follow: [],
       bookmark: [],
+      passwordUpdate: null,
     });
 
     if (createId) {
@@ -101,9 +102,9 @@ export const googleLogin = async (
   res: Response
 ): Promise<void> => {
   const token = req.body;
-  const type = USER_TYPE.Google;
-  const userData = (await googleToken(token)) as IgoogleLoginResult;
-  const { sub, name, email, profileImg } = userData;
+  const type = 'google' as USER_TYPE;
+  const userData = await googleToken(token);
+  const { sub, name, email, profileImage } = userData as IgoogleLoginResult;
   try {
     const checkUser = await findUserByEmail(email);
     if (checkUser) {
@@ -120,11 +121,12 @@ export const googleLogin = async (
         id: sub + type,
         userName: name,
         email: email,
-        profileImg: profileImg,
+        profileImage: profileImage,
         password: googlePWD,
         type: 'google' as USER_TYPE,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
       if (googleSignup) {
         const accessToken = await createAccessToken({ email, type });
@@ -155,7 +157,7 @@ export const kakaoLogin = async (
   const token = req.body;
   const type = USER_TYPE.Kakao;
   const userData = await kakaoToken(token);
-  const { id, userName, email, profileImg } = userData as IkakaoLoginResult;
+  const { id, userName, email, profileImage } = userData as IkakaoLoginResult;
   try {
     const checkUser = await findUserByEmail(email);
     if (checkUser) {
@@ -172,11 +174,12 @@ export const kakaoLogin = async (
         id: id + type,
         userName: userName,
         email: email,
-        profileImg: profileImg,
+        profileImage: profileImage,
         password: googlePWD,
         type: 'kakao' as USER_TYPE,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
       if (kakaoSignup) {
         const accessToken = await createAccessToken({ email, type });
@@ -205,9 +208,8 @@ export const kakaoLogin = async (
 export const twitterLogin = async (req: Request, res: Response) => {
   const token = req.body;
   const type = 'twitter' as USER_TYPE;
-  const userData = await twitterToken(token);
-  const { id, name, userName, profile_image_url } =
-    userData as ItwitterLoginResult;
+  const userData = (await twitterToken(token)) as ItwitterLoginResult;
+  const { id, name, userName, profile_image_url } = userData;
   const email = userName + '@twitter.com';
   try {
     const checkUser = await findUserByEmail(email);
@@ -225,11 +227,12 @@ export const twitterLogin = async (req: Request, res: Response) => {
         id: id,
         userName: userName,
         email: email,
-        profileImg: profile_image_url,
+        profileImage: profile_image_url,
         password: twitterPWD,
         type: USER_TYPE.Twitter,
         follow: [],
         bookmark: [],
+        passwordUpdate: null,
       });
       if (twitterSignup) {
         const accessToken = await createAccessToken({ email, type });
@@ -253,4 +256,77 @@ export const twitterLogin = async (req: Request, res: Response) => {
   }
 };
 
-//TODO : 회원탈퇴 , 비밀번호 변경, 로그아웃
+//TODO : 회원탈퇴 , 비밀번호 변경
+
+export const checkPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { password } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!password || !user) {
+      res
+        .status(401)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const hashedPWD = createPWD(user.email, password);
+      if (user.password === hashedPWD) {
+        res.status(201).send({
+          message: 'ok',
+        });
+      } else {
+        res.status(401).send({
+          message: 'unauthorized',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('checkPassword error');
+    res.status(400).send({
+      message: 'invlaid request',
+    });
+  }
+};
+
+export const setPassword = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { password } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!password || !user) {
+      res
+        .status(400)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const hashedPWD = createPWD(user.email, password);
+      const result = await updateUserPassword(user.id, hashedPWD);
+      if (result) {
+        res.status(201).send({
+          message: 'ok',
+        });
+      } else {
+        res.status(400).send({
+          message: 'invlaid request',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('setPassword error');
+    res.status(400).send({
+      message: 'invlaid request',
+    });
+  }
+};

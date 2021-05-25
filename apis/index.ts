@@ -22,12 +22,12 @@ export const googleToken = async (
       token,
     },
   });
-  const { sub, name, email, profileImg } = data;
+  const { sub, name, email, profileImage } = data;
   return {
     sub,
     name,
     email,
-    profileImg,
+    profileImage,
   };
 };
 //TODO : 리턴 결과에 대한 타입 정의 후 사용
@@ -42,7 +42,11 @@ export const kakaoToken = async (
 
   const { id, kakao_account } = data;
 
-  return {id,kakao_account.profile.nickname,kakao_account.email,kakao_account.profile.profile_image_url,
+  return {
+    id: id,
+    userName: kakao_account.profile.nickname,
+    email: kakao_account.email,
+    profileImage: kakao_account.profile.profile_image_url,
   };
 };
 // 컨트롤러 안에서만 req,res 처리를 할 수 있게
@@ -54,11 +58,11 @@ export const twitterToken = async (
     headers: token,
   });
 
-  const { id, name, userName, profile_image_url } = data;
+  const { id, name, username, profile_image_url } = data;
   return {
-    id,
-    name,
-    userName,
-    profile_image_url,
+    id: id,
+    name: name,
+    userName: username,
+    profile_image_url: profile_image_url ?? '',
   };
 };
