@@ -24,7 +24,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
 
-  const type = 'mail' as USER_TYPE;
+  const type = USER_TYPE.Email;
 
   try {
     let checkUser = await findValidUser(email, encodedPWD);
@@ -39,9 +39,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
         httpOnly: true,
       });
       console.log(accessToken);
-      res.status(200).send(accessToken);
+      res.status(201).send({
+        result: {
+          accessToken: accessToken,
+        },
+        message: 'ok',
+      });
     } else {
-      res.status(400).send('invalid input');
+      res.status(404).send('invalid input');
     }
   } catch (err) {
     console.error('User login error');
@@ -256,7 +261,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
         email: email,
         profileImg: profile_image_url,
         password: twitterPWD,
-        type: 'twitter' as USER_TYPE,
+        type: USER_TYPE.Twitter,
         follow: [],
         bookmark: [],
       });
