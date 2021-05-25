@@ -39,7 +39,8 @@
       "train": true,
       "elevator": true,
       "baby": true,
-      "parking": true
+      "parking": true,
+      "pet": true
     }
   },
   {
@@ -79,7 +80,8 @@
       "train": false,
       "elevator": true,
       "baby": false,
-      "parking": true
+      "parking": true,
+      "pet": false
     }
   },
   {
@@ -119,7 +121,8 @@
       "train": true,
       "elevator": false,
       "baby": false,
-      "parking": true
+      "parking": true,
+      "pet": true
     }
   }
 ]
