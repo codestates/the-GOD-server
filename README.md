@@ -9,7 +9,6 @@
 5. Connection string 복사
 <img width="400" alt="스크린샷 2021-05-25 오후 2 19 47" src="https://user-images.githubusercontent.com/55736594/119443267-48c23b00-bd64-11eb-8679-12bdc28820b6.png">
 
----
 
 ## VS Code
 
