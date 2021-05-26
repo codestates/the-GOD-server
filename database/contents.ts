@@ -4,6 +4,7 @@ import {
   IcontentUpdate,
   IcontentFind,
   IcontentFindResult,
+  IcontentListItem,
 } from '@interface';
 
 // content schema
@@ -60,6 +61,29 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
     return await ContentModel.findOne({ id });
   } catch (err) {
     console.error('findContentById error : ', err.message);
+    return null;
+  }
+};
+
+export const findContentsByIdList = async (
+  idList: string[]
+): Promise<IcontentListItem[] | null> => {
+  try {
+    return await ContentModel.find(
+      { id: { $in: idList } },
+      {
+        _id: 0,
+        id: 1,
+        userId: 1,
+        title: 1,
+        images: 1,
+        date: 1,
+        time: 1,
+        address: 1,
+      }
+    ).lean();
+  } catch (err) {
+    console.error('findContentsByIdList error : ', err.message);
     return null;
   }
 };

@@ -26,6 +26,29 @@ export interface Icontent {
   perks: any;
 }
 
+export interface IcontentListItem {
+  id: string;
+  userId: string;
+  title: string;
+  images: string[];
+  date: {
+    start: string;
+    end: string;
+  };
+  time: {
+    open: string;
+    close: string;
+  };
+  address: {
+    storeName: string;
+    roadAddress: string;
+    location: {
+      lat: number;
+      lng: number;
+    };
+  };
+}
+
 export interface IcontentUpdate {
   title?: string;
   artistId?: string;

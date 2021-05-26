@@ -38,7 +38,7 @@ export const findArtistById = async (id: string): Promise<Iartist | null> => {
   }
 };
 
-export const findArtistByIdList = async (
+export const findArtistsByIdList = async (
   idList: string[]
 ): Promise<Iartist[] | null> => {
   try {
