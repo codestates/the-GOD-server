@@ -8,7 +8,7 @@ import {
   updateUserProfileImage,
   updateUserName,
 } from '@database/users';
-import { findArtistById } from '@database/artists';
+import { findArtistById, findArtistByIdList } from '@database/artists';
 import { findContentById } from '@database/contents';
 import { uploadImage, deleteImage } from '@util/aws';
 
@@ -278,6 +278,56 @@ export const updateName = async (
     console.error('updateUserName error');
     res.status(404).send({
       message: 'invlaid request',
+    });
+  }
+};
+
+export const getFollowList = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const user = await findUserByEmail(parsedToken as string);
+    if (!user) {
+      res
+        .status(401)
+        .send({
+          message: 'unauthorized',
+        })
+        .end();
+    } else {
+      if (user.follow.length === 0) {
+        res
+          .status(200)
+          .send({
+            result: [],
+            message: 'unauthorized',
+          })
+          .end();
+        return;
+      }
+
+      const artists = await findArtistByIdList(user.follow);
+      if (artists) {
+        const result = artists.map((artist) => {
+          return { ...artist, isFollow: true };
+        });
+
+        res.status(200).send({
+          result,
+          message: 'not found user follow list',
+        });
+      } else {
+        res.status(404).send({
+          message: 'not found user follow list',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('getFollowList error');
+    res.status(404).send({
+      message: 'not found user follow list',
     });
   }
 };
