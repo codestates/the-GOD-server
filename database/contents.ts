@@ -66,7 +66,10 @@ export const createContent = async (content: Icontent): Promise<boolean> => {
 
 export const findContentById = async (id: string): Promise<Icontent | null> => {
   try {
-    return await ContentModel.findOne({ id });
+    return await ContentModel.findOne(
+      { id },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findContentById error : ', err.message);
     return null;
@@ -125,7 +128,7 @@ export const findContent = async (
           limit: dataPerPage,
           skip,
         }
-      );
+      ).lean();
 
       return {
         contents,
