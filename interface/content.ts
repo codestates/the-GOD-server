@@ -8,7 +8,7 @@ export interface Icontent {
   artist: {
     artistId: string;
     artistName: string;
-    group: string;
+    group: string | null;
     profileImage: string;
   };
   title: string;

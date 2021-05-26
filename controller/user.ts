@@ -359,75 +359,11 @@ export const getBookmarkList = async (
         return;
       }
 
-      const bookmarks = await findContentsByIdList(user.bookmark);
-      if (bookmarks) {
-        const result = [];
-        for (let idx = 0; idx < bookmarks.length; idx++) {
-          const bookmark = bookmarks[idx];
-          const {
-            id,
-            userId,
-            artistId,
-            title,
-            images,
-            date,
-            time,
-            address,
-            mobile,
-            description,
-            tags,
-            perks,
-          } = bookmark;
-
-          // TODO : refactoring, don't find user & artist
-
-          // const author = await findUserById(userId);
-          // const artist = await findArtistById(artistId);
-          // console.log(author);
-          // console.log(artist);
-          // if (author && artist) {
-          //   const { id: userId, userName, profileImage: userProfile } = author;
-          //   const {
-          //     id: artistId,
-          //     name: artistName,
-          //     group,
-          //     profileImage: artistProfile,
-          //   } = artist;
-
-          const data = {
-            id,
-            author: {
-              userId,
-              userName: 'unknown',
-              profileImage: 'https://bit.ly/3euIgJj',
-              // userName,
-              // profileImage: userProfile,
-            },
-            artist: {
-              artistId,
-              artistName: 'unknown',
-              group: 'unknown',
-              profileImage: 'https://bit.ly/3euIgJj',
-              // artistName,
-              // group,
-              // profileImage: artistProfile,
-              isFollow: user.follow.includes(artistId),
-            },
-            images,
-            address,
-            date,
-            time,
-            title,
-            mobile,
-            description,
-            tags,
-            perks,
-            isBookmark: true,
-          };
-
-          result.push(data);
-          // }
-        }
+      const contents = await findContentsByIdList(user.bookmark);
+      if (contents) {
+        const result = contents.map((content) => {
+          return { ...content, isBookmark: true };
+        });
 
         res.status(200).send({
           result,

@@ -18,7 +18,7 @@ const contentScheme = new mongoose.Schema<Icontent>(
     artist: {
       artistId: { type: String, required: true },
       artistName: { type: String, required: true },
-      group: { type: String, required: true },
+      group: { type: String },
       profileImage: { type: String, required: true },
     },
     title: { type: String, required: true },
@@ -77,7 +77,10 @@ export const findContentsByIdList = async (
   idList: string[]
 ): Promise<Icontent[] | null> => {
   try {
-    return await ContentModel.find({ id: { $in: idList } }).lean();
+    return await ContentModel.find(
+      { id: { $in: idList } },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findContentsByIdList error : ', err.message);
     return null;
@@ -117,7 +120,7 @@ export const findContent = async (
     } else {
       const contents = await ContentModel.find(
         findQuery,
-        {},
+        { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 },
         {
           limit: dataPerPage,
           skip,
