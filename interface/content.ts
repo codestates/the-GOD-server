@@ -1,8 +1,17 @@
 export interface Icontent {
   id: string;
-  userId: string;
+  author: {
+    userId: string;
+    userName: string;
+    profileImage: string;
+  };
+  artist: {
+    artistId: string;
+    artistName: string;
+    group: string;
+    profileImage: string;
+  };
   title: string;
-  artistId: string;
   images: string[];
   date: {
     start: string;
@@ -28,8 +37,13 @@ export interface Icontent {
 
 export interface IcontentUpdate {
   title?: string;
-  artistId?: string;
   images?: string[];
+  artist?: {
+    artistId: string;
+    artistName: string;
+    group: string;
+    profileImage: string;
+  };
   date?: {
     start: string;
     end: string;

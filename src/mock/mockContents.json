@@ -1,9 +1,18 @@
 [
   {
     "id": "1",
-    "userId": "123",
+    "author": {
+      "userId": "123",
+      "userName": "sim",
+      "profileImage": "https://bit.ly/3euIgJj"
+    },
+    "artist": {
+      "artistId": "tea",
+      "artistName": "태연",
+      "group": "소녀시대",
+      "profileImage": "https://bit.ly/3euIgJj"
+    },
     "title": "소녀시대 태연 음방 1위 축하 이벤트 카페",
-    "artistId": "tea",
     "images": [
       "https://images.unsplash.com/photo-1439405326854-014607f694d7?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1050&q=80",
       "https://images.unsplash.com/photo-1471922694854-ff1b63b20054?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1052&q=80",
@@ -27,7 +36,12 @@
     },
     "mobile": "010-1234-5678",
     "description": "소녀시대 태연 음방 1위를 기념하여 태연 굿즈를 공유하고 축하는 자리를 마련하고자 합니다.",
-    "tags": ["소녀시대", "태연", "음방 1위", "서울"],
+    "tags": [
+      "소녀시대",
+      "태연",
+      "음방 1위",
+      "서울"
+    ],
     "perks": {
       "bus": true,
       "subway": true,
@@ -40,9 +54,18 @@
   },
   {
     "id": "2",
-    "userId": "124",
+    "author": {
+      "userId": "124",
+      "userName": "choi",
+      "profileImage": "https://bit.ly/3euIgJj"
+    },
+    "artist": {
+      "artistId": "iu",
+      "artistName": "아이유",
+      "group": null,
+      "profileImage": "https://bit.ly/3euIgJj"
+    },
     "title": "아이유 너무 좋아",
-    "artistId": "iu",
     "images": [
       "https://images.unsplash.com/photo-1554629947-334ff61d85dc?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=676&q=80",
       "https://images.unsplash.com/photo-1483728642387-6c3bdd6c93e5?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1055&q=80"
@@ -65,7 +88,10 @@
     },
     "mobile": "010-1234-5678",
     "description": "아이유 좋아하는 사람 다 모여라 ~ !",
-    "tags": ["아이유", "IU"],
+    "tags": [
+      "아이유",
+      "IU"
+    ],
     "perks": {
       "bus": false,
       "subway": true,
@@ -78,9 +104,18 @@
   },
   {
     "id": "3",
-    "userId": "126",
+    "author": {
+      "userId": "126",
+      "userName": "Yoo",
+      "profileImage": "https://bit.ly/3euIgJj"
+    },
+    "artist": {
+      "artistId": "nha",
+      "artistName": "나훈아",
+      "group": null,
+      "profileImage": "https://bit.ly/3euIgJj"
+    },
     "title": "대한민국 어게인 나훈아",
-    "artistId": "nha",
     "images": [
       "https://images.unsplash.com/photo-1554118811-1e0d58224f24?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=1030&q=80",
       "https://images.unsplash.com/photo-1514933651103-005eec06c04b?ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80"
@@ -103,7 +138,10 @@
     },
     "mobile": "010-1234-5678",
     "description": "안녕하세요?",
-    "tags": ["트로트", "나훈아"],
+    "tags": [
+      "트로트",
+      "나훈아"
+    ],
     "perks": {
       "bus": true,
       "subway": false,
