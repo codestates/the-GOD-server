@@ -11,7 +11,6 @@ import {
 import { findArtistById, findArtistsByIdList } from '@database/artists';
 import { findContentById, findContentsByIdList } from '@database/contents';
 import { uploadImage, deleteImage } from '@util/aws';
-import { findUserById } from '../database/users';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -89,9 +88,9 @@ export const followArtist = async (
       const isFollow = user.follow.includes(artistId);
       let result;
       if (isFollow) {
-        result = await updateAddUserBookmark(user.email, artist.id);
+        result = await updateDeleteUserFollow(user.email, artist.id);
       } else {
-        result = await updateDeleteUserBookmark(user.email, artist.id);
+        result = await updateAddUserFollow(user.email, artist.id);
       }
 
       if (result) {
