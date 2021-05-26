@@ -18,7 +18,7 @@ const router = express.Router();
 router.get('/', getUser);
 router.get('/follow', getFollowList);
 router.put('/follow', followArtist);
-router.put('/bookmark', getBookmarkList);
+router.get('/bookmark', getBookmarkList);
 router.put('/bookmark', bookmarkContent);
 router.put('/profile', uplaodProfileImage, updateUserProfile);
 router.put('/username', updateName);

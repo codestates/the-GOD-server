@@ -10,7 +10,11 @@
       "tea",
       "iu"
     ],
-    "bookmark": [],
+    "bookmark": [
+      "1",
+      "2",
+      "3"
+    ],
     "passwordUpdate": null
   },
   {
@@ -23,7 +27,9 @@
     "follow": [
       "iu"
     ],
-    "bookmark": [],
+    "bookmark": [
+      "1"
+    ],
     "passwordUpdate": "2021-05-24 11:42:00"
   },
   {
@@ -37,7 +43,10 @@
       "v1",
       "j1"
     ],
-    "bookmark": [],
+    "bookmark": [
+      "2",
+      "1"
+    ],
     "passwordUpdate": null
   },
   {
@@ -56,7 +65,10 @@
       "e6",
       "e7"
     ],
-    "bookmark": [],
+    "bookmark": [
+      "3",
+      "1"
+    ],
     "passwordUpdate": null
   }
 ]

@@ -1,7 +1,7 @@
 [
   {
     "id": "1",
-    "userId": "sim",
+    "userId": "123",
     "title": "소녀시대 태연 음방 1위 축하 이벤트 카페",
     "artistId": "tea",
     "images": [
@@ -45,7 +45,7 @@
   },
   {
     "id": "2",
-    "userId": "choi",
+    "userId": "124",
     "title": "아이유 너무 좋아",
     "artistId": "iu",
     "images": [
@@ -86,7 +86,7 @@
   },
   {
     "id": "3",
-    "userId": "Yoo",
+    "userId": "126",
     "title": "대한민국 어게인 나훈아",
     "artistId": "nha",
     "images": [
