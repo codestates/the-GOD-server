@@ -31,9 +31,23 @@ export const createArtist = async (artist: Iartist): Promise<boolean> => {
 
 export const findArtistById = async (id: string): Promise<Iartist | null> => {
   try {
-    return await ArtistModel.findOne({ id });
+    return await ArtistModel.findOne({ id }).lean();
   } catch (err) {
     console.error('findArtistById error : ', err.message);
+    return null;
+  }
+};
+
+export const findArtistsByIdList = async (
+  idList: string[]
+): Promise<Iartist[] | null> => {
+  try {
+    return await ArtistModel.find(
+      { id: { $in: idList } },
+      { _id: 0, id: 1, name: 1, group: 1, profileImage: 1 }
+    ).lean();
+  } catch (err) {
+    console.error('findArtistByIdList error : ', err.message);
     return null;
   }
 };
@@ -41,10 +55,9 @@ export const findArtistById = async (id: string): Promise<Iartist | null> => {
 // 그룹 또는 이름으로 검색한 결과 반환
 export const findArtists = async (query: string): Promise<Iartist[] | null> => {
   try {
-    return await ArtistModel.find().or([
-      { name: { $regex: query } },
-      { group: { $regex: query } },
-    ]);
+    return await ArtistModel.find()
+      .or([{ name: { $regex: query } }, { group: { $regex: query } }])
+      .lean();
   } catch (err) {
     console.error('findArtist error : ', err.message);
     return null;

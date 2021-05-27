@@ -37,13 +37,22 @@ export interface Icontent {
 
 export interface IcontentUpdate {
   title?: string;
+<<<<<<< HEAD
   artist?: {
     artistId: string;
     artistName: string;
     group: string;
     profileImage: string;
   };
+=======
+>>>>>>> 3449e4d1ff8877da71f80f78995d19cdb1fd1af0
   images?: string[];
+  artist?: {
+    artistId: string;
+    artistName: string;
+    group: string;
+    profileImage: string;
+  };
   date?: {
     start: string;
     end: string;

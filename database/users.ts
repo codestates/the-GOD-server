@@ -38,7 +38,7 @@ export const createUser = async (user: Iuser): Promise<boolean> => {
 
 export const findUserById = async (id: string): Promise<Iuser | null> => {
   try {
-    return await UserModel.findOne({ id });
+    return await UserModel.findOne({ id }).lean();
   } catch (err) {
     console.error('findUserById error : ', err.message);
     return null;
@@ -47,7 +47,7 @@ export const findUserById = async (id: string): Promise<Iuser | null> => {
 
 export const findUserByEmail = async (email: string): Promise<Iuser | null> => {
   try {
-    return await UserModel.findOne({ email });
+    return await UserModel.findOne({ email }).lean();
   } catch (err) {
     console.error('findUserByEmail error : ', err.message);
     return null;
