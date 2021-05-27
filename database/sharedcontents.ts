@@ -37,18 +37,24 @@ export const findSharedContentById = async (
   id: string
 ): Promise<IsharedContents | null> => {
   try {
-    return await SharedContentModel.findOne({ id }).lean();
+    return await SharedContentModel.findOne(
+      { id },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findSharedContentsById error : ', err.message);
     return null;
   }
 };
 
-export const findSharedContentsByHostId = async (
-  hostId: string
+export const findSharedContentsByUserId = async (
+  userId: string
 ): Promise<IsharedContents[] | null> => {
   try {
-    return await SharedContentModel.find({ hostId }).lean();
+    return await SharedContentModel.find(
+      { hostId: userId },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findSharedContentsByUserId error : ', err.message);
     return null;
