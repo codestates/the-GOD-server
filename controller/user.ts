@@ -15,6 +15,9 @@ import {
   findContentsByUserId,
   updateContentUserInfo,
 } from '@database/contents';
+
+import { findSharedContentsByUserId } from '@database/sharedcontents';
+
 import { uploadImage, deleteImage } from '@util/aws';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
@@ -428,7 +431,64 @@ export const getUserContents = async (
   } catch (err) {
     console.error('getUserContents error');
     res.status(404).send({
-      message: 'not found user content list',
+      message: 'not found user content',
+    });
+  }
+};
+
+export const getUserSharedContents = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const user = await findUserByEmail(parsedToken as string);
+    if (!user) {
+      res
+        .status(401)
+        .send({
+          message: 'unauthorized',
+        })
+        .end();
+    } else {
+      const sharedContents = await findSharedContentsByUserId(user.id);
+      if (!sharedContents || sharedContents.length === 0) {
+        res
+          .status(200)
+          .send({
+            result: [],
+            message: 'ok',
+          })
+          .end();
+        return;
+      } else {
+        const result = [];
+
+        for (let idx = 0; idx < sharedContents.length; idx++) {
+          const { id, contents } = sharedContents[idx];
+          const findContents = await findContentsByIdList(contents);
+
+          if (!findContents || findContents.length === 0) continue;
+
+          const contentsResult = findContents.map((content) => {
+            return {
+              ...content,
+              isBookmark: user.bookmark.includes(content.id),
+            };
+          });
+          result.push({ id, contents: contentsResult });
+        }
+
+        res.status(200).send({
+          result,
+          message: 'ok',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('getUserSharedContents error');
+    res.status(404).send({
+      message: 'not found user shred content',
     });
   }
 };

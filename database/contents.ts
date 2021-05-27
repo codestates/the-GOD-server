@@ -262,14 +262,3 @@ export const createManyContent = async (contents: Icontent[]) => {
     return null;
   }
 };
-
-export const findContentsByIdList = async (
-  idList: string[]
-): Promise<Icontent[] | null> => {
-  try {
-    return await ContentModel.find({ id: { $in: idList } }).lean();
-  } catch (err) {
-    console.error('findContentsByIdList error : ', err.message);
-    return null;
-  }
-};
