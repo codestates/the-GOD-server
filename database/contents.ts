@@ -149,7 +149,10 @@ export const findContentsByUserId = async (
   userId: string
 ): Promise<Icontent[] | null> => {
   try {
-    return await ContentModel.find({ 'author.userId': userId });
+    return await ContentModel.find(
+      { 'author.userId': userId },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findContentById error : ', err.message);
     return null;

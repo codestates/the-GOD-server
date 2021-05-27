@@ -46,10 +46,10 @@
       "bus": true,
       "subway": true,
       "train": true,
-      "elevator": true,
+      "sort": true,
       "baby": true,
       "parking": true,
-      "pet": true
+      "cat": true
     }
   },
   {
@@ -96,10 +96,10 @@
       "bus": false,
       "subway": true,
       "train": false,
-      "elevator": true,
+      "sort": true,
       "baby": false,
       "parking": true,
-      "pet": false
+      "cat": false
     }
   },
   {
@@ -146,10 +146,10 @@
       "bus": true,
       "subway": false,
       "train": true,
-      "elevator": false,
+      "sort": false,
       "baby": false,
       "parking": true,
-      "pet": true
+      "cat": true
     }
   }
 ]
