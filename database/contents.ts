@@ -4,6 +4,8 @@ import {
   IcontentUpdate,
   IcontentFind,
   IcontentFindResult,
+  Iuser,
+  Iartist,
 } from '@interface';
 
 // content schema
@@ -18,7 +20,7 @@ const contentScheme = new mongoose.Schema<Icontent>(
     artist: {
       artistId: { type: String, required: true },
       artistName: { type: String, required: true },
-      group: { type: String, required: true },
+      group: { type: String },
       profileImage: { type: String, required: true },
     },
     title: { type: String, required: true },
@@ -66,7 +68,10 @@ export const createContent = async (content: Icontent): Promise<boolean> => {
 
 export const findContentById = async (id: string): Promise<Icontent | null> => {
   try {
-    return await ContentModel.findOne({ id });
+    return await ContentModel.findOne(
+      { id },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findContentById error : ', err.message);
     return null;
@@ -77,7 +82,10 @@ export const findContentsByIdList = async (
   idList: string[]
 ): Promise<Icontent[] | null> => {
   try {
-    return await ContentModel.find({ id: { $in: idList } }).lean();
+    return await ContentModel.find(
+      { id: { $in: idList } },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findContentsByIdList error : ', err.message);
     return null;
@@ -117,12 +125,12 @@ export const findContent = async (
     } else {
       const contents = await ContentModel.find(
         findQuery,
-        {},
+        { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 },
         {
           limit: dataPerPage,
           skip,
         }
-      );
+      ).lean();
 
       return {
         contents,
@@ -161,6 +169,63 @@ export const updateContent = async (
     }
   } catch (err) {
     console.error('updateContent error : ', err.message);
+    return false;
+  }
+};
+
+export const updateContentUserInfo = async (user: Iuser): Promise<boolean> => {
+  try {
+    const result = await ContentModel.updateMany(
+      { 'author.userId': user.id },
+      {
+        author: {
+          userId: user.id,
+          userName: user.userName,
+          profileImage: user.profileImage,
+        },
+      }
+    );
+
+    let updateCount = result.nModified || 0;
+    console.log('contetnt auther update : ', updateCount);
+
+    if (updateCount >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateContentUserInfo error : ', err.message);
+    return false;
+  }
+};
+
+export const updateContentArtistInfo = async (
+  artist: Iartist
+): Promise<boolean> => {
+  try {
+    const result = await ContentModel.updateMany(
+      { 'artist.artistId': artist.id },
+      {
+        artist: {
+          artistId: artist.id,
+          artistName: artist.name,
+          group: artist.group,
+          profileImage: artist.profileImage,
+        },
+      }
+    );
+
+    let updateCount = result.nModified || 0;
+    console.log('contetnt artist update : ', updateCount);
+
+    if (updateCount >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateContentArtistInfo error : ', err.message);
     return false;
   }
 };
