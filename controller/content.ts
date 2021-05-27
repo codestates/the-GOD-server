@@ -38,8 +38,8 @@ export const createContents = async (
     } = req.body;
 
     // TODO: check invalid input
-
     const user = await findUserByEmail(parsedToken as string);
+    //onst user = await findUserByEmail(parsedToken as string);
     const artist = await findArtistById(artistId);
     console.log('user : ', user);
 
@@ -51,24 +51,26 @@ export const createContents = async (
         })
         .end();
     } else {
+      console.log('email', user.email);
       //검색한 아티스트의 아이디입니다.
-      const contentsId = uuidv5(
-        parsedToken as string,
-        ENV.MY_NAMESPACE as string
-      );
-
+      console.log('ok');
+      const contentsId = uuidv5(user.email, ENV.MY_NAMESPACE as string);
+      console.log('컨텐츠 아이디', contentsId);
+      console.log('아티스트', artist);
+      console.log('아티스트 프로필 : ', artist.profileImage);
+      console.log('유저 프로필 : ', user.profileImage);
       const newContent = await createContent({
         id: contentsId,
         author: {
           userId: user.id,
           userName: user.userName,
-          profileImage: user.profileImage,
+          profileImage: 'user.profileImage',
         },
         artist: {
           artistId: artist.id,
           artistName: artist.name,
           group: artist.group,
-          profileImage: artist.profileImage || '',
+          profileImage: 'artist.profileImage',
         },
         title: title,
         images: images,

@@ -78,7 +78,7 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
   }
 };
 
-export const findContentsByIdList = async (
+/* export const findContentsByIdList = async (
   idList: string[]
 ): Promise<Icontent[] | null> => {
   try {
@@ -90,7 +90,7 @@ export const findContentsByIdList = async (
     console.error('findContentsByIdList error : ', err.message);
     return null;
   }
-};
+}; */
 
 // TODO : make content searcing function by query -> artist && location && date time
 // TODO : make pagination
