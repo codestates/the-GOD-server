@@ -223,7 +223,7 @@ export const updateUserProfile = async (
 
         if (updateResult) {
           deleteImage(user.profileImage);
-          updateContentUserInfo(user);
+          updateContentUserInfo({ ...user, profileImage: profileImageUrl });
 
           res
             .status(201)
