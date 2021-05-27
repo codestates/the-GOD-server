@@ -6,7 +6,7 @@ const sharedContentScheme = new mongoose.Schema<IsharedContents>(
   {
     id: { type: String, required: true, unique: true },
     userId: { type: String, required: true },
-    conetntsArray: [String],
+    contents: [String],
   },
   {
     timestamps: true,
@@ -37,7 +37,10 @@ export const findSharedContentById = async (
   id: string
 ): Promise<IsharedContents | null> => {
   try {
-    return await SharedContentModel.findOne({ id }).lean();
+    return await SharedContentModel.findOne(
+      { id },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findSharedContentsById error : ', err.message);
     return null;
@@ -45,10 +48,13 @@ export const findSharedContentById = async (
 };
 
 export const findSharedContentsByUserId = async (
-  hostId: string
+  userId: string
 ): Promise<IsharedContents[] | null> => {
   try {
-    return await SharedContentModel.find({ hostId }).lean();
+    return await SharedContentModel.find(
+      { userId },
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    ).lean();
   } catch (err) {
     console.error('findSharedContentsByUserId error : ', err.message);
     return null;
@@ -57,12 +63,12 @@ export const findSharedContentsByUserId = async (
 
 export const updateSharedContent = async (
   id: string,
-  conetntsArray: string[]
+  contents: string[]
 ): Promise<boolean> => {
   try {
     const result = await SharedContentModel.findOneAndUpdate(
       { id },
-      { conetntsArray }
+      { contents }
     );
     if (result) {
       return true;

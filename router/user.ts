@@ -8,6 +8,7 @@ import {
   getFollowList,
   getBookmarkList,
   getUserContents,
+  getUserSharedContents,
 } from '@controller/user';
 import multer from 'multer';
 
@@ -18,6 +19,7 @@ const router = express.Router();
 
 router.get('/', getUser);
 router.get('/content', getUserContents);
+router.get('/sharedcontent', getUserSharedContents);
 router.get('/follow', getFollowList);
 router.put('/follow', followArtist);
 router.get('/bookmark', getBookmarkList);

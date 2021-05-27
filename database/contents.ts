@@ -78,7 +78,7 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
   }
 };
 
-/* export const findContentsByIdList = async (
+export const findContentsByIdList = async (
   idList: string[]
 ): Promise<Icontent[] | null> => {
   try {
@@ -90,7 +90,7 @@ export const findContentById = async (id: string): Promise<Icontent | null> => {
     console.error('findContentsByIdList error : ', err.message);
     return null;
   }
-}; */
+};
 
 // TODO : make content searcing function by query -> artist && location && date time
 // TODO : make pagination
@@ -259,17 +259,6 @@ export const createManyContent = async (contents: Icontent[]) => {
     return result;
   } catch (err) {
     console.log('createManyContent error : ', err.message);
-    return null;
-  }
-};
-
-export const findContentsByIdList = async (
-  idList: string[]
-): Promise<Icontent[] | null> => {
-  try {
-    return await ContentModel.find({ id: { $in: idList } }).lean();
-  } catch (err) {
-    console.error('findContentsByIdList error : ', err.message);
     return null;
   }
 };
