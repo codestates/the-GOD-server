@@ -12,6 +12,7 @@ import { findArtistById, findArtistsByIdList } from '@database/artists';
 import {
   findContentById,
   findContentsByIdList,
+  findContentsByUserId,
   updateContentUserInfo,
 } from '@database/contents';
 import { uploadImage, deleteImage } from '@util/aws';
@@ -380,5 +381,54 @@ export const getBookmarkList = async (
         });
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('getBookmarkList error');
+    res.status(404).send({
+      message: 'not found user bookmark list',
+    });
+  }
+};
+
+export const getUserContents = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const user = await findUserByEmail(parsedToken as string);
+    if (!user) {
+      res
+        .status(401)
+        .send({
+          message: 'unauthorized',
+        })
+        .end();
+    } else {
+      const contents = await findContentsByUserId(user.id);
+      if (!contents || contents.length === 0) {
+        res
+          .status(200)
+          .send({
+            result: [],
+            message: 'ok',
+          })
+          .end();
+        return;
+      } else {
+        const result = contents.map((content) => {
+          return { ...content, isBookmark: user.bookmark.includes(content.id) };
+        });
+
+        res.status(200).send({
+          result,
+          message: 'ok',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('getUserContents error');
+    res.status(404).send({
+      message: 'not found user content list',
+    });
+  }
 };

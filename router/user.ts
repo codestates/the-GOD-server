@@ -7,6 +7,7 @@ import {
   updateName,
   getFollowList,
   getBookmarkList,
+  getUserContents,
 } from '@controller/user';
 import multer from 'multer';
 
@@ -16,6 +17,7 @@ const uplaodProfileImage = fileUpload.single('profileImage');
 const router = express.Router();
 
 router.get('/', getUser);
+router.get('/content', getUserContents);
 router.get('/follow', getFollowList);
 router.put('/follow', followArtist);
 router.get('/bookmark', getBookmarkList);
