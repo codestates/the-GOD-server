@@ -9,9 +9,12 @@ import {
   updateUserName,
 } from '@database/users';
 import { findArtistById, findArtistsByIdList } from '@database/artists';
-import { findContentById, findContentsByIdList } from '@database/contents';
+import {
+  findContentById,
+  findContentsByIdList,
+  updateContentUserInfo,
+} from '@database/contents';
 import { uploadImage, deleteImage } from '@util/aws';
-import { findUserById } from '../database/users';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -89,9 +92,9 @@ export const followArtist = async (
       const isFollow = user.follow.includes(artistId);
       let result;
       if (isFollow) {
-        result = await updateAddUserBookmark(user.email, artist.id);
+        result = await updateDeleteUserFollow(user.email, artist.id);
       } else {
-        result = await updateDeleteUserBookmark(user.email, artist.id);
+        result = await updateAddUserFollow(user.email, artist.id);
       }
 
       if (result) {
@@ -219,7 +222,9 @@ export const updateUserProfile = async (
         );
 
         if (updateResult) {
-          await deleteImage(user.profileImage);
+          deleteImage(user.profileImage);
+          updateContentUserInfo({ ...user, profileImage: profileImageUrl });
+
           res
             .status(201)
             .send({
@@ -359,75 +364,11 @@ export const getBookmarkList = async (
         return;
       }
 
-      const bookmarks = await findContentsByIdList(user.bookmark);
-      if (bookmarks) {
-        const result = [];
-        for (let idx = 0; idx < bookmarks.length; idx++) {
-          const bookmark = bookmarks[idx];
-          const {
-            id,
-            userId,
-            artistId,
-            title,
-            images,
-            date,
-            time,
-            address,
-            mobile,
-            description,
-            tags,
-            perks,
-          } = bookmark;
-
-          // TODO : refactoring, don't find user & artist
-
-          // const author = await findUserById(userId);
-          // const artist = await findArtistById(artistId);
-          // console.log(author);
-          // console.log(artist);
-          // if (author && artist) {
-          //   const { id: userId, userName, profileImage: userProfile } = author;
-          //   const {
-          //     id: artistId,
-          //     name: artistName,
-          //     group,
-          //     profileImage: artistProfile,
-          //   } = artist;
-
-          const data = {
-            id,
-            author: {
-              userId,
-              userName: 'unknown',
-              profileImage: 'https://bit.ly/3euIgJj',
-              // userName,
-              // profileImage: userProfile,
-            },
-            artist: {
-              artistId,
-              artistName: 'unknown',
-              group: 'unknown',
-              profileImage: 'https://bit.ly/3euIgJj',
-              // artistName,
-              // group,
-              // profileImage: artistProfile,
-              isFollow: user.follow.includes(artistId),
-            },
-            images,
-            address,
-            date,
-            time,
-            title,
-            mobile,
-            description,
-            tags,
-            perks,
-            isBookmark: true,
-          };
-
-          result.push(data);
-          // }
-        }
+      const contents = await findContentsByIdList(user.bookmark);
+      if (contents) {
+        const result = contents.map((content) => {
+          return { ...content, isBookmark: true };
+        });
 
         res.status(200).send({
           result,
