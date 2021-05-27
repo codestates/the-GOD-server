@@ -66,10 +66,10 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const hashedPWD = await createPWD(email, password);
 
-    const validName = await findUserByUserName(userName);
+    /* const validName = await findUserByUserName(userName);
     if (!validName) {
       res.status(401).send({ message: '' });
-    }
+    } */
 
     const uniqueID = uuidv5(email, ENV.MY_NAMESPACE as string);
     const createId = await createUser({

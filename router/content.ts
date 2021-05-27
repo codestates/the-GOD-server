@@ -1,6 +1,14 @@
 import express from 'express';
-import { createContent } from '@database/contents';
+import {
+  createContents,
+  deleteContents,
+  readContent,
+  updateContents,
+} from '@controller/content';
 
 const router = express.Router();
 
-router.post('/contents', createContent);
+router.post('/content', createContents);
+router.get('/content', readContent);
+router.put('/content', updateContents);
+router.delete('/content', deleteContents);
