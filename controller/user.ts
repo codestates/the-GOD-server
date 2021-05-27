@@ -8,9 +8,10 @@ import {
   updateUserProfileImage,
   updateUserName,
 } from '@database/users';
-import { findArtistById, findArtistByIdList } from '@database/artists';
-import { findContentById } from '@database/contents';
+import { findArtistById, findArtistsByIdList } from '@database/artists';
+import { findContentById, findContentsByIdList } from '@database/contents';
 import { uploadImage, deleteImage } from '@util/aws';
+import { findUserById } from '../database/users';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -156,9 +157,9 @@ export const bookmarkContent = async (
       const isBookmark = user.bookmark.includes(contentId);
       let result;
       if (isBookmark) {
-        result = await updateDeleteUserFollow(user.email, content.id);
+        result = await updateDeleteUserBookmark(user.email, content.id);
       } else {
-        result = await updateAddUserFollow(user.email, content.id);
+        result = await updateAddUserBookmark(user.email, content.id);
       }
 
       if (result) {
@@ -302,13 +303,13 @@ export const getFollowList = async (
           .status(200)
           .send({
             result: [],
-            message: 'unauthorized',
+            message: 'ok',
           })
           .end();
         return;
       }
 
-      const artists = await findArtistByIdList(user.follow);
+      const artists = await findArtistsByIdList(user.follow);
       if (artists) {
         const result = artists.map((artist) => {
           return { ...artist, isFollow: true };
@@ -316,7 +317,7 @@ export const getFollowList = async (
 
         res.status(200).send({
           result,
-          message: 'not found user follow list',
+          message: 'ok',
         });
       } else {
         res.status(404).send({
@@ -330,4 +331,113 @@ export const getFollowList = async (
       message: 'not found user follow list',
     });
   }
+};
+
+export const getBookmarkList = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const user = await findUserByEmail(parsedToken as string);
+    if (!user) {
+      res
+        .status(401)
+        .send({
+          message: 'unauthorized',
+        })
+        .end();
+    } else {
+      if (user.bookmark.length === 0) {
+        res
+          .status(200)
+          .send({
+            result: [],
+            message: 'ok',
+          })
+          .end();
+        return;
+      }
+
+      const bookmarks = await findContentsByIdList(user.bookmark);
+      if (bookmarks) {
+        const result = [];
+        for (let idx = 0; idx < bookmarks.length; idx++) {
+          const bookmark = bookmarks[idx];
+          const {
+            id,
+            userId,
+            artistId,
+            title,
+            images,
+            date,
+            time,
+            address,
+            mobile,
+            description,
+            tags,
+            perks,
+          } = bookmark;
+
+          // TODO : refactoring, don't find user & artist
+
+          // const author = await findUserById(userId);
+          // const artist = await findArtistById(artistId);
+          // console.log(author);
+          // console.log(artist);
+          // if (author && artist) {
+          //   const { id: userId, userName, profileImage: userProfile } = author;
+          //   const {
+          //     id: artistId,
+          //     name: artistName,
+          //     group,
+          //     profileImage: artistProfile,
+          //   } = artist;
+
+          const data = {
+            id,
+            author: {
+              userId,
+              userName: 'unknown',
+              profileImage: 'https://bit.ly/3euIgJj',
+              // userName,
+              // profileImage: userProfile,
+            },
+            artist: {
+              artistId,
+              artistName: 'unknown',
+              group: 'unknown',
+              profileImage: 'https://bit.ly/3euIgJj',
+              // artistName,
+              // group,
+              // profileImage: artistProfile,
+              isFollow: user.follow.includes(artistId),
+            },
+            images,
+            address,
+            date,
+            time,
+            title,
+            mobile,
+            description,
+            tags,
+            perks,
+            isBookmark: true,
+          };
+
+          result.push(data);
+          // }
+        }
+
+        res.status(200).send({
+          result,
+          message: 'ok',
+        });
+      } else {
+        res.status(404).send({
+          message: 'not found user content',
+        });
+      }
+    }
+  } catch (err) {}
 };

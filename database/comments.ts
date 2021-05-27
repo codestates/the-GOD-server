@@ -32,7 +32,7 @@ export const createComment = async (comment: Icomment): Promise<boolean> => {
 
 export const findCommentById = async (id: string): Promise<Icomment | null> => {
   try {
-    return await CommentModel.findOne({ id });
+    return await CommentModel.findOne({ id }).lean();
   } catch (err) {
     console.error('findCommentById error : ', err.message);
     return null;
@@ -69,7 +69,7 @@ export const findComments = async (
           limit: dataPerPage,
           skip,
         }
-      );
+      ).lean();
 
       return {
         comments,
@@ -88,7 +88,7 @@ export const findCommentsByUserId = async (
   userId: string
 ): Promise<Icomment[] | null> => {
   try {
-    return await CommentModel.find({ userId });
+    return await CommentModel.find({ userId }).lean();
   } catch (err) {
     console.error('findCommentByUserId error : ', err.message);
     return null;
