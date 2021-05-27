@@ -9,7 +9,11 @@ import {
   updateUserName,
 } from '@database/users';
 import { findArtistById, findArtistsByIdList } from '@database/artists';
-import { findContentById, findContentsByIdList } from '@database/contents';
+import {
+  findContentById,
+  findContentsByIdList,
+  updateContentUserInfo,
+} from '@database/contents';
 import { uploadImage, deleteImage } from '@util/aws';
 
 export const getUser = async (req: Request, res: Response): Promise<void> => {
@@ -218,7 +222,9 @@ export const updateUserProfile = async (
         );
 
         if (updateResult) {
-          await deleteImage(user.profileImage);
+          deleteImage(user.profileImage);
+          updateContentUserInfo(user);
+
           res
             .status(201)
             .send({

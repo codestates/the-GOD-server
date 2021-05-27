@@ -4,6 +4,8 @@ import {
   IcontentUpdate,
   IcontentFind,
   IcontentFindResult,
+  Iuser,
+  Iartist,
 } from '@interface';
 
 // content schema
@@ -167,6 +169,63 @@ export const updateContent = async (
     }
   } catch (err) {
     console.error('updateContent error : ', err.message);
+    return false;
+  }
+};
+
+export const updateContentUserInfo = async (user: Iuser): Promise<boolean> => {
+  try {
+    const result = await ContentModel.updateMany(
+      { 'author.userId': user.id },
+      {
+        author: {
+          userId: user.id,
+          userName: user.userName,
+          profileImage: user.profileImage,
+        },
+      }
+    );
+
+    let updateCount = result.nModified || 0;
+    console.log('contetnt auther update : ', updateCount);
+
+    if (updateCount >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateContentUserInfo error : ', err.message);
+    return false;
+  }
+};
+
+export const updateContentArtistInfo = async (
+  artist: Iartist
+): Promise<boolean> => {
+  try {
+    const result = await ContentModel.updateMany(
+      { 'artist.artistId': artist.id },
+      {
+        artist: {
+          artistId: artist.id,
+          artistName: artist.name,
+          group: artist.group,
+          profileImage: artist.profileImage,
+        },
+      }
+    );
+
+    let updateCount = result.nModified || 0;
+    console.log('contetnt artist update : ', updateCount);
+
+    if (updateCount >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('updateContentArtistInfo error : ', err.message);
     return false;
   }
 };
