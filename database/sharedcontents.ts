@@ -5,8 +5,8 @@ import { IsharedContents } from '@interface';
 const sharedContentScheme = new mongoose.Schema<IsharedContents>(
   {
     id: { type: String, required: true, unique: true },
-    hostId: { type: String, required: true },
-    conetntsArray: [String],
+    userId: { type: String, required: true },
+    contents: [String],
   },
   {
     timestamps: true,
@@ -52,7 +52,7 @@ export const findSharedContentsByUserId = async (
 ): Promise<IsharedContents[] | null> => {
   try {
     return await SharedContentModel.find(
-      { hostId: userId },
+      { userId },
       { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
     ).lean();
   } catch (err) {
@@ -63,12 +63,12 @@ export const findSharedContentsByUserId = async (
 
 export const updateSharedContent = async (
   id: string,
-  conetntsArray: string[]
+  contents: string[]
 ): Promise<boolean> => {
   try {
     const result = await SharedContentModel.findOneAndUpdate(
       { id },
-      { conetntsArray }
+      { contents }
     );
     if (result) {
       return true;

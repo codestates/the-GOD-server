@@ -1,16 +1,16 @@
 [
   {
     "id": "g123",
-    "hostId": "123",
-    "conetntsArray": [
+    "userId": "123",
+    "contents": [
       "1",
       "2"
     ]
   },
   {
     "id": "g456",
-    "hostId": "124",
-    "conetntsArray": [
+    "userId": "124",
+    "contents": [
       "1",
       "2",
       "3"

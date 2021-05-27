@@ -1,5 +1,5 @@
 export interface IsharedContents {
   id: string;
-  hostId: string;
-  conetntsArray: string[];
+  userId: string;
+  contents: string[];
 }

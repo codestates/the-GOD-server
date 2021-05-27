@@ -32,9 +32,7 @@ export const createContents = async (
       images,
       date,
       time,
-      storeName,
-      roadAddress,
-      location,
+      address,
       mobile,
       perks,
     } = req.body;
@@ -43,6 +41,7 @@ export const createContents = async (
 
     const user = await findUserByEmail(parsedToken as string);
     const artist = await findArtistById(artistId);
+    console.log('user : ', user);
 
     if (!user || !artist) {
       res
@@ -69,7 +68,7 @@ export const createContents = async (
           artistId: artist.id,
           artistName: artist.name,
           group: artist.group,
-          profileImage: artist.profileImage,
+          profileImage: artist.profileImage || '',
         },
         title: title,
         images: images,
@@ -82,11 +81,11 @@ export const createContents = async (
           close: time.close,
         },
         address: {
-          storeName: storeName,
-          roadAddress: roadAddress,
+          storeName: address.storeName,
+          roadAddress: address.roadAddress,
           location: {
-            lat: location.lat,
-            lng: location.lng,
+            lat: address.location.lat,
+            lng: address.location.lng,
           },
         },
         mobile: mobile,
