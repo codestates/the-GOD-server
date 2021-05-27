@@ -465,19 +465,18 @@ export const getUserSharedContents = async (
         const result = [];
 
         for (let idx = 0; idx < sharedContents.length; idx++) {
-          const { id, conetntsArray } = sharedContents[idx];
+          const { id, contents } = sharedContents[idx];
+          const findContents = await findContentsByIdList(contents);
 
-          const findContents = await findContentsByIdList(conetntsArray);
           if (!findContents || findContents.length === 0) continue;
 
-          const contents = findContents.map((content) => {
+          const contentsResult = findContents.map((content) => {
             return {
               ...content,
               isBookmark: user.bookmark.includes(content.id),
             };
           });
-
-          result.push({ id, contents });
+          result.push({ id, contents: contentsResult });
         }
 
         res.status(200).send({
