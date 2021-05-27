@@ -5,7 +5,7 @@ import { IsharedContents } from '@interface';
 const sharedContentScheme = new mongoose.Schema<IsharedContents>(
   {
     id: { type: String, required: true, unique: true },
-    hostId: { type: String, required: true },
+    userId: { type: String, required: true },
     conetntsArray: [String],
   },
   {
@@ -44,7 +44,7 @@ export const findSharedContentById = async (
   }
 };
 
-export const findSharedContentsByHostId = async (
+export const findSharedContentsByUserId = async (
   hostId: string
 ): Promise<IsharedContents[] | null> => {
   try {

@@ -10,9 +10,18 @@ import {
 const contentScheme = new mongoose.Schema<Icontent>(
   {
     id: { type: String, required: true, unique: true },
-    userId: { type: String, required: true },
+    author: {
+      userId: { type: String, required: true },
+      userName: { type: String, required: true },
+      profileImage: { type: String, required: true },
+    },
+    artist: {
+      artistId: { type: String, required: true },
+      artistName: { type: String, required: true },
+      group: { type: String, required: true },
+      profileImage: { type: String, required: true },
+    },
     title: { type: String, required: true },
-    artistId: { type: String, required: true },
     images: [String],
     date: {
       start: { type: String, required: true },
@@ -72,7 +81,7 @@ export const findContent = async (
 ): Promise<IcontentFindResult | null> => {
   try {
     const findQuery = {
-      'artistId': query.artistId,
+      'artist.artistId': query.artistId,
       'date.start': { $lte: query.date.end },
       'date.end': { $gte: query.date.start },
       'address.roadAddress': { $regex: query.location },
@@ -126,7 +135,7 @@ export const findContentsByUserId = async (
   userId: string
 ): Promise<Icontent[] | null> => {
   try {
-    return await ContentModel.find({ userId });
+    return await ContentModel.find({ author.userId });
   } catch (err) {
     console.error('findContentById error : ', err.message);
     return null;
@@ -176,6 +185,17 @@ export const createManyContent = async (contents: Icontent[]) => {
     return result;
   } catch (err) {
     console.log('createManyContent error : ', err.message);
+    return null;
+  }
+};
+
+export const findContentsByIdList = async (
+  idList: string[]
+): Promise<Icontent[] | null> => {
+  try {
+    return await ContentModel.find({ id: { $in: idList } }).lean();
+  } catch (err) {
+    console.error('findContentsByIdList error : ', err.message);
     return null;
   }
 };

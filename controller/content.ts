@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Iartist, Itoken, Iuser, Icontent, Iauthor } from '@interface';
 import { v5 as uuidv5 } from 'uuid';
-import { findArtists } from '@database/artists';
+import { findArtistById, findArtists } from '@database/artists';
 import { ENV } from '@config';
 import {
   createContent,
@@ -25,7 +25,7 @@ export const createContents = async (
 ): Promise<void> => {
   try {
     const { parsedToken } = req; //email
-    const user = await findUserByEmail(parsedToken as string);
+    const user = (await findUserByEmail(parsedToken as string)) as Iuser;
 
     if (!user) {
       res
@@ -50,15 +50,26 @@ export const createContents = async (
       perks,
     } = req.body;
     //검색한 아티스트의 아이디입니다.
+    const findArtist = (await findArtistById(artistId)) as Iartist;
     const contentsId = uuidv5(
       parsedToken as string,
       ENV.MY_NAMESPACE as string
     );
+
     const newContent = await createContent({
       id: contentsId,
-      userId: parsedToken as string,
+      author: {
+        userId: user.id,
+        userName: user.userName,
+        profileImage: user.profileImage,
+      },
       title: title,
-      artistId: artistId,
+      artist: {
+        artistId: findArtist.id,
+        artistName: findArtist.name,
+        group: findArtist.group || '',
+        profileImage: findArtist.profileImage || '',
+      },
       images: images,
       date: {
         start: date.start,
