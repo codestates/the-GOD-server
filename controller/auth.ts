@@ -74,7 +74,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     const uniqueID = uuidv5(email, ENV.MY_NAMESPACE as string);
     const createId = await createUser({
       id: uniqueID,
-      userName: userName,
+      name: userName,
       email: email,
       profileImage: req.body.profileImage || 'https://bit.ly/3euIgJj',
       password: hashedPWD,
@@ -119,7 +119,7 @@ export const googleLogin = async (
       const googlePWD = createPWD(email, name);
       const googleSignup = await createUser({
         id: sub + type,
-        userName: name,
+        name: name,
         email: email,
         profileImage: profileImage,
         password: googlePWD,
@@ -172,7 +172,7 @@ export const kakaoLogin = async (
       const googlePWD = createPWD(email, userName);
       const kakaoSignup = await createUser({
         id: id + type,
-        userName: userName,
+        name: userName,
         email: email,
         profileImage: profileImage,
         password: googlePWD,
@@ -225,7 +225,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
       const twitterPWD = createPWD(name, email);
       const twitterSignup = await createUser({
         id: id,
-        userName: userName,
+        name: userName,
         email: email,
         profileImage: profile_image_url,
         password: twitterPWD,

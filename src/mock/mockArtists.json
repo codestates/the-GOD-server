@@ -1,5 +1,11 @@
 [
   {
+    "id": "gbts",
+    "name": "전체",
+    "group": "BTS",
+    "profileImage": "https://bit.ly/3euIgJj"
+  },
+  {
     "id": "v1",
     "name": "V",
     "group": "BTS",
@@ -12,9 +18,21 @@
     "profileImage": "https://bit.ly/3euIgJj"
   },
   {
+    "id": "thegod",
+    "name": "전체",
+    "group": "theGOD",
+    "profileImage": "https://bit.ly/3euIgJj"
+  },
+  {
     "id": "s1",
     "name": "sim",
     "group": "theGOD",
+    "profileImage": "https://bit.ly/3euIgJj"
+  },
+  {
+    "id": "sosi",
+    "name": "전체",
+    "group": "소녀시대",
     "profileImage": "https://bit.ly/3euIgJj"
   },
   {
@@ -33,6 +51,12 @@
     "id": "nha",
     "name": "나훈아",
     "group": null,
+    "profileImage": "https://bit.ly/3euIgJj"
+  },
+  {
+    "id": "ea",
+    "name": "전체",
+    "group": "ENHYPEN",
     "profileImage": "https://bit.ly/3euIgJj"
   },
   {

@@ -1,13 +1,13 @@
 export interface Icontent {
   id: string;
   author: {
-    userId: string;
-    userName: string;
+    id: string;
+    name: string;
     profileImage: string;
   };
   artist: {
-    artistId: string;
-    artistName: string;
+    id: string;
+    name: string;
     group: string | null;
     profileImage: string;
   };
@@ -39,9 +39,9 @@ export interface IcontentUpdate {
   title?: string;
   images?: string[];
   artist?: {
-    artistId: string;
-    artistName: string;
-    group: string;
+    id: string;
+    name: string;
+    group: string | null;
     profileImage: string;
   };
   date?: {
@@ -81,9 +81,4 @@ export interface IcontentFindResult {
   totalPage: number;
   currentPage: number;
   dataPerPage: number;
-}
-
-export interface Iauthor {
-  userName: string;
-  profileImg: string;
 }

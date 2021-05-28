@@ -32,13 +32,13 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
         })
         .end();
     } else {
-      const { id, userName, email, profileImage, type } = user;
+      const { id, name, email, profileImage, type } = user;
       res
         .status(200)
         .send({
           result: {
             id,
-            userName,
+            name,
             email,
             profileImage,
             type,

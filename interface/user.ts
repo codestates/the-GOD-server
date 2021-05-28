@@ -7,7 +7,7 @@ export enum USER_TYPE {
 
 export interface Iuser {
   id: string;
-  userName: string;
+  name: string;
   email: string;
   profileImage: string;
   password: string;
@@ -15,4 +15,10 @@ export interface Iuser {
   follow: string[];
   bookmark: string[];
   passwordUpdate: string | null;
+}
+
+export interface Iauthor {
+  id: string;
+  name: string;
+  profileImage: string;
 }
