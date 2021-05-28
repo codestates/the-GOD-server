@@ -3,6 +3,7 @@ import mockAritists from './mockArtists.json';
 import mockComments from './mockComments.json';
 import mockContetnts from './mockContents.json';
 import mockSharedContents from './mockSharedContents.json';
+import mockLocation from './mockLocation.json';
 import mongoose from 'mongoose';
 
 import {
