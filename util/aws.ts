@@ -1,7 +1,7 @@
 import AWS from 'aws-sdk';
 import multer from 'multer';
 import path from 'path';
-import { v5 as uuidv5 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { ENV } from '@config';
 
 const {
@@ -9,7 +9,6 @@ const {
   AWS_REGION,
   AWS_SECRET_ACCESS_KEY,
   AWS_S3_BUCKET_NAME,
-  UUID_NAMESPACE,
 } = ENV;
 
 const BUCKET_URL = `https://${AWS_S3_BUCKET_NAME}.s3.ap-northeast-2.amazonaws.com`;
@@ -32,8 +31,8 @@ export const uploadImage = async (
 
     const fileExtension = path.extname(data.originalname);
     let imageName = path.basename(data.originalname, fileExtension);
-    imageName = uuidv5(imageName, UUID_NAMESPACE as string);
-    const fileName = `${imageName}${fileExtension}`;
+    let uuid = uuidv4();
+    const fileName = `${uuid}_${imageName}${fileExtension}`;
 
     if (AWS_S3_BUCKET_NAME) {
       await BUCKET.putObject({

@@ -14,7 +14,7 @@ const uplaodProfileImage = fileUpload.single('profileImage');
 const router = express.Router();
 
 router.get('/', getArtist);
-router.post('/', makeArtist);
+router.post('/', uplaodProfileImage, makeArtist);
 router.put('/', updateArtist);
 router.delete('/', deleteArtist);
 router.put('/profile', uplaodProfileImage, updateArtistProfile);
