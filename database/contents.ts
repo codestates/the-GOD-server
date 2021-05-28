@@ -13,13 +13,13 @@ const contentScheme = new mongoose.Schema<Icontent>(
   {
     id: { type: String, required: true, unique: true },
     author: {
-      userId: { type: String, required: true },
-      userName: { type: String, required: true },
+      id: { type: String, required: true },
+      name: { type: String, required: true },
       profileImage: { type: String, required: true },
     },
     artist: {
-      artistId: { type: String, required: true },
-      artistName: { type: String, required: true },
+      id: { type: String, required: true },
+      name: { type: String, required: true },
       group: { type: String },
       profileImage: { type: String, required: true },
     },
@@ -182,8 +182,8 @@ export const updateContentUserInfo = async (user: Iuser): Promise<boolean> => {
       { 'author.userId': user.id },
       {
         author: {
-          userId: user.id,
-          userName: user.userName,
+          id: user.id,
+          name: user.name,
           profileImage: user.profileImage,
         },
       }
@@ -211,8 +211,8 @@ export const updateContentArtistInfo = async (
       { 'artist.artistId': artist.id },
       {
         artist: {
-          artistId: artist.id,
-          artistName: artist.name,
+          id: artist.id,
+          name: artist.name,
           group: artist.group,
           profileImage: artist.profileImage,
         },

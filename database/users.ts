@@ -7,7 +7,7 @@ import { createPWD } from '@util/pwFunctions';
 const userSchema = new mongoose.Schema<Iuser>(
   {
     id: { type: String, required: true, unique: true },
-    userName: { type: String, required: true },
+    name: { type: String, required: true },
     email: { type: String, required: true },
     profileImage: { type: String },
     password: { type: String, required: true },

@@ -2,13 +2,13 @@
   {
     "id": "1",
     "author": {
-      "userId": "123",
-      "userName": "sim",
+      "id": "123",
+      "name": "sim",
       "profileImage": "https://bit.ly/3euIgJj"
     },
     "artist": {
-      "artistId": "tea",
-      "artistName": "태연",
+      "id": "tea",
+      "name": "태연",
       "group": "소녀시대",
       "profileImage": "https://bit.ly/3euIgJj"
     },
@@ -55,13 +55,13 @@
   {
     "id": "2",
     "author": {
-      "userId": "124",
-      "userName": "choi",
+      "id": "124",
+      "name": "choi",
       "profileImage": "https://bit.ly/3euIgJj"
     },
     "artist": {
-      "artistId": "iu",
-      "artistName": "아이유",
+      "id": "iu",
+      "name": "아이유",
       "group": null,
       "profileImage": "https://bit.ly/3euIgJj"
     },
@@ -105,13 +105,13 @@
   {
     "id": "3",
     "author": {
-      "userId": "126",
-      "userName": "Yoo",
+      "id": "126",
+      "name": "Yoo",
       "profileImage": "https://bit.ly/3euIgJj"
     },
     "artist": {
-      "artistId": "nha",
-      "artistName": "나훈아",
+      "id": "nha",
+      "name": "나훈아",
       "group": null,
       "profileImage": "https://bit.ly/3euIgJj"
     },

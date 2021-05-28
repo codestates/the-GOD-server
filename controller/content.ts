@@ -54,13 +54,13 @@ export const createContents = async (
       const newContent = await createContent({
         id: contentsId,
         author: {
-          userId: user.id,
-          userName: user.userName,
+          id: user.id,
+          name: user.name,
           profileImage: user.profileImage,
         },
         artist: {
-          artistId: artist.id,
-          artistName: artist.name,
+          id: artist.id,
+          name: artist.name,
           group: artist.group,
           profileImage: artist.profileImage,
         },
@@ -166,8 +166,8 @@ export const updateContents = async (
       const updateResult = await updateContent(req.body.contentId, {
         title: title,
         artist: {
-          artistId: artist.id,
-          artistName: artist.name,
+          id: artist.id,
+          name: artist.name,
           group: artist.group as string,
           profileImage: artist.profileImage as string,
         },
