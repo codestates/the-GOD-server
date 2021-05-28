@@ -38,10 +38,9 @@ export const createContents = async (
     } = req.body;
 
     // TODO: check invalid input
-
     const user = await findUserByEmail(parsedToken as string);
+    //onst user = await findUserByEmail(parsedToken as string);
     const artist = await findArtistById(artistId);
-    console.log('user : ', user);
 
     if (!user || !artist) {
       res
@@ -51,12 +50,7 @@ export const createContents = async (
         })
         .end();
     } else {
-      //검색한 아티스트의 아이디입니다.
-      const contentsId = uuidv5(
-        parsedToken as string,
-        ENV.MY_NAMESPACE as string
-      );
-
+      const contentsId = uuidv5(user.email, ENV.MY_NAMESPACE as string);
       const newContent = await createContent({
         id: contentsId,
         author: {
@@ -68,7 +62,7 @@ export const createContents = async (
           artistId: artist.id,
           artistName: artist.name,
           group: artist.group,
-          profileImage: artist.profileImage || '',
+          profileImage: artist.profileImage,
         },
         title: title,
         images: images,
@@ -216,7 +210,7 @@ export const updateContents = async (
 export const readContent = async (req: Request, res: Response) => {
   try {
     const { parsedToken } = req;
-    const { contentId } = req.body;
+    const contentId = req.body;
 
     const content = await findContentById(contentId);
     if (!content) {

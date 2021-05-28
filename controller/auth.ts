@@ -70,7 +70,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     if (!validName) {
       res.status(401).send({ message: '' });
     } */
-
+    console.log('here');
     const uniqueID = uuidv5(email, ENV.MY_NAMESPACE as string);
     const createId = await createUser({
       id: uniqueID,
