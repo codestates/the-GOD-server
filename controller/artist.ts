@@ -1,15 +1,16 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 
-import { createArtist } from '@database/artists';
+import {
+  createArtist,
+  deleteArtist as deleteArtistData,
+} from '@database/artists';
 import { findUserByEmail } from '@database/users';
 import { uploadImage, deleteImage } from '@util/aws';
 
 // TODO : make function
-export const getArtist = () => {};
-
 // TODO : make get all artist
-export const getArtistList = () => {};
+export const getArtist = () => {};
 
 export const makeArtist = async (
   req: Request,
@@ -50,7 +51,7 @@ export const makeArtist = async (
       }
     }
   } catch (err) {
-    console.error('create artist error : ', err.message);
+    console.error('makeArtist error : ', err.message);
     res.status(400).send({
       message: 'invalid request',
     });
@@ -58,5 +59,47 @@ export const makeArtist = async (
 };
 
 export const updateArtist = () => {};
-export const deleteArtist = () => {};
+export const deleteArtist = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { id } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+
+    // TODO : check admin user
+    if (!user) {
+      res
+        .status(401)
+        .send({
+          message: 'unauthorized',
+        })
+        .end();
+    } else if (!id) {
+      res
+        .status(400)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const result = await deleteArtistData(id);
+      if (result) {
+        res.status(201).send({
+          message: 'ok',
+        });
+      } else {
+        res.status(404).send({
+          message: 'invalid request',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('deleteArtist error : ', err.message);
+    res.status(400).send({
+      message: 'invalid request',
+    });
+  }
+};
 export const updateArtistProfile = () => {};
