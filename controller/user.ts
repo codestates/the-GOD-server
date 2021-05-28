@@ -11,8 +11,8 @@ import {
 import { findArtistById, findArtistsByIdList } from '@database/artists';
 import {
   findContentById,
-  findContentsByIdList,
   findContentsByUserId,
+  findContentsByIdList,
   updateContentUserInfo,
 } from '@database/contents';
 
