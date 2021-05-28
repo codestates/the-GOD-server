@@ -1,7 +1,7 @@
 [
   {
     "id": "123",
-    "userName": "sim",
+    "name": "sim",
     "email": "sim@test.com",
     "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
@@ -19,7 +19,7 @@
   },
   {
     "id": "124",
-    "userName": "choi",
+    "name": "choi",
     "email": "choi@test.com",
     "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
@@ -34,7 +34,7 @@
   },
   {
     "id": "125",
-    "userName": "Lee",
+    "name": "Lee",
     "email": "Lee@test.com",
     "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
@@ -51,7 +51,7 @@
   },
   {
     "id": "126",
-    "userName": "Yoo",
+    "name": "Yoo",
     "email": "Yoo@test.com",
     "profileImage": "https://bit.ly/3euIgJj",
     "password": "1234",
