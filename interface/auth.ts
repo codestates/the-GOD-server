@@ -22,7 +22,7 @@ export interface IkakaoLoginProps {
 
 export interface IkakaoLoginResult {
   id: string;
-  userName: string;
+  name: string;
   email: string;
   profileImage: string;
 }
@@ -34,7 +34,7 @@ export interface ItwitterLoginProps {
 export interface ItwitterLoginResult {
   id: string;
   name: string;
-  userName: string;
+  twitterName: string;
   profile_image_url: string;
 }
 
