@@ -12,6 +12,7 @@ import {
   artistRouter,
   contentRouter,
   commentRouter,
+  sharedcontentRouter,
 } from '@router';
 
 const PORT = ENV.SERVER_PORT || 4000;
@@ -29,6 +30,7 @@ app.use('/user', userRouter);
 app.use('/content', contentRouter);
 app.use('/artist', artistRouter);
 app.use('/comment', commentRouter);
+app.use('/sharedcontent', sharedcontentRouter);
 
 // NOTE : test funciton
 app.get('/', (req: express.Request, res: express.Response) => {
