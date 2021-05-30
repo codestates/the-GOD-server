@@ -6,16 +6,77 @@ import {
   findArtistById,
   deleteArtist as deleteArtistData,
   updateArtist as updateArtistData,
+  findAllArtists,
 } from '@database/artists';
 import { findUserByEmail } from '@database/users';
 import { updateContentArtistInfo } from '@database/contents';
 
-import { IartistUpdate } from '@interface';
+import { IartistUpdate, Artists, IgroupArtist, IsoloArtist } from '@interface';
 import { uploadImage, deleteImage } from '@util/aws';
 
 // TODO : make function
 // TODO : make get all artist
-export const getArtist = () => {};
+export const getArtist = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const artists = await findAllArtists();
+    if (!artists) {
+      res.status(404).send({
+        message: 'not found artist',
+      });
+    } else {
+      let result: Artists = [];
+      const groups: IgroupArtist[] = [];
+      const groupIdx: { [key: string]: number } = {};
+
+      for (let idx = 0; idx < artists.length; idx++) {
+        const { id, name, group, profileImage } = artists[idx];
+        if (group) {
+          const isAll = name === '전체';
+          if (group in groupIdx) {
+            const artistGroup = groups[groupIdx[group]];
+            artistGroup.name = group;
+            if (isAll) {
+              artistGroup.id = id;
+              artistGroup.profileImage = profileImage;
+            } else {
+              artistGroup.member.push({ id, name, profileImage });
+            }
+          } else {
+            groupIdx[group] = Object.keys(groupIdx).length;
+            const artistGroup: IgroupArtist = {
+              id: isAll ? id : '',
+              name: group,
+              type: 'group',
+              member: isAll ? [] : [{ id, name, profileImage }],
+              profileImage: isAll ? profileImage : '',
+            };
+            groups.push(artistGroup);
+          }
+        } else {
+          const soloArtist: IsoloArtist = {
+            id,
+            name,
+            profileImage,
+            type: 'solo',
+          };
+          result.push(soloArtist);
+        }
+      }
+
+      result = result.concat(groups);
+
+      res.status(200).send({
+        result,
+        message: 'ok',
+      });
+    }
+  } catch (err) {
+    console.error('getArtist error : ', err.message);
+    res.status(400).send({
+      message: 'invalid request',
+    });
+  }
+};
 
 export const makeArtist = async (
   req: Request,
