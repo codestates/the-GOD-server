@@ -3,10 +3,12 @@ import { v4 as uuidv4 } from 'uuid';
 
 import {
   createArtist,
+  findArtistById,
   deleteArtist as deleteArtistData,
   updateArtist as updateArtistData,
 } from '@database/artists';
 import { findUserByEmail } from '@database/users';
+import { updateContentArtistInfo } from '@database/contents';
 
 import { IartistUpdate } from '@interface';
 import { uploadImage, deleteImage } from '@util/aws';
@@ -69,8 +71,9 @@ export const updateArtist = async (
     const { parsedToken } = req;
     const { id, name, group } = req.body;
     const user = await findUserByEmail(parsedToken as string);
+    const artist = await findArtistById(id);
 
-    if (!user || !id) {
+    if (!user || !artist) {
       res
         .status(400)
         .send({
@@ -79,11 +82,19 @@ export const updateArtist = async (
         .end();
     } else {
       const update: IartistUpdate = {};
-      if (name) update.name = name;
-      if (group) update.group = group;
+      if (name) {
+        update.name = name;
+        artist.name = name;
+      }
+      if (group) {
+        update.group = group;
+        artist.group = group;
+      }
 
       const result = await updateArtistData(id, update);
       if (result) {
+        updateContentArtistInfo({ ...artist });
+
         res.status(201).send({
           message: 'ok',
         });
@@ -144,4 +155,66 @@ export const deleteArtist = async (
     });
   }
 };
-export const updateArtistProfile = () => {};
+export const updateArtistProfile = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { id } = req.body;
+    const profileImage = req.file;
+    const user = await findUserByEmail(parsedToken as string);
+    const artist = await findArtistById(id);
+
+    if (!user || !artist) {
+      res
+        .status(400)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const profileImageUrl = await uploadImage(profileImage);
+      if (!profileImageUrl) {
+        console.log('S3 Image update error');
+        res
+          .status(400)
+          .send({
+            message: 'invlaid request',
+          })
+          .end();
+      } else {
+        const updateResult = await updateArtistData(artist.id, {
+          profileImage: profileImageUrl,
+        });
+
+        if (updateResult) {
+          deleteImage(artist.profileImage);
+          updateContentArtistInfo({ ...artist, profileImage: profileImageUrl });
+
+          res
+            .status(201)
+            .send({
+              result: {
+                profileImage: profileImageUrl,
+              },
+              message: 'ok',
+            })
+            .end();
+        } else {
+          res
+            .status(404)
+            .send({
+              message: 'invlaid request',
+            })
+            .end();
+        }
+      }
+    }
+  } catch (err) {
+    console.error('updateArtistProfile error : ', err.message);
+    res.status(400).send({
+      message: 'invalid request',
+    });
+  }
+};
