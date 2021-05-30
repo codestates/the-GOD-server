@@ -6,7 +6,10 @@ import { Icomment, IcommentFind, IcommentFindResult } from '@interface';
 const commentScheme = new mongoose.Schema<Icomment>(
   {
     id: { type: String, required: true, unique: true },
-    userId: { type: String, required: true },
+    user: {
+      id: { type: String, required: true },
+      name: { type: String, required: true },
+    },
     comment: { type: String, required: true },
     contentId: { type: String, required: true },
   },
@@ -45,7 +48,7 @@ export const findComments = async (
   query: IcommentFind
 ): Promise<IcommentFindResult | null> => {
   try {
-    const totalCount = await CommentModel.count({ contentId: query.contentId });
+    const totalCount = await CommentModel.count({ id: query.id });
     const currentPage = query.page || 1;
     const dataPerPage = 30;
     const skip = (currentPage - 1) * dataPerPage;
@@ -62,14 +65,10 @@ export const findComments = async (
         dataPerPage,
       };
     } else {
-      const comments = await CommentModel.find(
-        { contentId: query.contentId },
-        null,
-        {
-          limit: dataPerPage,
-          skip,
-        }
-      ).lean();
+      const comments = await CommentModel.find({ id: query.id }, null, {
+        limit: dataPerPage,
+        skip,
+      }).lean();
 
       return {
         comments,
