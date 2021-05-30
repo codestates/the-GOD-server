@@ -4,8 +4,11 @@ import { v4 as uuidv4 } from 'uuid';
 import {
   createArtist,
   deleteArtist as deleteArtistData,
+  updateArtist as updateArtistData,
 } from '@database/artists';
 import { findUserByEmail } from '@database/users';
+
+import { IartistUpdate } from '@interface';
 import { uploadImage, deleteImage } from '@util/aws';
 
 // TODO : make function
@@ -58,7 +61,46 @@ export const makeArtist = async (
   }
 };
 
-export const updateArtist = () => {};
+export const updateArtist = async (
+  req: Request,
+  res: Response
+): Promise<void> => {
+  try {
+    const { parsedToken } = req;
+    const { id, name, group } = req.body;
+    const user = await findUserByEmail(parsedToken as string);
+
+    if (!user || !id) {
+      res
+        .status(400)
+        .send({
+          message: 'invlaid request',
+        })
+        .end();
+    } else {
+      const update: IartistUpdate = {};
+      if (name) update.name = name;
+      if (group) update.group = group;
+
+      const result = await updateArtistData(id, update);
+      if (result) {
+        res.status(201).send({
+          message: 'ok',
+        });
+      } else {
+        res.status(404).send({
+          message: 'invlaid request',
+        });
+      }
+    }
+  } catch (err) {
+    console.error('updateArtist error : ', err.message);
+    res.status(400).send({
+      message: 'invalid request',
+    });
+  }
+};
+
 export const deleteArtist = async (
   req: Request,
   res: Response
