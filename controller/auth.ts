@@ -157,7 +157,7 @@ export const kakaoLogin = async (
   const token = req.body;
   const type = USER_TYPE.Kakao;
   const userData = await kakaoToken(token);
-  const { id, userName, email, profileImage } = userData as IkakaoLoginResult;
+  const { id, name, email, profileImage } = userData as IkakaoLoginResult;
   try {
     const checkUser = await findUserByEmail(email);
     if (checkUser) {
@@ -169,10 +169,10 @@ export const kakaoLogin = async (
         })
         .send({ accessToken });
     } else {
-      const googlePWD = createPWD(email, userName);
+      const googlePWD = createPWD(email, name);
       const kakaoSignup = await createUser({
         id: id + type,
-        name: userName,
+        name: name,
         email: email,
         profileImage: profileImage,
         password: googlePWD,
@@ -209,8 +209,8 @@ export const twitterLogin = async (req: Request, res: Response) => {
   const token = req.body;
   const type = 'twitter' as USER_TYPE;
   const userData = (await twitterToken(token)) as ItwitterLoginResult;
-  const { id, name, userName, profile_image_url } = userData;
-  const email = userName + '@twitter.com';
+  const { id, name, twitterName, profile_image_url } = userData;
+  const email = twitterName + '@twitter.com';
   try {
     const checkUser = await findUserByEmail(email);
     if (checkUser) {
@@ -225,7 +225,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
       const twitterPWD = createPWD(name, email);
       const twitterSignup = await createUser({
         id: id,
-        name: userName,
+        name: twitterName,
         email: email,
         profileImage: profile_image_url,
         password: twitterPWD,

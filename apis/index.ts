@@ -44,7 +44,7 @@ export const kakaoToken = async (
 
   return {
     id: id,
-    userName: kakao_account.profile.nickname,
+    name: kakao_account.profile.nickname,
     email: kakao_account.email,
     profileImage: kakao_account.profile.profile_image_url,
   };
@@ -62,7 +62,7 @@ export const twitterToken = async (
   return {
     id: id,
     name: name,
-    userName: username,
+    twitterName: username,
     profile_image_url: profile_image_url ?? '',
   };
 };
