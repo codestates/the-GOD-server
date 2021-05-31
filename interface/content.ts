@@ -69,10 +69,8 @@ export interface IcontentUpdate {
 export interface IcontentFind {
   artistId: string;
   location: string;
-  date: {
-    start: string;
-    end: string;
-  };
+  dateStart: string;
+  dateEnd : string;
   page?: number;
 }
 

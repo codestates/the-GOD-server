@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Iartist, Itoken, Iuser, Icontent, Iauthor } from '@interface';
 import { v5 as uuidv5 } from 'uuid';
-import { findArtistById } from '@database/artists';
+import { findArtistById, findArtists } from '@database/artists';
 import { ENV } from '@config';
 import {
   createContent,
@@ -25,7 +25,7 @@ export const createContents = async (
   try {
     const { parsedToken } = req; //email
     const {
-      artistId,
+      artist,
       title,
       tags,
       description,
@@ -40,9 +40,9 @@ export const createContents = async (
     // TODO: check invalid input
     const user = await findUserByEmail(parsedToken as string);
     //onst user = await findUserByEmail(parsedToken as string);
-    const artist = await findArtistById(artistId);
+    const celeb = await findArtistById(artist);
 
-    if (!user || !artist) {
+    if (!user || !celeb) {
       res
         .status(401)
         .send({
@@ -59,10 +59,10 @@ export const createContents = async (
           profileImage: user.profileImage,
         },
         artist: {
-          id: artist.id,
-          name: artist.name,
-          group: artist.group,
-          profileImage: artist.profileImage,
+          id: celeb.id,
+          name: celeb.name,
+          group: celeb.group,
+          profileImage: celeb.profileImage,
         },
         title: title,
         images: images,
@@ -138,24 +138,23 @@ export const updateContents = async (
   try {
     const { parsedToken } = req;
     const {
-      artistId,
+      id,
+      artist,
       title,
       tags,
       description,
       images,
       date,
       time,
-      storeName,
-      roadAddress,
-      location,
+      address,
       mobile,
       perks,
     } = req.body;
 
     const user = await findUserByEmail(parsedToken as string);
-    const artist = await findArtistById(artistId);
+    const celeb = await findArtistById(artist);
 
-    if (!user || !artist) {
+    if (!user || !celeb) {
       res
         .status(401)
         .send({
@@ -163,13 +162,13 @@ export const updateContents = async (
         })
         .end();
     } else {
-      const updateResult = await updateContent(req.body.contentId, {
+      const updateResult = await updateContent(id, {
         title: title,
         artist: {
-          id: artist.id,
-          name: artist.name,
-          group: artist.group as string,
-          profileImage: artist.profileImage as string,
+          id: celeb.id,
+          name: celeb.name,
+          group: celeb.group as string,
+          profileImage: celeb.profileImage as string,
         },
         images: images,
         date: {
@@ -181,11 +180,11 @@ export const updateContents = async (
           close: time.close,
         },
         address: {
-          storeName: storeName,
-          roadAddress: roadAddress,
+          storeName: address.storeName,
+          roadAddress: address.roadAddress,
           location: {
-            lat: location.lat,
-            lng: location.lng,
+            lat: address.location.lat,
+            lng: address.location.lng,
           },
         },
         mobile: mobile,
@@ -210,9 +209,9 @@ export const updateContents = async (
 export const readContent = async (req: Request, res: Response) => {
   try {
     const { parsedToken } = req;
-    const contentId = req.body;
+    const id = req.query.id as string; //여기서 받는 id는 컨텐츠 id
 
-    const content = await findContentById(contentId);
+    const content = await findContentById(id);
     if (!content) {
       res.status(404).send({ message: 'no data' });
     } else {
@@ -234,9 +233,15 @@ export const readContent = async (req: Request, res: Response) => {
 };
 
 export const listOfContents = async (req: Request, res: Response) => {
-  const { artistId, location, date } = req.body;
+  const { artistId, location, dateStart, dateEnd } = req.query;
+  console.log(req.query);
   try {
-    const resultList = await findContent({ artistId, location, date });
+    const resultList = await findContent({
+      artistId: artistId as string,
+      location: location as string,
+      dateStart: dateStart as string,
+      dateEnd: dateEnd as string,
+    });
     if (!resultList) {
       res.status(404).send({ message: 'not found contents' });
     } else {

@@ -1,5 +1,5 @@
 import { Request, response, Response } from 'express';
-import { v5 as uuidv5 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { Payload, Itoken } from '../interface/auth';
 import { Iuser, USER_TYPE } from '@interface';
 import jwt, { Secret } from 'jsonwebtoken';
@@ -71,7 +71,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       res.status(401).send({ message: '' });
     } */
     console.log('here');
-    const uniqueID = uuidv5(email, ENV.MY_NAMESPACE as string);
+    const uniqueID = uuidv4();
     const createId = await createUser({
       id: uniqueID,
       name: userName,
@@ -102,7 +102,7 @@ export const googleLogin = async (
   res: Response
 ): Promise<void> => {
   const token = req.body;
-  const type = 'google' as USER_TYPE;
+  const type = USER_TYPE.Google;
   const userData = await googleToken(token);
   const { sub, name, email, profileImage } = userData as IgoogleLoginResult;
   try {
@@ -118,12 +118,12 @@ export const googleLogin = async (
     } else {
       const googlePWD = createPWD(email, name);
       const googleSignup = await createUser({
-        id: sub + type,
+        id: uuidv4(),
         name: name,
         email: email,
         profileImage: profileImage,
         password: googlePWD,
-        type: 'google' as USER_TYPE,
+        type: type,
         follow: [],
         bookmark: [],
         passwordUpdate: null,
@@ -171,12 +171,12 @@ export const kakaoLogin = async (
     } else {
       const googlePWD = createPWD(email, name);
       const kakaoSignup = await createUser({
-        id: id + type,
+        id: uuidv4(),
         name: name,
         email: email,
         profileImage: profileImage,
         password: googlePWD,
-        type: 'kakao' as USER_TYPE,
+        type: type,
         follow: [],
         bookmark: [],
         passwordUpdate: null,
@@ -207,9 +207,9 @@ export const kakaoLogin = async (
 
 export const twitterLogin = async (req: Request, res: Response) => {
   const token = req.body;
-  const type = 'twitter' as USER_TYPE;
+  const type = USER_TYPE.Twitter;
   const userData = (await twitterToken(token)) as ItwitterLoginResult;
-  const { id, name, twitterName, profile_image_url } = userData;
+  const { name, twitterName, profile_image_url } = userData;
   const email = twitterName + '@twitter.com';
   try {
     const checkUser = await findUserByEmail(email);
@@ -224,12 +224,12 @@ export const twitterLogin = async (req: Request, res: Response) => {
     } else {
       const twitterPWD = createPWD(name, email);
       const twitterSignup = await createUser({
-        id: id,
+        id: uuidv4(),
         name: twitterName,
         email: email,
         profileImage: profile_image_url,
         password: twitterPWD,
-        type: USER_TYPE.Twitter,
+        type: type,
         follow: [],
         bookmark: [],
         passwordUpdate: null,

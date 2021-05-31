@@ -1,12 +1,12 @@
 export interface Icomment {
   id: string;
-  userId: string;
+  user: IcommentWriter;
   comment: string;
   contentId: string;
 }
 
 export interface IcommentFind {
-  contentId: string;
+  id: string;
   page?: number;
 }
 
@@ -15,4 +15,9 @@ export interface IcommentFindResult {
   totalPage: number;
   currentPage: number;
   dataPerPage: number;
+}
+
+export interface IcommentWriter {
+  id: string;
+  name: string;
 }
