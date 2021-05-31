@@ -1,25 +1,37 @@
 [
   {
     "id": "c1",
-    "userId": "125",
+    "user": {
+      "id": "125",
+      "name": "Lee"
+    },
     "comment": "Icetea+shot",
     "contentId": "1"
   },
   {
     "id": "c2",
-    "userId": "124",
+    "user": {
+      "id": "124",
+      "name": "choi"
+    },
     "comment": "Americano",
     "contentId": "1"
   },
   {
     "id": "c3",
-    "userId": "123",
+    "user": {
+      "id": "123",
+      "name": "sim"
+    },
     "comment": "Latte",
     "contentId": "2"
   },
   {
     "id": "c4",
-    "userId": "126",
+    "user": {
+      "id": "126",
+      "name": "Yoo"
+    },
     "comment": "Caramel",
     "contentId": "3"
   }
