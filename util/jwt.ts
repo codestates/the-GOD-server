@@ -63,3 +63,9 @@ export const refreshToAccess = (req: Request, res: Response) => {
   const newToken = createAccessToken({ email, type });
   return newToken;
 };
+
+//클라이언트에서는 액세스 토큰이 만료되었다는 것을 알게 된 다음
+//리프레시 토큰을 서버로
+
+//아이디를 실어서 유저 정보를 가져오는 방향으로 작업.
+//굳이 미들웨어에 싣는다기 보다는 엔드포인트로..
