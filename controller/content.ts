@@ -25,7 +25,7 @@ export const createContents = async (
   try {
     const { parsedToken } = req; //email
     const {
-      artist,
+      artistId,
       title,
       tags,
       description,
@@ -40,7 +40,7 @@ export const createContents = async (
     // TODO: check invalid input
     const user = await findUserByEmail(parsedToken as string);
     //onst user = await findUserByEmail(parsedToken as string);
-    const celeb = await findArtistById(artist);
+    const celeb = await findArtistById(artistId);
 
     if (!user || !celeb) {
       res
@@ -139,7 +139,7 @@ export const updateContents = async (
     const { parsedToken } = req;
     const {
       id,
-      artist,
+      artistId,
       title,
       tags,
       description,
@@ -152,7 +152,7 @@ export const updateContents = async (
     } = req.body;
 
     const user = await findUserByEmail(parsedToken as string);
-    const celeb = await findArtistById(artist);
+    const celeb = await findArtistById(artistId);
 
     if (!user || !celeb) {
       res

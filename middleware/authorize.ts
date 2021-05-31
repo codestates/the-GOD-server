@@ -27,12 +27,12 @@ export default (req: Request, res: Response, next: NextFunction) => {
   const [type, token] = parseaAuthorization(authorization);
 
   if (type === 'BEARER') {
-    const email = verifyToken(TOKEN_TYPE.ACCESS, token);
+    const parsedToken = verifyToken(TOKEN_TYPE.ACCESS, token);
 
-    if (!email) {
+    if (!parsedToken) {
       res.status(401).send({ message: 'unauthorized' });
     } else {
-      req.parsedToken = email;
+      req.parsedToken = parsedToken.email;
       next();
     }
   } else {
