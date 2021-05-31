@@ -1,3 +1,8 @@
+export enum ARTST_TYPE {
+  Group = 'group',
+  Solo = 'solo',
+}
+
 export interface Iartist {
   id: string;
   name: string;
@@ -12,15 +17,14 @@ export interface Imember {
 }
 
 export interface IsoloArtist extends Imember {
-  type: 'group' | 'solo';
+  type: ARTST_TYPE;
 }
 
 export interface IgroupArtist extends IsoloArtist {
-  type: 'group';
   member: Imember[];
 }
 
-export type Artists = (IgroupArtist | IsoloArtist)[];
+export type IartistList = (IgroupArtist | IsoloArtist)[];
 
 export interface IartistUpdate {
   name?: string;
