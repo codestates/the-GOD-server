@@ -2,29 +2,21 @@ import { ENV } from '@config';
 import { Request, Response } from 'express';
 import jwt, { Secret, verify } from 'jsonwebtoken';
 import { Payload, TOKEN_TYPE } from '@interface';
-import { findUserByEmail } from '@database/users';
+import { findUserById } from '@database/users';
 
-export const createAccessToken = (payload: Payload) => {
-  const token = jwt.sign(
-    { email: payload.email, type: payload.type },
-    ENV.ACCESS_KEY as Secret,
-    {
-      algorithm: 'HS256',
-      expiresIn: '2h',
-    }
-  );
+export const createAccessToken = (id: string) => {
+  const token = jwt.sign(id, ENV.ACCESS_KEY as Secret, {
+    algorithm: 'HS256',
+    expiresIn: '2h',
+  });
   return token;
 };
 
-export const createRefreshToken = (payload: Payload) => {
-  const token = jwt.sign(
-    { email: payload.email, type: payload.type },
-    ENV.REFRESH_KEY as Secret,
-    {
-      algorithm: 'HS256',
-      expiresIn: '15d',
-    }
-  );
+export const createRefreshToken = (id: string) => {
+  const token = jwt.sign(id, ENV.REFRESH_KEY as Secret, {
+    algorithm: 'HS256',
+    expiresIn: '15d',
+  });
   return token;
 };
 
@@ -41,8 +33,8 @@ export const verifyToken = (type: TOKEN_TYPE, token: string | null) => {
   }
 
   try {
-    const { email, type } = verify(token, secret) as Payload;
-    return { email, type };
+    const id = verify(token, secret);
+    return id;
   } catch (err) {
     console.error('verify token error : ', err.message);
     return null;
@@ -59,8 +51,8 @@ export const refreshToAccess = (req: Request, res: Response) => {
   if (!refreshTokenData) {
     console.error('refreshToken invalid. log in again');
   } //리프레시토큰데이터는 현재 할당 받은 리프레시 토큰유저 이메일
-  const { email, type } = refreshTokenData as Payload;
-  const newToken = createAccessToken({ email, type });
+  const id = refreshTokenData as string;
+  const newToken = createAccessToken(id);
   return newToken;
 };
 

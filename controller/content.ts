@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { Iartist, Itoken, Iuser, Icontent, Iauthor } from '@interface';
-import { v5 as uuidv5 } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 import { findArtistById, findArtists } from '@database/artists';
 import { ENV } from '@config';
 import {
@@ -23,7 +23,8 @@ export const createContents = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { parsedToken } = req; //email
+    const { tokenUser } = req;
+    const { id, name, profileImage } = tokenUser as Iuser;
     const {
       artistId,
       title,
@@ -37,12 +38,9 @@ export const createContents = async (
       perks,
     } = req.body;
 
-    // TODO: check invalid input
-    const user = await findUserByEmail(parsedToken as string);
-    //onst user = await findUserByEmail(parsedToken as string);
     const celeb = await findArtistById(artistId);
 
-    if (!user || !celeb) {
+    if (!celeb) {
       res
         .status(401)
         .send({
@@ -50,13 +48,13 @@ export const createContents = async (
         })
         .end();
     } else {
-      const contentsId = uuidv5(user.email, ENV.MY_NAMESPACE as string);
+      const contentsId = uuidv4();
       const newContent = await createContent({
         id: contentsId,
         author: {
-          id: user.id,
-          name: user.name,
-          profileImage: user.profileImage,
+          id: id,
+          name: name,
+          profileImage: profileImage,
         },
         artist: {
           id: celeb.id,
@@ -107,23 +105,13 @@ export const deleteContents = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const { contentId } = req.body;
-    const user = await findUserByEmail(parsedToken as string);
-    if (!user) {
-      res
-        .status(401)
-        .send({
-          message: 'unauthorized',
-        })
-        .end();
+    const deleteResult = await deleteContent(contentId);
+    if (deleteResult && tokenUser) {
+      res.status(201).send({ message: 'ok' });
     } else {
-      const deleteResult = await deleteContent(contentId);
-      if (deleteResult) {
-        res.status(201).send({ message: 'ok' });
-      } else {
-        res.status(400).send({ message: 'invalid request' });
-      }
+      res.status(400).send({ message: 'invalid request' });
     }
   } catch (err) {
     console.error('delete contents error');
@@ -136,7 +124,7 @@ export const updateContents = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const {
       id,
       artistId,
@@ -151,10 +139,9 @@ export const updateContents = async (
       perks,
     } = req.body;
 
-    const user = await findUserByEmail(parsedToken as string);
     const celeb = await findArtistById(artistId);
 
-    if (!user || !celeb) {
+    if (!celeb) {
       res
         .status(401)
         .send({
@@ -208,7 +195,7 @@ export const updateContents = async (
 
 export const readContent = async (req: Request, res: Response) => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const id = req.query.id as string; //여기서 받는 id는 컨텐츠 id
 
     const content = await findContentById(id);
@@ -216,10 +203,7 @@ export const readContent = async (req: Request, res: Response) => {
       res.status(404).send({ message: 'no data' });
     } else {
       let isBookmark = false;
-      if (parsedToken) {
-        const user = await findUserById(parsedToken);
-        isBookmark = user?.bookmark.includes(content.id) || false;
-      }
+      isBookmark = tokenUser?.bookmark.includes(content.id) || false;
       res
         .status(200)
         .send({ result: { ...content, isBookmark }, message: 'ok' });
@@ -255,23 +239,18 @@ export const listOfContents = async (req: Request, res: Response) => {
 
 export const addBookmark = async (req: Request, res: Response) => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const { contentId } = req.body;
-    const findUser = await findUserByEmail(parsedToken as string);
-    if (!findUser) {
-      res.status(401).send({ message: 'unauthorized' });
+    const isBookmarked = await updateAddUserBookmark(
+      tokenUser?.email as string,
+      contentId
+    );
+    if (isBookmarked) {
+      res
+        .status(201)
+        .send({ result: { isBookmarked: isBookmarked }, message: 'ok' });
     } else {
-      const isBookmarked = await updateAddUserBookmark(
-        parsedToken as string,
-        contentId
-      );
-      if (isBookmarked) {
-        res
-          .status(201)
-          .send({ result: { isBookmarked: isBookmarked }, message: 'ok' });
-      } else {
-        res.status(400).send({ message: 'invalid request' });
-      }
+      res.status(400).send({ message: 'invalid request' });
     }
   } catch (err) {
     console.error('add bookmard error');
@@ -281,23 +260,16 @@ export const addBookmark = async (req: Request, res: Response) => {
 
 export const deleteBookmark = async (req: Request, res: Response) => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const { contentId } = req.body;
-    const findUser = await findUserByEmail(parsedToken as string);
-    if (!findUser) {
-      res.status(401).send({ message: 'unauthorized' });
+    const deletedBookmark = await updateDeleteUserBookmark(
+      tokenUser?.email as string,
+      contentId
+    );
+    if (deletedBookmark) {
+      res.status(201).send({ result: { isBookmarked: false }, message: 'ok' });
     } else {
-      const deletedBookmark = await updateDeleteUserBookmark(
-        parsedToken as string,
-        contentId
-      );
-      if (deletedBookmark) {
-        res
-          .status(201)
-          .send({ result: { isBookmarked: false }, message: 'ok' });
-      } else {
-        res.status(400).send({ message: 'invalid request' });
-      }
+      res.status(400).send({ message: 'invalid request' });
     }
   } catch (err) {
     console.error('delete bookmark error');

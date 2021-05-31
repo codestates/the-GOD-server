@@ -34,24 +34,27 @@ import {
 
 export const createSharedContents = async (req: Request, res: Response) => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const { contents } = req.body; //여기서 contents는 contentsId들로 이루어진 배열
-    const sharedContentsId = uuidv4();
-    const findUser = (await findUserByEmail(parsedToken as string)) as Iuser; // 공유 컨텐츠를 작성하는 유저의 아이디
-    const isShared = await createSharedContent({
-      id: sharedContentsId,
-      userId: findUser.id,
-      contents: contents,
-    });
-    if (isShared) {
-      res.status(201).send({
-        result: {
-          id: sharedContentsId,
-        },
-        message: 'ok',
-      });
+    if (!tokenUser) {
+      res.status(401).send({ message: 'unauthorized' });
     } else {
-      res.status(400).send({ message: 'invalid request' });
+      const id = uuidv4();
+      const isShared = await createSharedContent({
+        id: id,
+        userId: tokenUser.id,
+        contents: contents,
+      });
+      if (isShared) {
+        res.status(201).send({
+          result: {
+            id: id,
+          },
+          message: 'ok',
+        });
+      } else {
+        res.status(400).send({ message: 'invalid request' });
+      }
     }
   } catch (err) {
     console.error('sharing content error');
@@ -78,9 +81,8 @@ export const getSharedContents = async (req: Request, res: Response) => {
 
 export const updateSharedContents = async (req: Request, res: Response) => {
   try {
-    const { parsedToken } = req;
-    const findUser = await findUserByEmail(parsedToken as string);
-    if (!findUser) {
+    const { tokenUser } = req;
+    if (!tokenUser) {
       res.status(401).send({ message: 'unauthorized' });
     }
     const { id, contents } = req.body;
@@ -98,10 +100,9 @@ export const updateSharedContents = async (req: Request, res: Response) => {
 
 export const deleteSharedContents = async (req: Request, res: Response) => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const { id } = req.body;
-    const findUser = await findUserByEmail(parsedToken as string);
-    if (!findUser) {
+    if (!tokenUser) {
       res.status(401).send({ message: 'unauthorized' });
     } else {
       const isDeleted = await deleteSharedContent(id);
