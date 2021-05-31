@@ -76,11 +76,22 @@ export const findArtists = async (query: string): Promise<Iartist[] | null> => {
   }
 };
 
-export const updateArtist = async (
-  id: string,
-  update: IartistUpdate
-): Promise<boolean> => {
+export const updateArtist = async ({
+  id,
+  name,
+  group,
+  profileImage,
+}: IartistUpdate): Promise<boolean> => {
   try {
+    const update: {
+      name?: string;
+      group?: string | null;
+      profileImage?: string;
+    } = {};
+    if (name) update.name = name;
+    if (group) update.group = group;
+    if (profileImage) update.profileImage = profileImage;
+
     const result = await ArtistModel.findOneAndUpdate({ id }, update);
     if (result) {
       return true;
@@ -111,6 +122,7 @@ export const deleteArtist = async (id: string): Promise<boolean> => {
   }
 };
 
+// NOTE : for mock data
 export const createManyArtist = async (artists: Iartist[]) => {
   console.log('Write many artists - Start');
   try {

@@ -99,6 +99,7 @@ export const deleteSharedContent = async (id: string): Promise<boolean> => {
   }
 };
 
+// NOTE : for mock data
 export const createManySharedContent = async (
   shreadContents: IsharedContents[]
 ) => {

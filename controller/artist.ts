@@ -11,17 +11,9 @@ import {
 import { findUserByEmail } from '@database/users';
 import { updateContentArtistInfo } from '@database/contents';
 
-import {
-  IartistUpdate,
-  IartistList,
-  IgroupArtist,
-  IsoloArtist,
-  ARTST_TYPE,
-} from '@interface';
+import { IartistList, IgroupArtist, IsoloArtist, ARTST_TYPE } from '@interface';
 import { uploadImage, deleteImage } from '@util/aws';
 
-// TODO : make function
-// TODO : make get all artist
 export const getArtist = async (req: Request, res: Response): Promise<void> => {
   try {
     const artists = await findAllArtists();
@@ -148,17 +140,10 @@ export const updateArtist = async (
         })
         .end();
     } else {
-      const update: IartistUpdate = {};
-      if (name) {
-        update.name = name;
-        artist.name = name;
-      }
-      if (group) {
-        update.group = group;
-        artist.group = group;
-      }
+      if (name) artist.name = name;
+      if (group) artist.group = group;
 
-      const result = await updateArtistData(id, update);
+      const result = await updateArtistData({ id, name, group });
       if (result) {
         updateContentArtistInfo({ ...artist });
 
@@ -251,7 +236,8 @@ export const updateArtistProfile = async (
           })
           .end();
       } else {
-        const updateResult = await updateArtistData(artist.id, {
+        const updateResult = await updateArtistData({
+          id: artist.id,
           profileImage: profileImageUrl,
         });
 
