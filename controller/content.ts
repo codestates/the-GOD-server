@@ -127,21 +127,43 @@ export const findContent = async ({
         dataPerPage,
       };
     } else {
-      const contents = await ContentModel.find(
-        findQuery,
-        { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 },
-        {
-          limit: dataPerPage,
-          skip,
-        }
-      ).lean();
 
-      return {
-        contents,
-        totalPage,
-        currentPage,
-        dataPerPage,
-      };
+      const updateResult = await updateContent({
+        id,
+        title: title,
+        artist: {
+          id: celeb.id,
+          name: celeb.name,
+          group: celeb.group as string,
+          profileImage: celeb.profileImage as string,
+        },
+        images: images,
+        date: {
+          start: date.start,
+          end: date.end,
+        },
+        time: {
+          open: time.open,
+          close: time.close,
+        },
+        address: {
+          storeName: address.storeName,
+          roadAddress: address.roadAddress,
+          location: {
+            lat: address.location.lat,
+            lng: address.location.lng,
+          },
+        },
+        mobile: mobile,
+        description: description,
+        tags: tags,
+        perks: perks,
+      });
+      if (!updateResult) {
+        res.status(400).send('invalid input');
+      } else {
+        res.status(201).send({ result: updateResult, message: 'ok' });
+      }
     }
   } catch (err) {
     console.log('findContent error : ', err.message);
