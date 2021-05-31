@@ -32,10 +32,11 @@ export interface Icontent {
   mobile: string;
   description: string;
   tags: string[];
-  perks: any;
+  perks: { [key: string]: boolean };
 }
 
 export interface IcontentUpdate {
+  id: string;
   title?: string;
   images?: string[];
   artist?: {
@@ -63,14 +64,14 @@ export interface IcontentUpdate {
   mobile?: string;
   description?: string;
   tags?: string[];
-  perks?: any;
+  perks?: { [key: string]: boolean };
 }
 
 export interface IcontentFind {
   artistId: string;
   location: string;
   dateStart: string;
-  dateEnd : string;
+  dateEnd: string;
   page?: number;
 }
 
