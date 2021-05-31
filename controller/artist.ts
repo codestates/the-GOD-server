@@ -11,11 +11,9 @@ import {
 import { findUserByEmail } from '@database/users';
 import { updateContentArtistInfo } from '@database/contents';
 
-import { IartistUpdate, Artists, IgroupArtist, IsoloArtist } from '@interface';
+import { IartistList, IgroupArtist, IsoloArtist, ARTST_TYPE } from '@interface';
 import { uploadImage, deleteImage } from '@util/aws';
 
-// TODO : make function
-// TODO : make get all artist
 export const getArtist = async (req: Request, res: Response): Promise<void> => {
   try {
     const artists = await findAllArtists();
@@ -24,7 +22,7 @@ export const getArtist = async (req: Request, res: Response): Promise<void> => {
         message: 'not found artist',
       });
     } else {
-      let result: Artists = [];
+      let result: IartistList = [];
       const groups: IgroupArtist[] = [];
       const groupIdx: { [key: string]: number } = {};
 
@@ -46,7 +44,7 @@ export const getArtist = async (req: Request, res: Response): Promise<void> => {
             const artistGroup: IgroupArtist = {
               id: isAll ? id : '',
               name: group,
-              type: 'group',
+              type: ARTST_TYPE.Group,
               member: isAll ? [] : [{ id, name, profileImage }],
               profileImage: isAll ? profileImage : '',
             };
@@ -57,7 +55,7 @@ export const getArtist = async (req: Request, res: Response): Promise<void> => {
             id,
             name,
             profileImage,
-            type: 'solo',
+            type: ARTST_TYPE.Solo,
           };
           result.push(soloArtist);
         }
@@ -142,17 +140,10 @@ export const updateArtist = async (
         })
         .end();
     } else {
-      const update: IartistUpdate = {};
-      if (name) {
-        update.name = name;
-        artist.name = name;
-      }
-      if (group) {
-        update.group = group;
-        artist.group = group;
-      }
+      if (name) artist.name = name;
+      if (group) artist.group = group;
 
-      const result = await updateArtistData(id, update);
+      const result = await updateArtistData({ id, name, group });
       if (result) {
         updateContentArtistInfo({ ...artist });
 
@@ -245,7 +236,8 @@ export const updateArtistProfile = async (
           })
           .end();
       } else {
-        const updateResult = await updateArtistData(artist.id, {
+        const updateResult = await updateArtistData({
+          id: artist.id,
           profileImage: profileImageUrl,
         });
 
