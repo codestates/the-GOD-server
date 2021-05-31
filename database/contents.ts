@@ -100,9 +100,9 @@ export const findContent = async (
 ): Promise<IcontentFindResult | null> => {
   try {
     const findQuery = {
-      'artist.artistId': query.artistId,
-      'date.start': { $lte: query.dateStart },
-      'date.end': { $gte: query.dateEnd },
+      'artist.id': query.artistId,
+      'date.start': { $lte: query.date.end },
+      'date.end': { $gte: query.date.start },
       'address.roadAddress': { $regex: query.location },
     };
 
@@ -150,7 +150,7 @@ export const findContentsByUserId = async (
 ): Promise<Icontent[] | null> => {
   try {
     return await ContentModel.find(
-      { 'author.userId': userId },
+      { 'author.id': userId },
       { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
     ).lean();
   } catch (err) {
@@ -179,7 +179,7 @@ export const updateContent = async (
 export const updateContentUserInfo = async (user: Iuser): Promise<boolean> => {
   try {
     const result = await ContentModel.updateMany(
-      { 'author.userId': user.id },
+      { 'author.id': user.id },
       {
         author: {
           id: user.id,
@@ -208,7 +208,7 @@ export const updateContentArtistInfo = async (
 ): Promise<boolean> => {
   try {
     const result = await ContentModel.updateMany(
-      { 'artist.artistId': artist.id },
+      { 'artist.id': artist.id },
       {
         artist: {
           id: artist.id,
