@@ -10,7 +10,7 @@ import { uploadImage, deleteImage } from '@util/aws';
 
 // TODO : make function
 // TODO : make get all artist
-export const getArtist = () => {};
+export const getArtist = (req: Request, res: Response) => {};
 
 export const makeArtist = async (
   req: Request,
