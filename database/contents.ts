@@ -101,8 +101,8 @@ export const findContent = async (
   try {
     const findQuery = {
       'artist.artistId': query.artistId,
-      'date.start': { $lte: query.date.end },
-      'date.end': { $gte: query.date.start },
+      'date.start': { $lte: query.dateStart },
+      'date.end': { $gte: query.dateEnd },
       'address.roadAddress': { $regex: query.location },
     };
 
