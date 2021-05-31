@@ -36,6 +36,7 @@ export interface Icontent {
 }
 
 export interface IcontentUpdate {
+  id: string;
   title?: string;
   images?: string[];
   artist?: {

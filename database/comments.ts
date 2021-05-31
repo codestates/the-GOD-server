@@ -129,6 +129,7 @@ export const deleteComment = async (id: string): Promise<boolean> => {
   }
 };
 
+// NOTE : for mock data
 export const createManyComment = async (comments: Icomment[]) => {
   console.log('Write many comment - Start');
   try {

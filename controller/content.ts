@@ -162,7 +162,8 @@ export const updateContents = async (
         })
         .end();
     } else {
-      const updateResult = await updateContent(id, {
+      const updateResult = await updateContent({
+        id,
         title: title,
         artist: {
           id: celeb.id,

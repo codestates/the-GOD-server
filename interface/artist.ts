@@ -27,6 +27,7 @@ export interface IgroupArtist extends IsoloArtist {
 export type IartistList = (IgroupArtist | IsoloArtist)[];
 
 export interface IartistUpdate {
+  id: string;
   name?: string;
   group?: string | null;
   profileImage?: string;

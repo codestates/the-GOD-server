@@ -95,20 +95,24 @@ export const findContentsByIdList = async (
 // TODO : make content searcing function by query -> artist && location && date time
 // TODO : make pagination
 // TODO : sorting by location
-export const findContent = async (
-  query: IcontentFind
-): Promise<IcontentFindResult | null> => {
+export const findContent = async ({
+  artistId,
+  location,
+  dateStart,
+  dateEnd,
+  page,
+}: IcontentFind): Promise<IcontentFindResult | null> => {
   try {
     const findQuery = {
-      'artist.id': query.artistId,
-      'date.start': { $lte: query.dateEnd },
-      'date.end': { $gte: query.dateStart },
-      'address.roadAddress': { $regex: query.location },
+      'artist.id': artistId,
+      'date.start': { $lte: dateEnd },
+      'date.end': { $gte: dateStart },
+      'address.roadAddress': { $regex: location },
     };
 
     const totalCount = await ContentModel.count(findQuery);
-    const currentPage = query.page || 1;
-    const dataPerPage = 2;
+    const currentPage = page || 1;
+    const dataPerPage = 15;
     const skip = (currentPage - 1) * dataPerPage;
     const totalPage = Math.ceil(totalCount / dataPerPage);
 
@@ -160,11 +164,13 @@ export const findContentsByUserId = async (
 };
 
 export const updateContent = async (
-  id: string,
   update: IcontentUpdate
 ): Promise<boolean> => {
   try {
-    const result = await ContentModel.findOneAndUpdate({ id }, update);
+    const result = await ContentModel.findOneAndUpdate(
+      { id: update.id },
+      update
+    );
     if (result) {
       return true;
     } else {
@@ -176,15 +182,19 @@ export const updateContent = async (
   }
 };
 
-export const updateContentUserInfo = async (user: Iuser): Promise<boolean> => {
+export const updateContentUserInfo = async ({
+  id,
+  name,
+  profileImage,
+}: Iuser): Promise<boolean> => {
   try {
     const result = await ContentModel.updateMany(
-      { 'author.id': user.id },
+      { 'author.id': id },
       {
         author: {
-          id: user.id,
-          name: user.name,
-          profileImage: user.profileImage,
+          id,
+          name,
+          profileImage,
         },
       }
     );
@@ -203,19 +213,17 @@ export const updateContentUserInfo = async (user: Iuser): Promise<boolean> => {
   }
 };
 
-export const updateContentArtistInfo = async (
-  artist: Iartist
-): Promise<boolean> => {
+export const updateContentArtistInfo = async ({
+  id,
+  name,
+  group,
+  profileImage,
+}: Iartist): Promise<boolean> => {
   try {
     const result = await ContentModel.updateMany(
-      { 'artist.id': artist.id },
+      { 'artist.id': id },
       {
-        artist: {
-          id: artist.id,
-          name: artist.name,
-          group: artist.group,
-          profileImage: artist.profileImage,
-        },
+        artist: { id, name, group, profileImage },
       }
     );
 
@@ -251,6 +259,7 @@ export const deleteContent = async (id: string): Promise<boolean> => {
   }
 };
 
+// NOTE : for mock data
 export const createManyContent = async (contents: Icontent[]) => {
   console.log('Write many contents - Start');
   try {
