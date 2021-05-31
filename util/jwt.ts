@@ -41,8 +41,8 @@ export const verifyToken = (type: TOKEN_TYPE, token: string | null) => {
   }
 
   try {
-    const { email , type } = verify(token, secret) as Payload;
-    return { email , type };
+    const { email, type } = verify(token, secret) as Payload;
+    return { email, type };
   } catch (err) {
     console.error('verify token error : ', err.message);
     return null;
@@ -59,6 +59,7 @@ export const refreshToAccess = (req: Request, res: Response) => {
   if (!refreshTokenData) {
     console.error('refreshToken invalid. log in again');
   } //리프레시토큰데이터는 현재 할당 받은 리프레시 토큰유저 이메일
-  const { email , type } = refreshTokenData;
-  const user = findUserByEmail(email);
+  const { email, type } = refreshTokenData as Payload;
+  const newToken = createAccessToken({ email, type });
+  return newToken;
 };
