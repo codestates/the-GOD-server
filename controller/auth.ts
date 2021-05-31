@@ -97,6 +97,11 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   }
 };
 
+export const signout = async (req: Request, res: Response) => {
+  try {
+  } catch (err) {}
+};
+
 export const googleLogin = async (
   req: Request,
   res: Response

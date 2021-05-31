@@ -52,6 +52,18 @@ export const findArtistsByIdList = async (
   }
 };
 
+export const findAllArtists = async (): Promise<Iartist[] | null> => {
+  try {
+    return await ArtistModel.find(
+      {},
+      { _id: 0, id: 1, name: 1, group: 1, profileImage: 1 }
+    ).lean();
+  } catch (err) {
+    console.error('findAllArtists error : ', err.message);
+    return null;
+  }
+};
+
 // 그룹 또는 이름으로 검색한 결과 반환
 export const findArtists = async (query: string): Promise<Iartist[] | null> => {
   try {
