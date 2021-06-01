@@ -1,11 +1,9 @@
 import { ENV } from '@config';
-import { Request, Response } from 'express';
 import jwt, { Secret, verify } from 'jsonwebtoken';
-import { Payload, TOKEN_TYPE } from '@interface';
-import { findUserById } from '@database/users';
+import { TOKEN_TYPE, Ipayload } from '@interface';
 
 export const createAccessToken = (id: string) => {
-  const token = jwt.sign(id, ENV.ACCESS_KEY as Secret, {
+  const token = jwt.sign({ id }, ENV.ACCESS_KEY as Secret, {
     algorithm: 'HS256',
     expiresIn: '2h',
   });
@@ -13,7 +11,7 @@ export const createAccessToken = (id: string) => {
 };
 
 export const createRefreshToken = (id: string) => {
-  const token = jwt.sign(id, ENV.REFRESH_KEY as Secret, {
+  const token = jwt.sign({ id }, ENV.REFRESH_KEY as Secret, {
     algorithm: 'HS256',
     expiresIn: '15d',
   });
@@ -33,31 +31,10 @@ export const verifyToken = (type: TOKEN_TYPE, token: string | null) => {
   }
 
   try {
-    const id = verify(token, secret);
+    const { id } = verify(token, secret) as Ipayload;
     return id;
   } catch (err) {
     console.error('verify token error : ', err.message);
     return null;
   }
 };
-
-export const refreshToAccess = (req: Request, res: Response) => {
-  const refreshToken = req.cookies.refreshToken;
-  if (!refreshToken) {
-    console.error('no refreshToken');
-    return null;
-  } //쿠키에 리프레시 토큰 유무 확인
-  const refreshTokenData = verifyToken(TOKEN_TYPE.REFRESH, refreshToken);
-  if (!refreshTokenData) {
-    console.error('refreshToken invalid. log in again');
-  } //리프레시토큰데이터는 현재 할당 받은 리프레시 토큰유저 이메일
-  const id = refreshTokenData as string;
-  const newToken = createAccessToken(id);
-  return newToken;
-};
-
-//클라이언트에서는 액세스 토큰이 만료되었다는 것을 알게 된 다음
-//리프레시 토큰을 서버로
-
-//아이디를 실어서 유저 정보를 가져오는 방향으로 작업.
-//굳이 미들웨어에 싣는다기 보다는 엔드포인트로..

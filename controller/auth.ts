@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { Payload, Itoken } from '../interface/auth';
-import { Iuser, USER_TYPE } from '@interface';
-import jwt, { Secret } from 'jsonwebtoken';
-import crypto from 'crypto';
-import { createAccessToken, createRefreshToken } from '../util/jwt';
-import { ENV } from '@config';
+import { Iuser, TOKEN_TYPE, USER_TYPE } from '@interface';
+import {
+  createAccessToken,
+  createRefreshToken,
+  verifyToken,
+} from '../util/jwt';
 import { createPWD } from '../util/pwFunctions';
 import { googleToken, kakaoToken, twitterToken } from '../apis';
 import {
@@ -16,9 +16,6 @@ import {
 import {
   createUser,
   findUserById,
-  findUserByUserName,
-  updateUserName,
-  updateUserProfileImage,
   updateUserPassword,
   deleteUser,
   findUserByEmail,
@@ -28,27 +25,27 @@ import {
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
   const encodedPWD = createPWD(email, password);
-  const type = USER_TYPE.Email;
 
   try {
-    let user = await findValidUser(email, encodedPWD);
-
-    if (user) {
-      const accessToken = createAccessToken(user.id);
-      const refreshToken = createRefreshToken(user.id);
-
-      res.cookie('Refresh Token : ', refreshToken, {
-        httpOnly: true,
+    let user = (await findValidUser(email, encodedPWD)) as Iuser;
+    if (!user) {
+      res.status(400).send({
+        message: 'invalid request',
       });
-      res.status(201).send({
-        result: {
-          accessToken: accessToken,
-        },
-        message: 'ok',
-      });
-    } else {
-      res.status(400).send({ message: 'invalid request' });
+      return;
     }
+    const accessToken = createAccessToken(user.id);
+    const refreshToken = createRefreshToken(user.id);
+
+    res.cookie('Refresh Token : ', refreshToken, {
+      httpOnly: true,
+    });
+    res.status(201).send({
+      result: {
+        accessToken: accessToken,
+      },
+      message: 'ok',
+    });
   } catch (err) {
     console.error('User login error');
     res.status(404).send({
@@ -62,7 +59,10 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const duplicated = await findUserByEmail(email);
     if (duplicated) {
-      res.status(400).send({ message: 'invalid request' }).end();
+      res.status(401).send({
+        message: 'fali signup',
+      });
+      return;
     }
     const hashedPWD = await createPWD(email, password);
     const id = uuidv4();
@@ -78,15 +78,13 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       passwordUpdate: null,
     });
 
-    if (createId) {
-      res.status(201).send({ message: 'ok' });
-    } else {
-      res.status(400).send('invalid input');
-    }
+    res.status(201).send({
+      message: 'ok',
+    });
   } catch (err) {
     console.error('User save error by server');
-    res.status(401).send({
-      message: 'fail signup',
+    res.status(400).send({
+      message: 'invalid request',
     });
   }
 };
@@ -339,6 +337,41 @@ export const setPassword = async (
     console.error('setPassword error');
     res.status(400).send({
       message: 'invlaid request',
+    });
+  }
+};
+
+export const refreshToAccess = (req: Request, res: Response) => {
+  try {
+    const refreshToken = req.cookies.refreshToken;
+
+    if (!refreshToken) {
+      res.status(400).send({
+        message: 'invalid request',
+      });
+      return;
+    }
+
+    const refreshTokenData = verifyToken(TOKEN_TYPE.REFRESH, refreshToken);
+    if (!refreshTokenData) {
+      res.status(401).send({
+        message: 'unauthorized',
+      });
+      return;
+    }
+
+    const id = refreshTokenData as string;
+    const newToken = createAccessToken(id);
+    res.status(200).send({
+      result: {
+        accessToken: newToken,
+      },
+      message: 'ok',
+    });
+  } catch (err) {
+    console.error('refreshToken error : ', err.message);
+    res.status(400).send({
+      message: 'invalid request',
     });
   }
 };
