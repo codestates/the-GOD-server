@@ -184,9 +184,12 @@ export const kakaoLogin = async (
         })
         .send({ accessToken });
     } else {
+      if (findUserById(id)) {
+        const id = uuidv4();
+      }
       const googlePWD = createPWD(email, name);
       const kakaoSignup = await createUser({
-        id: uuidv4(),
+        id: id,
         name: name,
         email: email,
         profileImage: profileImage,

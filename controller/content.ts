@@ -127,7 +127,7 @@ export const findContent = async ({
         dataPerPage,
       };
     } else {
-<<<<<<< HEAD
+
       const contents = await ContentModel.find(
         findQuery,
         { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 },
@@ -143,7 +143,7 @@ export const findContent = async ({
         currentPage,
         dataPerPage,
       };
-=======
+
       const updateResult = await updateContent({
         id,
         title: title,
@@ -180,7 +180,6 @@ export const findContent = async ({
       } else {
         res.status(201).send({ result: updateResult, message: 'ok' });
       }
->>>>>>> 450518314169ce2939f028ad8f7cc14398abb1fd
     }
   } catch (err) {
     console.log('findContent error : ', err.message);
