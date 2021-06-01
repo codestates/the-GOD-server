@@ -94,9 +94,17 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 export const signout = async (req: Request, res: Response) => {
   try {
     const { tokenUser } = req;
-    const { id } = tokenUser as Iuser;
-    const isDeleted = await deleteUser(id);
-    if (isDeleted) {
+    const { password } = req.body;
+    const { id, email } = tokenUser as Iuser;
+    const encodedPWD = createPWD(email, password);
+    const isUser = await findValidUser(email, encodedPWD);
+    if (isUser) {
+      const isDeleted = await deleteUser(id);
+      if (isDeleted) {
+        res.status(201).send({ message: 'ok' });
+      } else {
+        res.status(400).send({ message: 'invalid request' });
+      }
     }
   } catch (err) {
     console.error('signout error');
@@ -114,8 +122,8 @@ export const googleLogin = async (
   try {
     const user = await findUserByEmail(email);
     if (user && user.type === 'google') {
-      const accessToken = createAccessToken(sub);
-      const refreshToken = createRefreshToken(sub);
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
       res
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
@@ -135,8 +143,9 @@ export const googleLogin = async (
         passwordUpdate: null,
       });
       if (googleSignup) {
-        const accessToken = await createAccessToken(sub);
-        const refreshToken = await createRefreshToken(sub);
+        const user = (await findUserByEmail(email)) as Iuser;
+        const accessToken = await createAccessToken(user.id);
+        const refreshToken = await createRefreshToken(user.id);
         res
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
@@ -167,20 +176,17 @@ export const kakaoLogin = async (
   try {
     const user = await findUserByEmail(email);
     if (user && user.type === 'kakao') {
-      const accessToken = createAccessToken(id);
-      const refreshToken = createRefreshToken(id);
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
       res
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
         })
         .send({ accessToken });
     } else {
-      if (findUserById(id)) {
-        const id = uuidv4();
-      }
       const googlePWD = createPWD(email, name);
       const kakaoSignup = await createUser({
-        id: id,
+        id: uuidv4(),
         name: name,
         email: email,
         profileImage: profileImage,
@@ -191,8 +197,9 @@ export const kakaoLogin = async (
         passwordUpdate: null,
       });
       if (kakaoSignup) {
-        const accessToken = await createAccessToken(id);
-        const refreshToken = await createRefreshToken(id);
+        const user = (await findUserByEmail(email)) as Iuser;
+        const accessToken = await createAccessToken(user.id);
+        const refreshToken = await createRefreshToken(user.id);
         res
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
@@ -221,8 +228,8 @@ export const twitterLogin = async (req: Request, res: Response) => {
   try {
     const user = await findUserByEmail(email);
     if (user) {
-      const accessToken = createAccessToken(email);
-      const refreshToken = createRefreshToken(email);
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
       res
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
@@ -242,8 +249,9 @@ export const twitterLogin = async (req: Request, res: Response) => {
         passwordUpdate: null,
       });
       if (twitterSignup) {
-        const accessToken = await createAccessToken(email);
-        const refreshToken = await createRefreshToken(email);
+        const user = (await findUserByEmail(email)) as Iuser;
+        const accessToken = await createAccessToken(user.id);
+        const refreshToken = await createRefreshToken(user.id);
         res
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
@@ -262,8 +270,6 @@ export const twitterLogin = async (req: Request, res: Response) => {
     });
   }
 };
-
-//TODO : 회원탈퇴 , 비밀번호 변경
 
 export const checkPassword = async (
   req: Request,
