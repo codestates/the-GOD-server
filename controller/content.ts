@@ -128,6 +128,22 @@ export const findContent = async ({
       };
     } else {
 
+      const contents = await ContentModel.find(
+        findQuery,
+        { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 },
+        {
+          limit: dataPerPage,
+          skip,
+        }
+      ).lean();
+
+      return {
+        contents,
+        totalPage,
+        currentPage,
+        dataPerPage,
+      };
+
       const updateResult = await updateContent({
         id,
         title: title,

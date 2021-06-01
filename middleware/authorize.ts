@@ -35,6 +35,7 @@ export default async (req: Request, res: Response, next: NextFunction) => {
       res.status(401).send({ message: 'unauthorized' });
     } else {
       req.tokenUser = user;
+      next();
     }
   } else {
     console.log(`token type Error: ${type}`);
