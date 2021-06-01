@@ -350,7 +350,14 @@ export const getUserContents = async (
     }
 
     const result = contents.map((content) => {
-      return { ...content, isBookmark: user.bookmark.includes(content.id) };
+      return {
+        ...content,
+        artist: {
+          ...content.artist,
+          isFollow: user.follow.includes(content.artist.id),
+        },
+        isBookmark: user.bookmark.includes(content.id),
+      };
     });
 
     res.status(200).send({
