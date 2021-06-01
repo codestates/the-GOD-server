@@ -212,6 +212,8 @@ export const updateName = async (
 
     const result = await updateUserName(user.id, userName);
     if (result) {
+      updateContentUserInfo({ ...user, name: userName });
+
       res.status(201).send({
         message: 'ok',
       });
