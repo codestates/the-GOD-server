@@ -1,6 +1,8 @@
+import { Iuser } from './user';
+
 declare module 'express' {
   export interface Request {
-    parsedToken?: string;
+    tokenUser?: Iuser;
   }
 }
 

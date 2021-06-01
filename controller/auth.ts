@@ -31,19 +31,15 @@ export const login = async (req: Request, res: Response): Promise<void> => {
   const type = USER_TYPE.Email;
 
   try {
-    let checkUser = await findValidUser(email, encodedPWD);
-    //console.log(checkUser);
+    let user = await findValidUser(email, encodedPWD);
 
-    if (checkUser) {
-      const accessToken = createAccessToken({ email, type });
-      //console.log('access Token : ', accessToken);
-      const refreshToken = createRefreshToken({ email, type });
+    if (user) {
+      const accessToken = createAccessToken(user.id);
+      const refreshToken = createRefreshToken(user.id);
 
-      //console.log('refreshToken', refreshToken);
       res.cookie('Refresh Token : ', refreshToken, {
         httpOnly: true,
       });
-      //console.log(accessToken);
       res.status(201).send({
         result: {
           accessToken: accessToken,
@@ -64,16 +60,14 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 export const signup = async (req: Request, res: Response): Promise<void> => {
   const { userName, email, password } = req.body;
   try {
+    const duplicated = await findUserByEmail(email);
+    if (duplicated) {
+      res.status(400).send({ message: 'invalid request' }).end();
+    }
     const hashedPWD = await createPWD(email, password);
-
-    /* const validName = await findUserByUserName(userName);
-    if (!validName) {
-      res.status(401).send({ message: '' });
-    } */
-    console.log('here');
-    const uniqueID = uuidv4();
+    const id = uuidv4();
     const createId = await createUser({
-      id: uniqueID,
+      id: id,
       name: userName,
       email: email,
       profileImage: req.body.profileImage || 'https://bit.ly/3euIgJj',
@@ -99,7 +93,15 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
 
 export const signout = async (req: Request, res: Response) => {
   try {
-  } catch (err) {}
+    const { tokenUser } = req;
+    const { id } = tokenUser as Iuser;
+    const isDeleted = await deleteUser(id);
+    if (isDeleted) {
+    }
+  } catch (err) {
+    console.error('signout error');
+    res.status(400).send({ message: 'invalid request' });
+  }
 };
 
 export const googleLogin = async (
@@ -107,14 +109,13 @@ export const googleLogin = async (
   res: Response
 ): Promise<void> => {
   const token = req.body;
-  const type = USER_TYPE.Google;
   const userData = await googleToken(token);
   const { sub, name, email, profileImage } = userData as IgoogleLoginResult;
   try {
-    const checkUser = await findUserByEmail(email);
-    if (checkUser) {
-      const accessToken = createAccessToken({ email, type });
-      const refreshToken = createRefreshToken({ email, type });
+    const user = await findUserByEmail(email);
+    if (user && user.type === 'google') {
+      const accessToken = createAccessToken(sub);
+      const refreshToken = createRefreshToken(sub);
       res
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
@@ -128,14 +129,14 @@ export const googleLogin = async (
         email: email,
         profileImage: profileImage,
         password: googlePWD,
-        type: type,
+        type: USER_TYPE.Google,
         follow: [],
         bookmark: [],
         passwordUpdate: null,
       });
       if (googleSignup) {
-        const accessToken = await createAccessToken({ email, type });
-        const refreshToken = await createRefreshToken({ email, type });
+        const accessToken = await createAccessToken(sub);
+        const refreshToken = await createRefreshToken(sub);
         res
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
@@ -164,19 +165,22 @@ export const kakaoLogin = async (
   const userData = await kakaoToken(token);
   const { id, name, email, profileImage } = userData as IkakaoLoginResult;
   try {
-    const checkUser = await findUserByEmail(email);
-    if (checkUser) {
-      const accessToken = createAccessToken({ email, type });
-      const refreshToken = createRefreshToken({ email, type });
+    const user = await findUserByEmail(email);
+    if (user && user.type === 'kakao') {
+      const accessToken = createAccessToken(id);
+      const refreshToken = createRefreshToken(id);
       res
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
         })
         .send({ accessToken });
     } else {
+      if (findUserById(id)) {
+        const id = uuidv4();
+      }
       const googlePWD = createPWD(email, name);
       const kakaoSignup = await createUser({
-        id: uuidv4(),
+        id: id,
         name: name,
         email: email,
         profileImage: profileImage,
@@ -187,8 +191,8 @@ export const kakaoLogin = async (
         passwordUpdate: null,
       });
       if (kakaoSignup) {
-        const accessToken = await createAccessToken({ email, type });
-        const refreshToken = await createRefreshToken({ email, type });
+        const accessToken = await createAccessToken(id);
+        const refreshToken = await createRefreshToken(id);
         res
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
@@ -207,8 +211,6 @@ export const kakaoLogin = async (
     });
   }
 };
-//TODO : 간단한 클라이언트 코드 작성 후 확인
-//TODO : API문서에 의거하여 res 수정
 
 export const twitterLogin = async (req: Request, res: Response) => {
   const token = req.body;
@@ -217,10 +219,10 @@ export const twitterLogin = async (req: Request, res: Response) => {
   const { name, twitterName, profile_image_url } = userData;
   const email = twitterName + '@twitter.com';
   try {
-    const checkUser = await findUserByEmail(email);
-    if (checkUser) {
-      const accessToken = createAccessToken({ email, type });
-      const refreshToken = createRefreshToken({ email, type });
+    const user = await findUserByEmail(email);
+    if (user) {
+      const accessToken = createAccessToken(email);
+      const refreshToken = createRefreshToken(email);
       res
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
@@ -240,8 +242,8 @@ export const twitterLogin = async (req: Request, res: Response) => {
         passwordUpdate: null,
       });
       if (twitterSignup) {
-        const accessToken = await createAccessToken({ email, type });
-        const refreshToken = await createRefreshToken({ email, type });
+        const accessToken = await createAccessToken(email);
+        const refreshToken = await createRefreshToken(email);
         res
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
@@ -268,11 +270,9 @@ export const checkPassword = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const { password } = req.body;
-    const user = await findUserByEmail(parsedToken as string);
-
-    if (!password || !user) {
+    if (!password || !tokenUser) {
       res
         .status(401)
         .send({
@@ -280,8 +280,8 @@ export const checkPassword = async (
         })
         .end();
     } else {
-      const hashedPWD = createPWD(user.email, password);
-      if (user.password === hashedPWD) {
+      const hashedPWD = createPWD(tokenUser.email as string, password);
+      if (tokenUser.password === hashedPWD) {
         res.status(201).send({
           message: 'ok',
         });
@@ -304,11 +304,9 @@ export const setPassword = async (
   res: Response
 ): Promise<void> => {
   try {
-    const { parsedToken } = req;
+    const { tokenUser } = req;
     const { password } = req.body;
-    const user = await findUserByEmail(parsedToken as string);
-
-    if (!password || !user) {
+    if (!password || !tokenUser) {
       res
         .status(400)
         .send({
@@ -316,8 +314,8 @@ export const setPassword = async (
         })
         .end();
     } else {
-      const hashedPWD = createPWD(user.email, password);
-      const result = await updateUserPassword(user.id, hashedPWD);
+      const hashedPWD = createPWD(tokenUser.email, password);
+      const result = await updateUserPassword(tokenUser.id, hashedPWD);
       if (result) {
         res.status(201).send({
           message: 'ok',

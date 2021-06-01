@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
-import { TOKEN_TYPE } from '@interface';
+import { TOKEN_TYPE, Iuser } from '@interface';
 import { verifyToken } from '@util/jwt';
+import { findUserById } from '@database/users';
 
 const parseaAuthorization = (header: string) => {
   const splitHeader = header.split(' ');
@@ -15,7 +16,7 @@ const parseaAuthorization = (header: string) => {
   return [type, token];
 };
 
-export default (req: Request, res: Response, next: NextFunction) => {
+export default async (req: Request, res: Response, next: NextFunction) => {
   // 헤더에 인증 데이터가 있는지 확인한다
   const authorization = req.headers.authorization;
 
@@ -27,13 +28,13 @@ export default (req: Request, res: Response, next: NextFunction) => {
   const [type, token] = parseaAuthorization(authorization);
 
   if (type === 'BEARER') {
-    const parsedToken = verifyToken(TOKEN_TYPE.ACCESS, token);
+    const id = verifyToken(TOKEN_TYPE.ACCESS, token) as string;
+    const user = await findUserById(id);
 
-    if (!parsedToken) {
+    if (!user) {
       res.status(401).send({ message: 'unauthorized' });
     } else {
-      req.parsedToken = parsedToken.email;
-      next();
+      req.tokenUser = user;
     }
   } else {
     console.log(`token type Error: ${type}`);
