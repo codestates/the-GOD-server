@@ -48,7 +48,8 @@ export const findComments = async (
   query: IcommentFind
 ): Promise<IcommentFindResult | null> => {
   try {
-    const totalCount = await CommentModel.count({ id: query.id });
+    const totalCount = await CommentModel.count({ contentId: query.id });
+    console.log(query.id);
     const currentPage = query.page || 1;
     const dataPerPage = 30;
     const skip = (currentPage - 1) * dataPerPage;
@@ -65,7 +66,7 @@ export const findComments = async (
         dataPerPage,
       };
     } else {
-      const comments = await CommentModel.find({ id: query.id }, null, {
+      const comments = await CommentModel.find({ contentId: query.id }, null, {
         limit: dataPerPage,
         skip,
       }).lean();

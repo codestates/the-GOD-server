@@ -38,9 +38,8 @@ export interface ItwitterLoginResult {
   profile_image_url: string;
 }
 
-export interface Payload {
-  email: string;
-  type: USER_TYPE;
+export interface Ipayload {
+  id: string;
 }
 
 export interface Itoken {
