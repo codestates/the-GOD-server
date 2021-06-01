@@ -82,7 +82,7 @@ export const updateUserName = async (
   userName: string
 ): Promise<boolean> => {
   try {
-    const result = await UserModel.findOneAndUpdate({ id }, { userName });
+    const result = await UserModel.findOneAndUpdate({ id }, { name: userName });
 
     if (result) {
       return true;
