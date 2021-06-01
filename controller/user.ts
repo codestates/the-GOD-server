@@ -1,6 +1,5 @@
 import { Request, Response } from 'express';
 import {
-  findUserByEmail,
   updateAddUserFollow,
   updateDeleteUserFollow,
   updateAddUserBookmark,
