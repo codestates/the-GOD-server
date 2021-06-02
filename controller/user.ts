@@ -201,18 +201,18 @@ export const updateName = async (
 ): Promise<void> => {
   try {
     const { tokenUser: user } = req;
-    const { userName } = req.body;
+    const { name } = req.body;
 
-    if (!user || !userName) {
+    if (!user || !name) {
       res.status(400).send({
         message: 'invlaid request',
       });
       return;
     }
 
-    const result = await updateUserName(user.id, userName);
+    const result = await updateUserName(user.id, name);
     if (result) {
-      updateContentUserInfo({ ...user, name: userName });
+      updateContentUserInfo({ ...user, name });
 
       res.status(201).send({
         message: 'ok',
