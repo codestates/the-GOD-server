@@ -1,8 +1,9 @@
 import { Request, Response } from 'express';
-import { IcommentFindResult } from '@interface';
+import { IcommentFindResult, Iuser, Icomment } from '@interface';
 import {
   createComment,
   deleteComment,
+  findCommentById,
   findComments,
   updateComment,
 } from '@database/comments';
@@ -15,8 +16,8 @@ export const createComments = async (
 ): Promise<void> => {
   try {
     const { tokenUser } = req;
-    const { id, comment } = req.body;
-    if (!id || !tokenUser) {
+    const { contentId, comment } = req.body;
+    if (!contentId || !tokenUser) {
       res.status(404).send({ message: 'not found data' });
       return;
     }
@@ -26,9 +27,10 @@ export const createComments = async (
       user: {
         id: tokenUser.id,
         name: tokenUser.name,
+        profileImage: tokenUser.profileImage,
       },
       comment: comment,
-      contentId: id,
+      contentId: contentId,
     });
     if (newComment) {
       res.status(200).send({
@@ -55,21 +57,25 @@ export const deleteComments = async (
 ): Promise<void> => {
   try {
     const { tokenUser } = req;
-    if (!tokenUser) {
-      res.status(401).send({ message: 'unauthorized' });
+    const { id } = req.body;
+    const writer = await findCommentById(id);
+    const user = tokenUser as Iuser;
+    if (writer?.user.id !== user.id) {
+      res.status(401).send({
+        message: 'unauthorized',
+      });
       return;
-    } else {
-      const { id } = req.body;
-      const isDeleted = await deleteComment(id);
-      if (!isDeleted) {
-        res.status(400).send({ message: 'invalid request' });
-        return;
-      } else {
-        res.status(200).send({ result: { id: id }, message: 'ok' });
-      }
+    }
+
+    const isDeleted = await deleteComment(id);
+    if (isDeleted) {
+      res.status(200).send({
+        result: { id: id },
+        message: 'ok',
+      });
     }
   } catch (err) {
-    console.error('delete comment error');
+    console.error('delete comment error', err.message);
     res.status(400).send({ message: 'invalid request' });
   }
 };
@@ -77,16 +83,18 @@ export const deleteComments = async (
 export const updateComments = async (req: Request, res: Response) => {
   try {
     const { tokenUser } = req;
-    if (!tokenUser) {
-      res.status(401).send({ message: 'unauthorized' });
+    const { id, comment } = req.body; //{ 수정하고자 하는 댓글의 id , 수정할 내용 }
+    const user = tokenUser as Iuser;
+    const writer = (await findCommentById(id)) as Icomment;
+    if (user.id !== writer.user.id) {
+      res.status(401).send({
+        message: 'unauthorized',
+      });
       return;
     }
-    const { id, comment } = req.body; //{ 수정하고자 하는 댓글의 id , 수정할 내용 }
     const updatedComment = await updateComment(id, comment);
     if (updatedComment) {
       res.status(200).send({ message: 'ok' });
-    } else {
-      res.status(400).send({ message: 'invalid request' });
     }
   } catch {
     console.error('update comment error');
@@ -96,15 +104,15 @@ export const updateComments = async (req: Request, res: Response) => {
 
 export const pageComments = async (req: Request, res: Response) => {
   try {
-    const { id } = req.query;
+    const { contentId } = req.query;
     const { page } = req.query;
-    const checkContent = await findContentById(id as string);
+    const checkContent = await findContentById(contentId as string);
     if (!checkContent) {
       res.status(404).send({ message: 'not found data' });
       return;
     } else {
       const resultCommentPages: IcommentFindResult = (await findComments({
-        id: id as string,
+        id: contentId as string,
         page: Number(page as string),
       })) as IcommentFindResult;
       res.status(200).send({ result: resultCommentPages, message: 'ok' });

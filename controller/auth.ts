@@ -55,7 +55,7 @@ export const login = async (req: Request, res: Response): Promise<void> => {
 };
 
 export const signup = async (req: Request, res: Response): Promise<void> => {
-  const { userName, email, password } = req.body;
+  const { name, email, password } = req.body;
   try {
     const duplicated = await findUserByEmail(email);
     if (duplicated) {
@@ -68,7 +68,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
     const id = uuidv4();
     const createId = await createUser({
       id: id,
-      name: userName,
+      name: name,
       email: email,
       profileImage: req.body.profileImage || 'https://bit.ly/3euIgJj',
       password: hashedPWD,
@@ -77,10 +77,11 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       bookmark: [],
       passwordUpdate: null,
     });
-
-    res.status(201).send({
-      message: 'ok',
-    });
+    if (createId) {
+      res.status(201).send({
+        message: 'ok',
+      });
+    }
   } catch (err) {
     console.error('User save error by server');
     res.status(400).send({
@@ -116,7 +117,7 @@ export const googleLogin = async (
 ): Promise<void> => {
   const token = req.body;
   const userData = await googleToken(token);
-  const { sub, name, email, profileImage } = userData as IgoogleLoginResult;
+  const { name, email, profileImage } = userData as IgoogleLoginResult;
   try {
     const user = await findUserByEmail(email);
     if (user && user.type === 'google') {
