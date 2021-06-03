@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import { Iuser } from '@interface';
 
-import { createPWD } from '@util/pwFunctions';
+import { createPWD, getDateTimeString } from '@util/pwFunctions';
 
 // user schema
 const userSchema = new mongoose.Schema<Iuser>(
@@ -117,7 +117,11 @@ export const updateUserPassword = async (
   password: string
 ): Promise<boolean> => {
   try {
-    const result = await UserModel.findOneAndUpdate({ id }, { password });
+    const passwordUpdate = getDateTimeString();
+    const result = await UserModel.findOneAndUpdate(
+      { id },
+      { password, passwordUpdate }
+    );
 
     if (result) {
       return true;
