@@ -10,7 +10,6 @@ import {
 import multer from 'multer';
 
 const fileUpload = multer({ storage: multer.memoryStorage() });
-//const uploadContentImage = fileUpload.array('images', 5);
 const uploadContentImage = fileUpload.fields([{ name: 'images' }]);
 
 const router = express.Router();
