@@ -31,8 +31,17 @@ export const createContents = async (
       mobile,
       perks,
     } = req.body;
-    const artistParsing = JSON.parse(artistId);
-    const celeb = await findArtistById(artistParsing);
+
+    const parsedTitle = JSON.parse(title);
+    const parsedMobile = JSON.parse(mobile);
+    const parsedDesc = JSON.parse(description);
+    const parsedTags = JSON.parse(tags);
+    const parsedDate = JSON.parse(date);
+    const parsedTime = JSON.parse(time);
+    const parsedAddress = JSON.parse(address);
+    const parsedPerks = JSON.parse(perks);
+    const parsedArtist = JSON.parse(artistId);
+    const celeb = await findArtistById(parsedArtist);
 
     const imageUrls = [];
     if (imageData) {
@@ -41,12 +50,6 @@ export const createContents = async (
         imageUrls.push(data);
       }
     }
-
-    const jsonTags = JSON.parse(tags);
-    const jsonDate = JSON.parse(date);
-    const jsonTime = JSON.parse(time);
-    const jsonAddress = JSON.parse(address);
-    const jsonPerks = JSON.parse(perks);
 
     if (!celeb) {
       res.status(400).send({
@@ -73,15 +76,15 @@ export const createContents = async (
         group: celeb.group,
         profileImage: celeb.profileImage,
       },
-      title: title,
+      title: parsedTitle,
       images: imageUrls as string[],
-      date: jsonDate,
-      time: jsonTime,
-      address: jsonAddress,
-      mobile: mobile,
-      description: description,
-      tags: jsonTags,
-      perks: jsonPerks,
+      date: parsedDate,
+      time: parsedTime,
+      address: parsedAddress,
+      mobile: parsedMobile,
+      description: parsedDesc,
+      tags: parsedTags,
+      perks: parsedPerks,
     });
     const resultContent = (await findContentById(contentId)) as Icontent;
     if (newContent) {
@@ -153,7 +156,7 @@ export const updateContents = async (
       address,
       mobile,
       perks,
-    } = req.body;
+    } = JSON.parse(req.body);
     const user = tokenUser as Iuser;
     const author = await findContentById(id);
     if (user.id !== author?.author.id) {
