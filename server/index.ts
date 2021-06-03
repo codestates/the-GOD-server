@@ -14,16 +14,13 @@ import {
   commentRouter,
   sharedcontentRouter,
 } from '@router';
-
 const PORT = ENV.SERVER_PORT || 4000;
 
 const app = express();
-//set secret key for jwt
-app.set('jwt-secret', ENV.SECRET);
-
+/* app.use(express.urlencoded({ extended: false }));
+app.use(express.json()); */
 // moddleware
 app.use(...defaultMiddleware);
-
 // router
 app.use('/auth', authRouter);
 app.use('/user', userRouter);

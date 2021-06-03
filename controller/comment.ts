@@ -16,8 +16,8 @@ export const createComments = async (
 ): Promise<void> => {
   try {
     const { tokenUser } = req;
-    const { contentId, comment } = req.body;
-    if (!contentId || !tokenUser) {
+    const { id, comment } = req.body;
+    if (!id || !tokenUser) {
       res.status(404).send({ message: 'not found data' });
       return;
     }
@@ -30,7 +30,7 @@ export const createComments = async (
         profileImage: tokenUser.profileImage,
       },
       comment: comment,
-      contentId: contentId,
+      contentId: id,
     });
     if (newComment) {
       res.status(200).send({
@@ -104,15 +104,15 @@ export const updateComments = async (req: Request, res: Response) => {
 
 export const pageComments = async (req: Request, res: Response) => {
   try {
-    const { contentId } = req.query;
+    const { id } = req.query;
     const { page } = req.query;
-    const checkContent = await findContentById(contentId as string);
+    const checkContent = await findContentById(id as string);
     if (!checkContent) {
       res.status(404).send({ message: 'not found data' });
       return;
     } else {
       const resultCommentPages: IcommentFindResult = (await findComments({
-        id: contentId as string,
+        id: id as string,
         page: Number(page as string),
       })) as IcommentFindResult;
       res.status(200).send({ result: resultCommentPages, message: 'ok' });

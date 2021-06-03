@@ -9,6 +9,7 @@ const commentScheme = new mongoose.Schema<Icomment>(
     user: {
       id: { type: String, required: true },
       name: { type: String, required: true },
+      profileImage: { type: String, required: true },
     },
     comment: { type: String, required: true },
     contentId: { type: String, required: true },
