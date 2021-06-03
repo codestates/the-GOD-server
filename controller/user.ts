@@ -36,7 +36,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
       })
       .end();
   } catch (err) {
-    console.error('getUser error');
+    console.error('getUser error : ', err.message);
     res.status(404).send({
       message: 'invlaid user',
     });
@@ -87,7 +87,7 @@ export const followArtist = async (
       });
     }
   } catch (err) {
-    console.error('followArtist error');
+    console.error('followArtist error : ', err.message);
     res.status(404).send({
       message: 'invlaid request',
     });
@@ -139,7 +139,7 @@ export const bookmarkContent = async (
       });
     }
   } catch (err) {
-    console.error('bookmarkContent error');
+    console.error('bookmarkContent error : ', err.message);
     res.status(404).send({
       message: 'invlaid request',
     });
@@ -188,7 +188,7 @@ export const updateUserProfile = async (
       });
     }
   } catch (err) {
-    console.error('updateUserProfile error');
+    console.error('updateUserProfile error : ', err.message);
     res.status(404).send({
       message: 'invlaid request',
     });
@@ -201,17 +201,19 @@ export const updateName = async (
 ): Promise<void> => {
   try {
     const { tokenUser: user } = req;
-    const { userName } = req.body;
+    const { name } = req.body;
 
-    if (!user || !userName) {
+    if (!user || !name) {
       res.status(400).send({
         message: 'invlaid request',
       });
       return;
     }
 
-    const result = await updateUserName(user.id, userName);
+    const result = await updateUserName(user.id, name);
     if (result) {
+      updateContentUserInfo({ ...user, name });
+
       res.status(201).send({
         message: 'ok',
       });
@@ -221,7 +223,7 @@ export const updateName = async (
       });
     }
   } catch (err) {
-    console.error('updateUserName error');
+    console.error('updateUserName error : ', err.message);
     res.status(404).send({
       message: 'invlaid request',
     });
@@ -266,7 +268,7 @@ export const getFollowList = async (
       message: 'ok',
     });
   } catch (err) {
-    console.error('getFollowList error');
+    console.error('getFollowList error : ', err.message);
     res.status(404).send({
       message: 'not found user follow list',
     });
@@ -303,7 +305,14 @@ export const getBookmarkList = async (
     }
 
     const result = contents.map((content) => {
-      return { ...content, isBookmark: true };
+      return {
+        ...content,
+        artist: {
+          ...content.artist,
+          isFollow: user.follow.includes(content.artist.id),
+        },
+        isBookmark: true,
+      };
     });
 
     res.status(200).send({
@@ -311,7 +320,7 @@ export const getBookmarkList = async (
       message: 'ok',
     });
   } catch (err) {
-    console.error('getBookmarkList error');
+    console.error('getBookmarkList error : ', err.message);
     res.status(404).send({
       message: 'not found user bookmark list',
     });
@@ -341,7 +350,14 @@ export const getUserContents = async (
     }
 
     const result = contents.map((content) => {
-      return { ...content, isBookmark: user.bookmark.includes(content.id) };
+      return {
+        ...content,
+        artist: {
+          ...content.artist,
+          isFollow: user.follow.includes(content.artist.id),
+        },
+        isBookmark: user.bookmark.includes(content.id),
+      };
     });
 
     res.status(200).send({
@@ -349,7 +365,7 @@ export const getUserContents = async (
       message: 'ok',
     });
   } catch (err) {
-    console.error('getUserContents error');
+    console.error('getUserContents error : ', err.message);
     res.status(404).send({
       message: 'not found user content',
     });
@@ -399,7 +415,7 @@ export const getUserSharedContents = async (
       message: 'ok',
     });
   } catch (err) {
-    console.error('getUserSharedContents error');
+    console.error('getUserSharedContents error : ', err.message);
     res.status(404).send({
       message: 'not found user shred content',
     });
