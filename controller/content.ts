@@ -275,9 +275,6 @@ export const createContentsTesting = async (
     });
     console.log(urls);
 
-    //const url = await uploadImage(image);
-    //console.log(url);
-
     const newContent = await createContent({
       id: uuidv4(),
       author: {
@@ -326,16 +323,3 @@ export const createContentsTesting = async (
     });
   }
 };
-
-/* export const dataCheck = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { tokenUser: user } = req;
-    const { check } = req.body;
-    const images = req.files as Express.Multer.File[];
-    const result = await uploadImages(images);
-    res.status(200).send({ result: check, message: 'ok' });
-  } catch (err) {
-    console.error('check error');
-  }
-};
- */
