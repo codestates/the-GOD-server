@@ -80,14 +80,12 @@ export const makeArtist = async (
     const { tokenUser: user } = req;
     const { name, group } = req.body;
     const profileImageFile = req.file;
-
     if (!user) {
       res.status(401).send({
         message: 'unauthorized',
       });
       return;
     }
-
     const id = uuidv4();
     let profileImage = 'https://bit.ly/3euIgJj';
     if (profileImageFile) {
@@ -122,6 +120,7 @@ export const updateArtist = async (
     const { tokenUser: user } = req;
     const { id, name, group } = req.body;
     const artist = await findArtistById(id);
+    console.log(id);
 
     if (!user || !artist) {
       res.status(400).send({

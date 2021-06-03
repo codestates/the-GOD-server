@@ -6,6 +6,7 @@ import {
   deleteSharedContent,
   updateSharedContent,
 } from '@database/sharedcontents';
+import { Iuser, IsharedContents } from '@interface';
 
 export const createSharedContents = async (req: Request, res: Response) => {
   try {
@@ -62,11 +63,15 @@ export const getSharedContents = async (req: Request, res: Response) => {
 export const updateSharedContents = async (req: Request, res: Response) => {
   try {
     const { tokenUser } = req;
-    if (!tokenUser) {
-      res.status(401).send({ message: 'unauthorized' });
+    const { id, contents } = req.body;
+    const author = (await findSharedContentById(id)) as IsharedContents;
+    const user = tokenUser as Iuser;
+    if (author?.userId !== user.id) {
+      res.status(401).send({
+        message: 'unauthorized',
+      });
       return;
     }
-    const { id, contents } = req.body;
     const updateResult = await updateSharedContent(id, contents);
     if (updateResult) {
       res.status(201).send({ result: { id: id }, message: 'ok' });
@@ -81,10 +86,15 @@ export const deleteSharedContents = async (req: Request, res: Response) => {
   try {
     const { tokenUser } = req;
     const { id } = req.body;
-    if (!tokenUser) {
-      res.status(401).send({ message: 'unauthorized' });
+    const author = (await findSharedContentById(id)) as IsharedContents;
+    const user = tokenUser as Iuser;
+    if (user.id !== author.userId) {
+      res.status(401).send({
+        message: 'unauthorized',
+      });
       return;
     }
+
     const isDeleted = await deleteSharedContent(id);
     if (isDeleted) {
       res.status(201).send({ message: 'ok' });
