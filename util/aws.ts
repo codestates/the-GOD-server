@@ -29,7 +29,7 @@ export const uploadImage = async (
       return null;
     }
 
-    const fileExtension = path.extname(data.originalname);
+    const fileExtension = path.extname(data.originalname); //파일명
     let imageName = path.basename(data.originalname, fileExtension);
     let uuid = uuidv4();
     const fileName = `${uuid}_${imageName}${fileExtension}`;

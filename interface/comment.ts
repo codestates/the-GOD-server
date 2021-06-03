@@ -20,4 +20,5 @@ export interface IcommentFindResult {
 export interface IcommentWriter {
   id: string;
   name: string;
+  profileImage: string;
 }

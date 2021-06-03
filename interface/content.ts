@@ -81,3 +81,7 @@ export interface IcontentFindResult {
   currentPage: number;
   dataPerPage: number;
 }
+
+export interface IcontentImages {
+  images?: Express.Multer.File[];
+}
