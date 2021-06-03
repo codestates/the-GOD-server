@@ -3,102 +3,174 @@
     "id": "gbts",
     "name": "전체",
     "group": "BTS",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/btsLogo.jpg"
   },
   {
-    "id": "v1",
-    "name": "V",
+    "id": "bts1",
+    "name": "진",
     "group": "BTS",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/bts_jin.jpeg"
   },
   {
-    "id": "j1",
-    "name": "Jimin",
+    "id": "bts2",
+    "name": "슈가",
     "group": "BTS",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/bts_suga.jpeg"
   },
   {
-    "id": "thegod",
+    "id": "bts3",
+    "name": "제이홉",
+    "group": "BTS",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/bts_jhope.jpeg"
+  },
+  {
+    "id": "bts4",
+    "name": "RM",
+    "group": "BTS",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/bts_rm.jpeg"
+  },
+  {
+    "id": "bts5",
+    "name": "지민",
+    "group": "BTS",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/bts_jimin.jpeg"
+  },
+  {
+    "id": "bts6",
+    "name": "뷔",
+    "group": "BTS",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/bts_v.jpeg"
+  },
+  {
+    "id": "bts7",
+    "name": "정국",
+    "group": "BTS",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bts/bts_jk.jpeg"
+  },
+  {
+    "id": "genhypen",
     "name": "전체",
-    "group": "theGOD",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_logo.jpg"
   },
   {
-    "id": "s1",
-    "name": "sim",
-    "group": "theGOD",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "id": "enhypen1",
+    "name": "희승",
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_hs.jpeg"
   },
   {
-    "id": "sosi",
+    "id": "enhypen2",
+    "name": "제이",
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_j.jpeg"
+  },
+  {
+    "id": "enhypen3",
+    "name": "제이크",
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_jake.jpeg"
+  },
+  {
+    "id": "enhypen4",
+    "name": "성훈",
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_sh.jpeg"
+  },
+  {
+    "id": "enhypen5",
+    "name": "선우",
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_sunoo.jpeg"
+  },
+  {
+    "id": "enhypen6",
+    "name": "정원",
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_jw.jpeg"
+  },
+  {
+    "id": "enhypen7",
+    "name": "니키",
+    "group": "ENHYPEN",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/enhypen/en_nk.jpeg"
+  },
+  {
+    "id": "gblackpink",
     "name": "전체",
-    "group": "소녀시대",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "group": "BLACKPINK",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/blackpink/bp_logo.png"
   },
   {
-    "id": "tea",
-    "name": "태연",
-    "group": "소녀시대",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "id": "blackpink1",
+    "name": "지수",
+    "group": "BLACKPINK",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/blackpink/bp_js.jpeg"
+  },
+  {
+    "id": "blackpink2",
+    "name": "제니",
+    "group": "BLACKPINK",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/blackpink/bp_jn.jpeg"
+  },
+  {
+    "id": "blackpink3",
+    "name": "로제",
+    "group": "BLACKPINK",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/blackpink/bp_rs.jpeg"
+  },
+  {
+    "id": "blackpink4",
+    "name": "리사",
+    "group": "BLACKPINK",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/blackpink/bp_ls.jpeg"
+  },
+  {
+    "id": "gbravegrils",
+    "name": "전체",
+    "group": "Brave Grils",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bbg/bbg_logo.jpg"
+  },
+  {
+    "id": "bravegrils1",
+    "name": "민영",
+    "group": "Brave Grils",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bbg/bbg_my.jpeg"
+  },
+  {
+    "id": "bravegrils2",
+    "name": "유정",
+    "group": "Brave Grils",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bbg/bbg_yujeong.jpeg"
+  },
+  {
+    "id": "bravegrils3",
+    "name": "은지",
+    "group": "Brave Grils",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bbg/bbg_eunji.jpeg"
+  },
+  {
+    "id": "bravegrils4",
+    "name": "유나",
+    "group": "Brave Grils",
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/bbg/bbg_yn.jpeg"
   },
   {
     "id": "iu",
     "name": "아이유",
     "group": null,
-    "profileImage": "https://bit.ly/3euIgJj"
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/solo/iu.jpeg"
   },
   {
     "id": "nha",
     "name": "나훈아",
     "group": null,
-    "profileImage": "https://bit.ly/3euIgJj"
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/solo/nha.jpeg"
   },
   {
-    "id": "ea",
-    "name": "전체",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
-  },
-  {
-    "id": "e1",
-    "name": "희승❤️",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
-  },
-  {
-    "id": "e2",
-    "name": "제이",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
-  },
-  {
-    "id": "e3",
-    "name": "제이크",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
-  },
-  {
-    "id": "e4",
-    "name": "성훈",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
-  },
-  {
-    "id": "e5",
-    "name": "선우",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
-  },
-  {
-    "id": "e6",
-    "name": "정원",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
-  },
-  {
-    "id": "e7",
-    "name": "니키",
-    "group": "ENHYPEN",
-    "profileImage": "https://bit.ly/3euIgJj"
+    "id": "yt",
+    "name": "영탁",
+    "group": null,
+    "profileImage": "https://fanssum-image-bucket.s3.ap-northeast-2.amazonaws.com/solo/yt.jpeg"
   }
 ]
