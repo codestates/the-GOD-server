@@ -120,7 +120,6 @@ export const updateArtist = async (
     const { tokenUser: user } = req;
     const { id, name, group } = req.body;
     const artist = await findArtistById(id);
-    console.log(id);
 
     if (!user || !artist) {
       res.status(400).send({
