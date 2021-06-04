@@ -10,14 +10,11 @@ import {
 import { Request, Response } from 'express';
 
 // NOTE : example for creating Axios instance
-const api = axios.create({
-  baseURL: 'https://localhost:4000',
-});
 
 export const googleToken = async (
   token: string
 ): Promise<IgoogleLoginResult | null> => {
-  const { data } = await api.post('https://oauth2.googleapis.com/tokeninfo', {
+  const { data } = await axios.post('https://oauth2.googleapis.com/tokeninfo', {
     id_token: {
       token,
     },
@@ -35,7 +32,7 @@ export const googleToken = async (
 export const kakaoToken = async (
   token: string
 ): Promise<IkakaoLoginResult | null> => {
-  const { data } = await api.get('https://kapi.kakao.com/v2/user/me', {
+  const { data } = await axios.get('https://kapi.kakao.com/v2/user/me', {
     // 클라이언트에서 받은 토큰을 kapi.kakao에 보내서 해당 토큰을 가진 유저에 대한 정보 얻기
     headers: token,
   });
@@ -54,7 +51,7 @@ export const kakaoToken = async (
 export const twitterToken = async (
   token: string
 ): Promise<ItwitterLoginResult | null> => {
-  const { data } = await api.get('https://api.twitter.com/2/users', {
+  const { data } = await axios.get('https://api.twitter.com/2/users', {
     headers: token,
   });
 
