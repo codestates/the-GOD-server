@@ -18,3 +18,16 @@ export const createPWD = (email: string, password: string) => {
   );
   return hashedPWD + password;
 };
+
+export const getDateTimeString = (): string => {
+  const dateTime = new Date();
+  const year = dateTime.getFullYear().toString().padStart(4, '0');
+  const month = (dateTime.getMonth() + 1).toString().padStart(2, '0');
+  const date = dateTime.getDate().toString().padStart(2, '0');
+  const hours = dateTime.getHours().toString().padStart(2, '0');
+  const minutes = dateTime.getMinutes().toString().padStart(2, '0');
+  const seconds = dateTime.getSeconds().toString().padStart(2, '0');
+
+  const dateTimeString = `${year}-${month}-${date} ${hours}:${minutes}:${seconds}`;
+  return dateTimeString;
+};
