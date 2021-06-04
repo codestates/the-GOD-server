@@ -82,7 +82,7 @@ export const followArtist = async (
         message: 'ok',
       });
     } else {
-      res.status(404).send({
+      res.status(400).send({
         message: 'invlaid request',
       });
     }
@@ -134,7 +134,7 @@ export const bookmarkContent = async (
         message: 'ok',
       });
     } else {
-      res.status(404).send({
+      res.status(400).send({
         message: 'invlaid request',
       });
     }
@@ -183,7 +183,7 @@ export const updateUserProfile = async (
         message: 'ok',
       });
     } else {
-      res.status(404).send({
+      res.status(400).send({
         message: 'invlaid request',
       });
     }
@@ -218,7 +218,7 @@ export const updateName = async (
         message: 'ok',
       });
     } else {
-      res.status(404).send({
+      res.status(400).send({
         message: 'invlaid request',
       });
     }
