@@ -7,8 +7,9 @@ import {
   signout,
   googleLogin,
   kakaoLogin,
+  refreshToAccess,
+  twitterLogin,
 } from '@controller/auth';
-import { twitterToken } from '@apis';
 
 const router = express.Router();
 
@@ -17,8 +18,9 @@ router.post('/signup', signup);
 router.post('/password', checkPassword);
 router.put('/password', setPassword);
 router.delete('/signout', signout);
-router.post('google', googleLogin);
-router.post('kakao', kakaoLogin);
-router.post('twitter', twitterToken);
+router.post('/google', googleLogin);
+router.post('/kakao', kakaoLogin);
+router.post('/twitter', twitterLogin);
+router.get('/accesstoken', refreshToAccess);
 
 export default router;
