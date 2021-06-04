@@ -21,7 +21,8 @@ import { uploadImage, deleteImage } from '@util/aws';
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   try {
     const { tokenUser: user } = req;
-    const { id, name, email, profileImage, type } = user as Iuser;
+    const { id, name, email, profileImage, type, passwordUpdate } =
+      user as Iuser;
     res
       .status(200)
       .send({
@@ -31,6 +32,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
           email,
           profileImage,
           type,
+          passwordUpdate,
         },
         message: 'ok',
       })
