@@ -121,7 +121,7 @@ export const deleteContents = async (
     const user = tokenUser as Iuser;
     if (author.author.id !== user.id) {
       res.status(403).send({
-        message: 'no rights',
+        message: 'rejected',
       });
       return;
     }
@@ -161,7 +161,7 @@ export const updateContents = async (
     const author = await findContentById(id);
     if (user.id !== author?.author.id) {
       res.status(403).send({
-        message: 'no rights',
+        message: 'rejected',
       });
       return;
     }

@@ -64,7 +64,7 @@ export const updateSharedContents = async (req: Request, res: Response) => {
     const user = tokenUser as Iuser;
     if (author?.userId !== user.id) {
       res.status(403).send({
-        message: 'no rights',
+        message: 'rejected',
       });
       return;
     }
@@ -86,7 +86,7 @@ export const deleteSharedContents = async (req: Request, res: Response) => {
     const user = tokenUser as Iuser;
     if (user.id !== author.userId) {
       res.status(403).send({
-        message: 'no rights',
+        message: 'rejected',
       });
       return;
     }
