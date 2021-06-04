@@ -1,13 +1,9 @@
 import { Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { Iuser, TOKEN_TYPE, USER_TYPE } from '@interface';
-import {
-  createAccessToken,
-  createRefreshToken,
-  verifyToken,
-} from '../util/jwt';
-import { createPWD } from '../util/pwFunctions';
-import { googleToken, kakaoToken, twitterToken } from '../apis';
+import { createAccessToken, createRefreshToken, verifyToken } from '@util/jwt';
+import { createPWD } from '@util/pwFunctions';
+import { googleToken, kakaoToken, twitterToken } from '@apis';
 import {
   IgoogleLoginResult,
   IkakaoLoginResult,
@@ -20,7 +16,9 @@ import {
   deleteUser,
   findUserByEmail,
   findValidUser,
-} from '../database/users';
+} from '@database/users';
+
+import { disableContentAuthor } from '@database/contents';
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
@@ -99,10 +97,14 @@ export const signout = async (req: Request, res: Response) => {
     const isUser = await findValidUser(email, encodedPWD);
     if (isUser) {
       const isDeleted = await deleteUser(id);
-      if (!isDeleted) {
-        res.status(404).send({ message: 'password error' });
+      if (isDeleted) {
+        disableContentAuthor(id);
+        res.status(201).send({ message: 'ok' });
+      } else {
+        res.status(400).send({ message: 'invalid request' });
       }
-      res.status(201).send({ message: 'ok' });
+    } else {
+      res.status(404).send({ message: 'password error' });
     }
   } catch (err) {
     console.error('signout error', err.message);
@@ -126,7 +128,10 @@ export const googleLogin = async (
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
         })
-        .send({ accessToken });
+        .send({
+          result: { accessToken },
+          message: 'ok',
+        });
     } else {
       const googlePWD = createPWD(email, name);
       const googleSignup = await createUser({
@@ -149,9 +154,7 @@ export const googleLogin = async (
             httpOnly: true,
           })
           .send({
-            result: {
-              accessToken: accessToken,
-            },
+            result: { accessToken },
             message: 'ok',
           });
       } else {
@@ -185,7 +188,10 @@ export const kakaoLogin = async (
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
         })
-        .send({ accessToken });
+        .send({
+          result: { accessToken },
+          message: 'ok',
+        });
     } else {
       if (findUserById(id)) {
         const id = uuidv4();
@@ -211,9 +217,7 @@ export const kakaoLogin = async (
             httpOnly: true,
           })
           .send({
-            result: {
-              accessToken: accessToken,
-            },
+            result: { accessToken },
             message: 'ok',
           });
       } else {
@@ -245,7 +249,10 @@ export const twitterLogin = async (req: Request, res: Response) => {
         .cookie('Refresh Token : ', refreshToken, {
           httpOnly: true,
         })
-        .send({ accessToken });
+        .send({
+          result: { accessToken },
+          message: 'ok',
+        });
     } else {
       const twitterPWD = createPWD(name, email);
       const twitterSignup = await createUser({
@@ -354,7 +361,6 @@ export const setPassword = async (
 export const refreshToAccess = (req: Request, res: Response) => {
   try {
     const refreshToken = req.cookies.refreshToken;
-
     if (!refreshToken) {
       res.status(400).send({
         message: 'invalid request',
