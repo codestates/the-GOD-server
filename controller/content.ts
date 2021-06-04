@@ -20,7 +20,6 @@ export const createContents = async (
     const { tokenUser } = req;
     const { images: imageData } = req.files as IcontentImages;
     const { id, name, profileImage } = tokenUser as Iuser;
-    console.log('imageData : ', imageData);
     const {
       artistId,
       title,
@@ -32,22 +31,25 @@ export const createContents = async (
       mobile,
       perks,
     } = req.body;
+
+    const parsedTitle = JSON.parse(title);
+    const parsedMobile = JSON.parse(mobile);
+    const parsedDesc = JSON.parse(description);
+    const parsedTags = JSON.parse(tags);
+    const parsedDate = JSON.parse(date);
+    const parsedTime = JSON.parse(time);
+    const parsedAddress = JSON.parse(address);
+    const parsedPerks = JSON.parse(perks);
+    const parsedArtist = JSON.parse(artistId);
+    const celeb = await findArtistById(parsedArtist);
+
     const imageUrls = [];
-    const celeb = await findArtistById(artistId);
     if (imageData) {
       for (let idx = 0; idx < imageData.length; idx++) {
         const data = await uploadImage(imageData[idx]);
         imageUrls.push(data);
       }
     }
-    //text값으로 들어온 json 값을 parsing을 해서
-    const jsonTags = JSON.parse(tags);
-    const jsonDate = JSON.parse(date);
-    const jsonTime = JSON.parse(time);
-    const jsonAddress = JSON.parse(address);
-    const jsonPerks = JSON.parse(perks);
-    //tag date time address perks
-    //json.parse 해서 사용해야함
 
     if (!celeb) {
       res.status(400).send({
@@ -55,9 +57,14 @@ export const createContents = async (
       });
       return;
     }
-    console.log('입력 값 : ', req.body);
+    let contentId = uuidv4();
+    const isDuple = await findContentById(contentId);
+    while (isDuple) {
+      contentId = uuidv4();
+    }
+
     const newContent = await createContent({
-      id: uuidv4(),
+      id: contentId,
       author: {
         id: id,
         name: name,
@@ -69,19 +76,24 @@ export const createContents = async (
         group: celeb.group,
         profileImage: celeb.profileImage,
       },
-      title: title,
+      title: parsedTitle,
       images: imageUrls as string[],
-      date: jsonDate,
-      time: jsonTime,
-      address: jsonAddress,
-      mobile: mobile,
-      description: description,
-      tags: jsonTags,
-      perks: jsonPerks,
+      date: parsedDate,
+      time: parsedTime,
+      address: parsedAddress,
+      mobile: parsedMobile,
+      description: parsedDesc,
+      tags: parsedTags,
+      perks: parsedPerks,
     });
-
+    const resultContent = (await findContentById(contentId)) as Icontent;
     if (newContent) {
-      res.status(201).send({ result: newContent, message: 'ok' });
+      res.status(201).send({
+        result: {
+          id: resultContent.id,
+        },
+        message: 'ok',
+      });
     }
   } catch (err) {
     console.error('create content error', err.message);
@@ -132,19 +144,19 @@ export const updateContents = async (
 ): Promise<void> => {
   try {
     const { tokenUser } = req;
+    const { images: imageData } = req.files as IcontentImages;
     const {
       id,
       artistId,
       title,
       tags,
       description,
-      images,
       date,
       time,
       address,
       mobile,
       perks,
-    } = req.body;
+    } = JSON.parse(req.body);
     const user = tokenUser as Iuser;
     const author = await findContentById(id);
     if (user.id !== author?.author.id) {
@@ -153,7 +165,23 @@ export const updateContents = async (
       });
       return;
     }
-    const celeb = (await findArtistById(artistId)) as Iartist;
+    const artistParsing = JSON.parse(artistId);
+    const jsonTags = JSON.parse(tags);
+    const jsonDate = JSON.parse(date);
+    const jsonTime = JSON.parse(time);
+    const jsonAddress = JSON.parse(address);
+    const jsonPerks = JSON.parse(perks);
+
+    const celeb = (await findArtistById(artistParsing)) as Iartist;
+
+    const imageUrls = [];
+    if (imageData) {
+      for (let idx = 0; idx < imageData.length; idx++) {
+        const data = await uploadImage(imageData[idx]);
+        imageUrls.push(data);
+      }
+    }
+
     const updateResult = await updateContent({
       id: id,
       title: title,
@@ -163,30 +191,17 @@ export const updateContents = async (
         group: celeb.group as string,
         profileImage: celeb.profileImage as string,
       },
-      images: images,
-      date: {
-        start: date.start,
-        end: date.end,
-      },
-      time: {
-        open: time.open,
-        close: time.close,
-      },
-      address: {
-        storeName: address.storeName,
-        roadAddress: address.roadAddress,
-        location: {
-          lat: address.location.lat,
-          lng: address.location.lng,
-        },
-      },
+      images: imageUrls as string[],
+      date: jsonDate,
+      time: jsonTime,
+      address: jsonAddress,
       mobile: mobile,
       description: description,
-      tags: tags,
-      perks: perks,
+      tags: jsonTags,
+      perks: jsonPerks,
     });
     if (updateResult) {
-      res.status(201).send({ result: updateResult, message: 'ok' });
+      res.status(201).send({ message: 'ok' });
     }
   } catch (err) {
     console.error('update content error', err.message);
@@ -275,6 +290,9 @@ export const createContentsTesting = async (
     });
     console.log(urls);
 
+    //const url = await uploadImage(image);
+    //console.log(url);
+
     const newContent = await createContent({
       id: uuidv4(),
       author: {
@@ -323,3 +341,16 @@ export const createContentsTesting = async (
     });
   }
 };
+
+/* export const dataCheck = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { tokenUser: user } = req;
+    const { check } = req.body;
+    const images = req.files as Express.Multer.File[];
+    const result = await uploadImages(images);
+    res.status(200).send({ result: check, message: 'ok' });
+  } catch (err) {
+    console.error('check error');
+  }
+};
+ */
