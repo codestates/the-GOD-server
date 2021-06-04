@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "nodemon -r tsconfig-paths/register server/index.ts",
     "start": "ts-node -r tsconfig-paths/register server/index.ts",
-    "mock": "npx ts-node -r tsconfig-paths/register ./src/mock/index.ts ",
-    "test": ""
+    "mock": "ts-node -r tsconfig-paths/register src/mock/index.ts ",
+    "test": "mocha **/*.test.ts -r ts-node/register"
   },
   "dependencies": {
     "@types/jsonwebtoken": "^8.5.1",

@@ -159,16 +159,16 @@ export const deleteArtist = async (
     const { tokenUser: user } = req;
     const { id } = req.body;
 
-    if (!id) {
-      res.status(400).send({
-        message: 'invlaid request',
+    if (!user) {
+      res.status(401).send({
+        message: 'unauthorized',
       });
       return;
     }
 
-    if (!user) {
-      res.status(401).send({
-        message: 'unauthorized',
+    if (!id) {
+      res.status(400).send({
+        message: 'invlaid request',
       });
       return;
     }

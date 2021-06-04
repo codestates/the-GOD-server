@@ -1,7 +1,7 @@
 export interface Icontent {
   id: string;
   author: {
-    id: string;
+    id: string | null;
     name: string;
     profileImage: string;
   };
