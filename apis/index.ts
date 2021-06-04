@@ -15,9 +15,7 @@ export const googleToken = async (
   token: string
 ): Promise<IgoogleLoginResult | null> => {
   const { data } = await axios.post('https://oauth2.googleapis.com/tokeninfo', {
-    id_token: {
-      token,
-    },
+    id_token: token,
   });
   const { sub, name, email, profileImage } = data;
   return {
@@ -27,7 +25,6 @@ export const googleToken = async (
     profileImage,
   };
 };
-//TODO : 리턴 결과에 대한 타입 정의 후 사용
 
 export const kakaoToken = async (
   token: string
