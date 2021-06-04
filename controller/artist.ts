@@ -35,16 +35,15 @@ export const getArtist = async (req: Request, res: Response): Promise<void> => {
           if (isAll) {
             artistGroup.id = id;
             artistGroup.profileImage = profileImage;
-          } else {
-            artistGroup.member.push({ id, name, profileImage });
           }
+          artistGroup.member.push({ id, name, profileImage });
         } else {
           groupIdx[group] = Object.keys(groupIdx).length;
           const artistGroup: IgroupArtist = {
             id: isAll ? id : '',
             name: group,
             type: ARTST_TYPE.Group,
-            member: isAll ? [] : [{ id, name, profileImage }],
+            member: [{ id, name, profileImage }],
             profileImage: isAll ? profileImage : '',
           };
           groups.push(artistGroup);
@@ -159,16 +158,16 @@ export const deleteArtist = async (
     const { tokenUser: user } = req;
     const { id } = req.body;
 
-    if (!id) {
-      res.status(400).send({
-        message: 'invlaid request',
+    if (!user) {
+      res.status(401).send({
+        message: 'unauthorized',
       });
       return;
     }
 
-    if (!user) {
-      res.status(401).send({
-        message: 'unauthorized',
+    if (!id) {
+      res.status(400).send({
+        message: 'invlaid request',
       });
       return;
     }

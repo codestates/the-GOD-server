@@ -259,6 +259,33 @@ export const deleteContent = async (id: string): Promise<boolean> => {
   }
 };
 
+export const disableContentAuthor = async (id: string): Promise<boolean> => {
+  try {
+    const result = await ContentModel.updateMany(
+      { 'author.id': id },
+      {
+        author: {
+          id: null,
+          name: '탈퇴한 회원',
+          profileImage: 'https://bit.ly/3euIgJj',
+        },
+      }
+    );
+
+    let updateCount = result.nModified || 0;
+    console.log('contetnt auther disabled : ', updateCount);
+
+    if (updateCount >= 1) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (err) {
+    console.error('disableContetntAuthor error : ', err.message);
+    return false;
+  }
+};
+
 // NOTE : for mock data
 export const createManyContent = async (contents: Icontent[]) => {
   console.log('Write many contents - Start');
