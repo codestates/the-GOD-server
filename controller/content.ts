@@ -165,14 +165,18 @@ export const updateContents = async (
       });
       return;
     }
-    const artistParsing = JSON.parse(artistId);
-    const jsonTags = JSON.parse(tags);
-    const jsonDate = JSON.parse(date);
-    const jsonTime = JSON.parse(time);
-    const jsonAddress = JSON.parse(address);
-    const jsonPerks = JSON.parse(perks);
+    const parsedId = JSON.parse(id);
+    const parsedTitle = JSON.parse(title);
+    const parsedMobile = JSON.parse(mobile);
+    const parsedDesc = JSON.parse(description);
+    const parsedTags = JSON.parse(tags);
+    const parsedDate = JSON.parse(date);
+    const parsedTime = JSON.parse(time);
+    const parsedAddress = JSON.parse(address);
+    const parsedPerks = JSON.parse(perks);
+    const parsedArtist = JSON.parse(artistId);
 
-    const celeb = (await findArtistById(artistParsing)) as Iartist;
+    const celeb = (await findArtistById(parsedArtist)) as Iartist;
 
     const imageUrls = [];
     if (imageData) {
@@ -183,8 +187,8 @@ export const updateContents = async (
     }
 
     const updateResult = await updateContent({
-      id: id,
-      title: title,
+      id: parsedId,
+      title: parsedTitle,
       artist: {
         id: celeb.id,
         name: celeb.name,
@@ -192,13 +196,13 @@ export const updateContents = async (
         profileImage: celeb.profileImage as string,
       },
       images: imageUrls as string[],
-      date: jsonDate,
-      time: jsonTime,
-      address: jsonAddress,
-      mobile: mobile,
-      description: description,
-      tags: jsonTags,
-      perks: jsonPerks,
+      date: parsedDate,
+      time: parsedTime,
+      address: parsedAddress,
+      mobile: parsedMobile,
+      description: parsedDesc,
+      tags: parsedTags,
+      perks: parsedPerks,
     });
     if (updateResult) {
       res.status(201).send({ message: 'ok' });
