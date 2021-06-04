@@ -35,16 +35,15 @@ export const getArtist = async (req: Request, res: Response): Promise<void> => {
           if (isAll) {
             artistGroup.id = id;
             artistGroup.profileImage = profileImage;
-          } else {
-            artistGroup.member.push({ id, name, profileImage });
           }
+          artistGroup.member.push({ id, name, profileImage });
         } else {
           groupIdx[group] = Object.keys(groupIdx).length;
           const artistGroup: IgroupArtist = {
             id: isAll ? id : '',
             name: group,
             type: ARTST_TYPE.Group,
-            member: isAll ? [] : [{ id, name, profileImage }],
+            member: [{ id, name, profileImage }],
             profileImage: isAll ? profileImage : '',
           };
           groups.push(artistGroup);
