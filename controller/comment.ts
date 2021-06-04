@@ -47,7 +47,7 @@ export const createComments = async (
     }
   } catch (err) {
     console.error('create comment error', err.message);
-    res.status(400).send({ message: 'bad request' });
+    res.status(400).send({ message: 'invalid request' });
   }
 };
 
@@ -110,15 +110,14 @@ export const pageComments = async (req: Request, res: Response) => {
     if (!checkContent) {
       res.status(404).send({ message: 'not found data' });
       return;
-    } else {
-      const resultCommentPages: IcommentFindResult = (await findComments({
-        id: id as string,
-        page: Number(page as string),
-      })) as IcommentFindResult;
-      res.status(200).send({ result: resultCommentPages, message: 'ok' });
     }
+    const resultCommentPages: IcommentFindResult = (await findComments({
+      id: id as string,
+      page: Number(page as string),
+    })) as IcommentFindResult;
+    res.status(200).send({ result: resultCommentPages, message: 'ok' });
   } catch (err) {
-    console.error('page comment error');
+    console.error('page comment error', err.message);
     res.status(400).send({ message: 'bad request' });
   }
 };

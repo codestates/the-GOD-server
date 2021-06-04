@@ -12,16 +12,12 @@ export const createSharedContents = async (req: Request, res: Response) => {
   try {
     const { tokenUser } = req;
     const { contents } = req.body;
-
-    if (!tokenUser) {
-      res.status(401).send({ message: 'unauthorized' });
-      return;
-    }
+    const user = tokenUser as Iuser;
 
     const id = uuidv4();
     const isShared = await createSharedContent({
       id: id,
-      userId: tokenUser.id,
+      userId: user.id,
       contents: contents,
     });
 
@@ -35,7 +31,7 @@ export const createSharedContents = async (req: Request, res: Response) => {
     }
   } catch (err) {
     console.error('sharing content error', err.message);
-    res.status(400).send({ message: 'invalidrequest' });
+    res.status(400).send({ message: 'invalid request' });
   }
 };
 
@@ -67,8 +63,8 @@ export const updateSharedContents = async (req: Request, res: Response) => {
     const author = (await findSharedContentById(id)) as IsharedContents;
     const user = tokenUser as Iuser;
     if (author?.userId !== user.id) {
-      res.status(401).send({
-        message: 'unauthorized',
+      res.status(403).send({
+        message: 'no rights',
       });
       return;
     }
@@ -89,8 +85,8 @@ export const deleteSharedContents = async (req: Request, res: Response) => {
     const author = (await findSharedContentById(id)) as IsharedContents;
     const user = tokenUser as Iuser;
     if (user.id !== author.userId) {
-      res.status(401).send({
-        message: 'unauthorized',
+      res.status(403).send({
+        message: 'no rights',
       });
       return;
     }

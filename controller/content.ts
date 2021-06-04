@@ -52,7 +52,7 @@ export const createContents = async (
     }
 
     if (!celeb) {
-      res.status(400).send({
+      res.status(404).send({
         message: 'no data',
       });
       return;
@@ -120,8 +120,8 @@ export const deleteContents = async (
 
     const user = tokenUser as Iuser;
     if (author.author.id !== user.id) {
-      res.status(401).send({
-        message: 'unauthorized',
+      res.status(403).send({
+        message: 'no rights',
       });
       return;
     }
@@ -160,19 +160,23 @@ export const updateContents = async (
     const user = tokenUser as Iuser;
     const author = await findContentById(id);
     if (user.id !== author?.author.id) {
-      res.status(401).send({
-        message: 'unauthorized',
+      res.status(403).send({
+        message: 'no rights',
       });
       return;
     }
-    const artistParsing = JSON.parse(artistId);
-    const jsonTags = JSON.parse(tags);
-    const jsonDate = JSON.parse(date);
-    const jsonTime = JSON.parse(time);
-    const jsonAddress = JSON.parse(address);
-    const jsonPerks = JSON.parse(perks);
+    const parsedId = JSON.parse(id);
+    const parsedTitle = JSON.parse(title);
+    const parsedMobile = JSON.parse(mobile);
+    const parsedDesc = JSON.parse(description);
+    const parsedTags = JSON.parse(tags);
+    const parsedDate = JSON.parse(date);
+    const parsedTime = JSON.parse(time);
+    const parsedAddress = JSON.parse(address);
+    const parsedPerks = JSON.parse(perks);
+    const parsedArtist = JSON.parse(artistId);
 
-    const celeb = (await findArtistById(artistParsing)) as Iartist;
+    const celeb = (await findArtistById(parsedArtist)) as Iartist;
 
     const imageUrls = [];
     if (imageData) {
@@ -183,8 +187,8 @@ export const updateContents = async (
     }
 
     const updateResult = await updateContent({
-      id: id,
-      title: title,
+      id: parsedId,
+      title: parsedTitle,
       artist: {
         id: celeb.id,
         name: celeb.name,
@@ -192,13 +196,13 @@ export const updateContents = async (
         profileImage: celeb.profileImage as string,
       },
       images: imageUrls as string[],
-      date: jsonDate,
-      time: jsonTime,
-      address: jsonAddress,
-      mobile: mobile,
-      description: description,
-      tags: jsonTags,
-      perks: jsonPerks,
+      date: parsedDate,
+      time: parsedTime,
+      address: parsedAddress,
+      mobile: parsedMobile,
+      description: parsedDesc,
+      tags: parsedTags,
+      perks: parsedPerks,
     });
     if (updateResult) {
       res.status(201).send({ message: 'ok' });
@@ -234,7 +238,6 @@ export const readContent = async (req: Request, res: Response) => {
 
 export const listOfContents = async (req: Request, res: Response) => {
   const { artistId, location, dateStart, dateEnd } = req.query;
-  console.log(req.query);
   try {
     const resultList = await findContent({
       artistId: artistId as string,
@@ -254,103 +257,3 @@ export const listOfContents = async (req: Request, res: Response) => {
     });
   }
 };
-
-export const createContentsTesting = async (
-  req: Request,
-  res: Response
-): Promise<void> => {
-  try {
-    const { tokenUser } = req;
-    const { id, name, profileImage } = tokenUser as Iuser;
-    const {
-      artistId,
-      title,
-      tags,
-      description,
-      date,
-      time,
-      address,
-      mobile,
-      perks,
-    } = req.body;
-    const imagesFiles = req.files as Express.Multer.File[];
-    console.log(imagesFiles);
-    const celeb = await findArtistById(artistId);
-    console.log(imagesFiles);
-    if (!celeb) {
-      res.status(400).send({
-        message: 'no data',
-      });
-      return;
-    }
-
-    const urls = imagesFiles.map((imagesFiles) => {
-      const url = uploadImage(imagesFiles);
-      return url;
-    });
-    console.log(urls);
-
-    //const url = await uploadImage(image);
-    //console.log(url);
-
-    const newContent = await createContent({
-      id: uuidv4(),
-      author: {
-        id: id,
-        name: name,
-        profileImage: profileImage,
-      },
-      artist: {
-        id: celeb.id,
-        name: celeb.name,
-        group: celeb.group,
-        profileImage: celeb.profileImage,
-      },
-      title: title,
-      //images: images,
-      images: [''],
-      date: {
-        start: date.start,
-        end: date.end,
-      },
-      time: {
-        open: time.open,
-        close: time.close,
-      },
-      address: {
-        storeName: address.storeName,
-        roadAddress: address.roadAddress,
-        location: {
-          lat: address.location.lat,
-          lng: address.location.lng,
-        },
-      },
-      mobile: mobile,
-      description: description,
-      tags: tags,
-      perks: perks,
-    });
-
-    if (newContent) {
-      res.status(201).send({ result: newContent, message: 'ok' });
-    }
-  } catch (err) {
-    console.error('create content error');
-    res.status(400).send({
-      message: 'invalid request',
-    });
-  }
-};
-
-/* export const dataCheck = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const { tokenUser: user } = req;
-    const { check } = req.body;
-    const images = req.files as Express.Multer.File[];
-    const result = await uploadImages(images);
-    res.status(200).send({ result: check, message: 'ok' });
-  } catch (err) {
-    console.error('check error');
-  }
-};
- */
