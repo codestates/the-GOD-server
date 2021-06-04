@@ -15,7 +15,6 @@ import {
 const PORT = ENV.SERVER_PORT || 4000;
 import LocationData from '@src/mock/mockLocation.json';
 
-const PORT = ENV.SERVER_PORT || 4000;
 const app = express();
 // moddleware
 app.use(...defaultMiddleware);
