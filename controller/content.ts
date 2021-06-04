@@ -237,19 +237,32 @@ export const readContent = async (req: Request, res: Response) => {
 };
 
 export const listOfContents = async (req: Request, res: Response) => {
-  const { artistId, location, dateStart, dateEnd } = req.query;
+  const { tokenUser: user } = req;
+  const { artistId, location, dateStart, dateEnd, page } = req.query;
   try {
-    const resultList = await findContent({
+    const findResult = await findContent({
       artistId: artistId as string,
       location: location as string,
       dateStart: dateStart as string,
       dateEnd: dateEnd as string,
+      page: Number(page) || 1,
     });
-    if (!resultList) {
+    if (!findResult) {
       res.status(404).send({ message: 'not found contents' });
       return;
     }
-    res.status(200).send({ result: resultList, message: 'ok' });
+
+    if (user) {
+      const resultArr = findResult.contents.map((el) => {
+        return { ...el, isBookmark: user.bookmark.includes(el.id) };
+      });
+      res.status(200).send({ result: resultArr, message: 'ok' });
+    } else {
+      const resultArr = findResult.contents.map((el) => {
+        return { ...el, isBookmark: false };
+      });
+      res.status(200).send({ result: resultArr, message: 'ok' });
+    }
   } catch (err) {
     console.error('contents list error', err.message);
     res.status(400).send({
