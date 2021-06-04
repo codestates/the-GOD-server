@@ -116,7 +116,7 @@ export const googleLogin = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const token = req.body;
+  const { token } = req.body;
   const userData = await googleToken(token);
   const { name, email, profileImage } = userData as IgoogleLoginResult;
   try {
@@ -175,7 +175,7 @@ export const kakaoLogin = async (
   req: Request,
   res: Response
 ): Promise<void> => {
-  const token = req.body;
+  const { token } = req.body;
   const type = USER_TYPE.Kakao;
   const userData = await kakaoToken(token);
   const { id, name, email, profileImage } = userData as IkakaoLoginResult;
@@ -235,7 +235,7 @@ export const kakaoLogin = async (
 };
 
 export const twitterLogin = async (req: Request, res: Response) => {
-  const token = req.body;
+  const { token } = req.body;
   const type = USER_TYPE.Twitter;
   const userData = (await twitterToken(token)) as ItwitterLoginResult;
   const { name, twitterName, profile_image_url } = userData;
