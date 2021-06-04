@@ -59,8 +59,8 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
   try {
     const duplicated = await findUserByEmail(email);
     if (duplicated) {
-      res.status(401).send({
-        message: 'fali signup',
+      res.status(403).send({
+        message: 'already exist',
       });
       return;
     }
@@ -83,7 +83,7 @@ export const signup = async (req: Request, res: Response): Promise<void> => {
       });
     }
   } catch (err) {
-    console.error('User save error by server');
+    console.error('User save error by server', err.message);
     res.status(400).send({
       message: 'invalid request',
     });
@@ -99,14 +99,13 @@ export const signout = async (req: Request, res: Response) => {
     const isUser = await findValidUser(email, encodedPWD);
     if (isUser) {
       const isDeleted = await deleteUser(id);
-      if (isDeleted) {
-        res.status(201).send({ message: 'ok' });
-      } else {
-        res.status(400).send({ message: 'invalid request' });
+      if (!isDeleted) {
+        res.status(404).send({ message: 'password error' });
       }
+      res.status(201).send({ message: 'ok' });
     }
   } catch (err) {
-    console.error('signout error');
+    console.error('signout error', err.message);
     res.status(400).send({ message: 'invalid request' });
   }
 };
@@ -149,7 +148,12 @@ export const googleLogin = async (
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
           })
-          .send({ result: accessToken, message: 'ok' });
+          .send({
+            result: {
+              accessToken: accessToken,
+            },
+            message: 'ok',
+          });
       } else {
         res.status(400).send({
           message: 'invalid request',
@@ -157,9 +161,9 @@ export const googleLogin = async (
       }
     }
   } catch (err) {
-    console.error('google login error');
-    res.status(401).send({
-      message: 'unauthorized',
+    console.error('google login error', err.message);
+    res.status(400).send({
+      message: 'invalid request',
     });
   }
 };
@@ -206,7 +210,12 @@ export const kakaoLogin = async (
           .cookie('Refresh Token : ', refreshToken, {
             httpOnly: true,
           })
-          .send({ result: accessToken, message: 'ok' });
+          .send({
+            result: {
+              accessToken: accessToken,
+            },
+            message: 'ok',
+          });
       } else {
         res.status(400).send({
           message: 'invalid input',
@@ -214,9 +223,9 @@ export const kakaoLogin = async (
       }
     }
   } catch (err) {
-    console.error('kakao login error');
-    res.status(401).send({
-      message: 'invalid data',
+    console.error('kakao login error', err.message);
+    res.status(400).send({
+      message: 'invalid request',
     });
   }
 };
@@ -260,15 +269,15 @@ export const twitterLogin = async (req: Request, res: Response) => {
           })
           .send({ result: accessToken, message: 'ok' });
       } else {
-        res.status(400).send({
+        res.status(404).send({
           message: 'invalid request',
         });
       }
     }
   } catch (err) {
-    console.error('twitter login error');
-    res.status(401).send({
-      message: 'invalid data',
+    console.error('twitter login error', err.message);
+    res.status(400).send({
+      message: 'invalid request',
     });
   }
 };
@@ -294,13 +303,13 @@ export const checkPassword = async (
           message: 'ok',
         });
       } else {
-        res.status(401).send({
-          message: 'unauthorized',
+        res.status(404).send({
+          message: 'password error',
         });
       }
     }
   } catch (err) {
-    console.error('checkPassword error');
+    console.error('checkPassword error', err.message);
     res.status(400).send({
       message: 'invlaid request',
     });
