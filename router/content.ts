@@ -1,7 +1,6 @@
 import express, { Request, Response } from 'express';
 import {
   createContents,
-  createContentsTesting,
   deleteContents,
   listOfContents,
   readContent,
@@ -29,6 +28,5 @@ router.get('/', readContent);
 router.put('/', updateContents, uploadContentImage);
 router.delete('/', deleteContents);
 router.get('/query', listOfContents);
-router.post('/test', createContentsTesting, uploadContentImage);
 
 export default router;
