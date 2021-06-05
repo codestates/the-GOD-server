@@ -156,16 +156,16 @@ export const updateContents = async (
       address,
       mobile,
       perks,
-    } = JSON.parse(req.body);
+    } = req.body;
     const user = tokenUser as Iuser;
-    const author = await findContentById(id);
-    if (user.id !== author?.author.id) {
+    const parsedId = JSON.parse(id);
+    const author = (await findContentById(id)) as Icontent;
+    if (user.id !== author.author.id) {
       res.status(403).send({
         message: 'rejected',
       });
       return;
     }
-    const parsedId = JSON.parse(id);
     const parsedTitle = JSON.parse(title);
     const parsedMobile = JSON.parse(mobile);
     const parsedDesc = JSON.parse(description);

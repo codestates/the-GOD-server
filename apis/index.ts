@@ -31,7 +31,9 @@ export const kakaoToken = async (
 ): Promise<IkakaoLoginResult | null> => {
   const { data } = await axios.get('https://kapi.kakao.com/v2/user/me', {
     // 클라이언트에서 받은 토큰을 kapi.kakao에 보내서 해당 토큰을 가진 유저에 대한 정보 얻기
-    headers: token,
+    headers: {
+      authorization: `BEARER ${token}`,
+    },
   });
 
   const { id, kakao_account } = data;
@@ -49,7 +51,9 @@ export const twitterToken = async (
   token: string
 ): Promise<ItwitterLoginResult | null> => {
   const { data } = await axios.get('https://api.twitter.com/2/users', {
-    headers: token,
+    headers: {
+      authorization: `BEARER ${token}`,
+    },
   });
 
   const { id, name, username, profile_image_url } = data;

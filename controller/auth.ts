@@ -125,7 +125,7 @@ export const googleLogin = async (
       const accessToken = createAccessToken(user.id);
       const refreshToken = createRefreshToken(user.id);
       res
-        .cookie('Refresh Token : ', refreshToken, {
+        .cookie('refreshToken : ', refreshToken, {
           httpOnly: true,
         })
         .send({
@@ -150,7 +150,7 @@ export const googleLogin = async (
         const accessToken = await createAccessToken(user.id);
         const refreshToken = await createRefreshToken(user.id);
         res
-          .cookie('Refresh Token : ', refreshToken, {
+          .cookie('refreshToken : ', refreshToken, {
             httpOnly: true,
           })
           .send({
@@ -185,7 +185,7 @@ export const kakaoLogin = async (
       const accessToken = createAccessToken(user.id);
       const refreshToken = createRefreshToken(user.id);
       res
-        .cookie('Refresh Token : ', refreshToken, {
+        .cookie('refreshToken : ', refreshToken, {
           httpOnly: true,
         })
         .send({
@@ -213,7 +213,7 @@ export const kakaoLogin = async (
         const accessToken = await createAccessToken(user.id);
         const refreshToken = await createRefreshToken(user.id);
         res
-          .cookie('Refresh Token : ', refreshToken, {
+          .cookie('refreshToken : ', refreshToken, {
             httpOnly: true,
           })
           .send({
@@ -246,7 +246,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
       const accessToken = createAccessToken(user.id);
       const refreshToken = createRefreshToken(user.id);
       res
-        .cookie('Refresh Token : ', refreshToken, {
+        .cookie('refreshToken : ', refreshToken, {
           httpOnly: true,
         })
         .send({
@@ -271,7 +271,7 @@ export const twitterLogin = async (req: Request, res: Response) => {
         const accessToken = await createAccessToken(user.id);
         const refreshToken = await createRefreshToken(user.id);
         res
-          .cookie('Refresh Token : ', refreshToken, {
+          .cookie('refreshToken : ', refreshToken, {
             httpOnly: true,
           })
           .send({ result: accessToken, message: 'ok' });
