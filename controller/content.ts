@@ -256,12 +256,22 @@ export const listOfContents = async (req: Request, res: Response) => {
       const resultArr = findResult.contents.map((el) => {
         return { ...el, isBookmark: user.bookmark.includes(el.id) };
       });
-      res.status(200).send({ result: resultArr, message: 'ok' });
+      res.status(200).send({
+        result: {
+          contents: resultArr,
+        },
+        message: 'ok',
+      });
     } else {
       const resultArr = findResult.contents.map((el) => {
         return { ...el, isBookmark: false };
       });
-      res.status(200).send({ result: resultArr, message: 'ok' });
+      res.status(200).send({
+        result: {
+          contents: resultArr,
+        },
+        message: 'ok',
+      });
     }
   } catch (err) {
     console.error('contents list error', err.message);
