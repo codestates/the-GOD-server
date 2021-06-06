@@ -6,6 +6,8 @@ import {
   deleteSharedContent,
   updateSharedContent,
 } from '@database/sharedcontents';
+import { findUserById } from '@database/users';
+import { findContentsByIdList } from '@database/contents';
 import { Iuser, IsharedContents } from '@interface';
 
 export const createSharedContents = async (req: Request, res: Response) => {
@@ -46,8 +48,36 @@ export const getSharedContents = async (req: Request, res: Response) => {
       return;
     }
 
+    const user = await findUserById(result.userId);
+    if (!user) {
+      res.status(400).send({ message: 'invalid request' });
+      return;
+    }
+
+    if (result.contents.length === 0) {
+      res.status(200).send({ result: { id, constants: [] }, message: 'ok' });
+      return;
+    }
+
+    let contents = await findContentsByIdList(result.contents);
+    if (!contents) {
+      res.status(400).send({ message: 'invalid request' });
+      return;
+    }
+
+    contents = contents.map((content) => {
+      return {
+        ...content,
+        artist: {
+          ...content.artist,
+          isFollow: user.follow.includes(content.artist.id),
+        },
+        isBookmark: true,
+      };
+    });
+
     res.status(200).send({
-      result: { id: id, contents: result },
+      result: { id: id, contents },
       message: 'ok',
     });
   } catch (err) {
