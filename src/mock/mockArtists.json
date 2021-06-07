@@ -514,5 +514,89 @@
     "name": "티파니",
     "group": "Girls'Generation",
     "profileImage": "https://w.namu.la/s/18e9a379adf8722e0b3e5829fe283e7b1af35c5f64dc344d6d607d87a97f0d475d4c52193457a3dce1523b7563d3d55fd9ec10d048bd32590d112f0bb4d7a5a940e78d13dad8ceca424b6c35233f2eabf5e33db2b919aaf5fd5b9b2958b6862fe37e74406c42a34043486b9a78305be7"
+  },
+  {
+    "id": "gexid",
+    "name": "전체",
+    "group": "EXID",
+    "profileImage": "https://ww.namu.la/s/f74490707d620c4f51e005876658e84fbe1d32673653ad842ec08ccacbffc8251c575dc5fd0ee9a398ced2d8b877ae6d89a829fb502915044e2ce1ccf0c79672c22fea453bd65ea47dadc9ac62dacb011ea9d6a5f5a67f186d507ff25275ecd9"
+  },
+  {
+    "id": "exid1",
+    "name": "솔지",
+    "group": "EXID",
+    "profileImage": "https://ww.namu.la/s/01ca784f3e7f91f2b91b925757b94488aeff2959112638bc8af00a01bac5d3061d2006c7da111b773c5ad08f8899b7774d2fe56e3d677ef37b3bf2d2075203c72720e33cdcf3bde27af3e63994fa16c8eba8474a184704b92ae6e531a42ccab99b21c3bb1017c8f6f67b15e1707fa5c8"
+  },
+  {
+    "id": "exid2",
+    "name": "LE",
+    "group": "EXID",
+    "profileImage": "https://w.namu.la/s/dd95719913e99eea426779b8c1646417e5265bafb1191fb2264aa37634f1dd2a54b5216ae770a2ff13e345ccdb7d99d9a836347af5f9e354d8cd48baa57ff15ae86fc53a75da113d1f09c16132e3f3920ba4adb853bcb6a44eed02ea49bdb7fa"
+  },
+  {
+    "id": "exid3",
+    "name": "하니",
+    "group": "EXID",
+    "profileImage": "https://ww.namu.la/s/c6abfffd00487cdbe767f605d3840eedbf38747680a21dc30815eeafc07a1bd120c3172f2b3218628388794e05ae598140fdd3ac67412f52d2928110bf3883e4c053d91efe72875f9ec8a0fb32792318d7376da5ad29118ed91a09cdf2c0d7ecf68526bf14f1ab3b7e4d0b560f3a96e7"
+  },
+  {
+    "id": "exid4",
+    "name": "혜린",
+    "group": "EXID",
+    "profileImage": "https://w.namu.la/s/36ed8d2707b7669340f599fefb43fe0bf0026168e5b907ac37302fb226298d279de42b7c740f1ceddb1c8a6be0a86f49602c6bd3b99f7b71080f024619ea9a3ffd627518c2b33ce411af004f9e84a6aa278ad8f9dc7d5e6e77f34edb06820e5aad64bb2a021013446e36354c1d87fa26"
+  },
+  {
+    "id": "exid5",
+    "name": "정화",
+    "group": "EXID",
+    "profileImage": "https://w.namu.la/s/6e1e57365ef711eb17e77ea3139c86d719da6ca4128cc2246a2147e59e03da1e4429fb4a8cd828566600cb739a10daef1a6b9ed8bd048a37e8a0e1ce7082fc3f7d34e634f1bac6affe4f54112ae149c03424b8796503d0adae561a055ad43efd27cd5bf317e0152d8f56582c11d3f288"
+  },
+  {
+    "id": "gblockb",
+    "name": "전체",
+    "group": "블락비",
+    "profileImage": "https://w.namu.la/s/6120742f1acdb3e15dbfb8e44dac0795799a5698fcdcbf3cb2856520a11772a403e66001b66bb96cb655de6e89c98f20fad0da4665a3740bd6b347581898880f081e74959368cfffd349969e52a01b3dd3dd9681904eb881116184cba3643a49"
+  },
+  {
+    "id": "blockb1",
+    "name": "태일",
+    "group": "블락비",
+    "profileImage": "https://w.namu.la/s/a08451959fbea0c2873f2304699633eb5661d7c68fc48ff21b6a5e67303c00fc64ff64bfc71e0776f0c501d4bac4b41f6e411a810eb595c0c870fd4f3a927e782b9dd8fb124d07766546722696e30c3bfe59c693ed70cc646965b6abbae56892"
+  },
+  {
+    "id": "blockb2",
+    "name": "비범",
+    "group": "블락비",
+    "profileImage": "https://ww.namu.la/s/15e6bc9d18cf194547f7df5a2066d61ec7c78d5e1f609501141397dbe904a488cf553e10a77c95c19f37a8863216852aae5a0e0e0c08ba3620ea15a3e81fb1d153bbf1ab59ddf4d7b0474dc8a79ab3e531985dfb5c07f11d01a4ffbea5818cfb385270dfaeafe9c5a385a637981821d6"
+  },
+  {
+    "id": "blockb3",
+    "name": "재효",
+    "group": "블락비",
+    "profileImage": "https://w.namu.la/s/a53ec4eecde539625fea2e9bfa0558b5fa6f9e50a3eab798f50f9f3fea454a4e070cce8f1406cdda4615190cfe8cb06d547943e93f9dafc1727be7db133e766a1e0f649764cb90a5d189b0dcfcb5ef38515ff0eec6403de42e5fe9c4bd0997335e5435a74009bb0db943678b9124c6d7"
+  },
+  {
+    "id": "blockb4",
+    "name": "유권",
+    "group": "블락비",
+    "profileImage": "https://ww.namu.la/s/b45e8ba339d07d0022110a53927d1224ced7cfcac9708473ddc6780778712302a6e33610eec826d6aa1ab9f381bdacf98e7fe018b7871720a8ab2f9b6aab4714bf6dc8244994353bb07a38abd6f70f5a0efce8529349338e9c2c865911bce3c6ec39db05312f5494751871c2b7f08f88"
+  },
+  {
+    "id": "blockb5",
+    "name": "박경",
+    "group": "블락비",
+    "profileImage": "https://w.namu.la/s/f91806d4260d29d72ee74fca65e7c7e8516df13f17930bd21b0a26d408234a16b79e2807d54db6ff973108341d240f1905ebf762c3f208db3fe9909b5d963c9a35c37b75554f8a909bcc4780f30d7699ecf84869af8b223ae188ee3420763bf6e3e4aeeb2faa5f129fff650b4cc47ecb"
+  },
+  {
+    "id": "blockb6",
+    "name": "지코",
+    "group": "블락비",
+    "profileImage": "https://w.namu.la/s/aa1edb380ec66989854ff4b0e77ba2bb83ff678eb6555c7c479ed4aa67dce691e629291b940379d8ff4517986c292efc4b58c0632a37a57308bb3aa7b97011cf57a18cf6287dd39c55e69097941dfe27ae5848f39bca45e999979ccc542d2bc9"
+  },
+  {
+    "id": "blockb7",
+    "name": "피오",
+    "group": "블락비",
+    "profileImage": "https://w.namu.la/s/87c66b0e17478c63ce7d9cd6bb14de6f973794466ecb6511a5eed7dcdde23ec4578c405dcf57283f71bd32fecfd7ee186f0cf84605fc705f782db37936ccbd91b5a8203f7ec6d4ee34a5fb37c4d9f0f758bcc4a6332ad3cb4ff343c9c65832fa"
   }
 ]
