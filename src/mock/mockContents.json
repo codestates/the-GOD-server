@@ -124,11 +124,11 @@
       "close": "18:00:00"
     },
     "address": {
-      "storeName": "커피에 반하다",
-      "roadAddress": "서울시 마포구 연희로 4길 34",
+      "storeName": "PITCOFFEE",
+      "roadAddress": "서울특별시 마포구 동교동 204-3",
       "location": {
-        "lat": 37.5556743,
-        "lng": 126.9259855
+        "lat": 37.3759563,
+        "lng": 126.7287064
       }
     },
     "mobile": "010-1234-5678",
