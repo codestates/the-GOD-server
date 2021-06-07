@@ -1,0 +1,34 @@
+{
+  "compilerOptions": {
+    "lib": ["es5", "es6", "dom"],
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "./dist",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "allowJs": true,
+    "strict": true,
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "types": ["node"],
+    "paths": {
+      "@config": ["config/index"],
+      "@interface": ["interface/index"],
+      "@src/*": ["src/*"],
+      "@middleware": ["middleware/index"],
+      "@apis": ["apis/index"],
+      "@router": ["router/index"],
+      "@controller/*": ["controller/*"],
+      "@database/*": ["database/*"],
+      "@util/*": ["util/*"]
+    }
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

@@ -1,0 +1,87 @@
+[
+  {
+    "id": "z0QTT3PWXL0r09panZm58RxH05C0fZ",
+    "name": "Sim",
+    "email": "sim@test.com",
+    "profileImage": "https://bit.ly/3euIgJj",
+    "password": "123456a",
+    "type": "mail",
+    "follow": [
+      "gbravegrils",
+      "iu"
+    ],
+    "bookmark": [
+      "XbzfVUWdWBNJmhT2s2UGdEZnkj2TqC",
+      "HGL3AHZjSnuNsanFl4p7UyZRkWdpLy",
+      "91Zp5fDct9esQ9eQzQKkj2y7dbSguN",
+      "L7ODYr6o6XrtfECV4DigQ3Y4mZBu0N"
+    ],
+    "passwordUpdate": null
+  },
+  {
+    "id": "nu4GbCqOxo4aslGchaEDT3dVgQyBb7",
+    "name": "Choi",
+    "email": "choi@test.com",
+    "profileImage": "https://bit.ly/3euIgJj",
+    "password": "123456a",
+    "type": "mail",
+    "follow": [
+      "iu",
+      "nha",
+      "yt"
+    ],
+    "bookmark": [
+      "XbzfVUWdWBNJmhT2s2UGdEZnkj2TqC",
+      "L7ODYr6o6XrtfECV4DigQ3Y4mZBu0N"
+    ],
+    "passwordUpdate": "2021-05-24 11:42:00"
+  },
+  {
+    "id": "WwqbZYVAZh0fxHuvKkN87SXAZIy0cm",
+    "name": "Lee",
+    "email": "Lee@test.com",
+    "profileImage": "https://bit.ly/3euIgJj",
+    "password": "123456a",
+    "type": "mail",
+    "follow": [
+      "gbts",
+      "bts1",
+      "bts2",
+      "bts3",
+      "bts4",
+      "bts5",
+      "bts6",
+      "bts7"
+    ],
+    "bookmark": [
+      "91Zp5fDct9esQ9eQzQKkj2y7dbSguN",
+      "L7ODYr6o6XrtfECV4DigQ3Y4mZBu0N"
+    ],
+    "passwordUpdate": null
+  },
+  {
+    "id": "xoMyHTyhMWYv6QDjssWEyayVWPZVFj",
+    "name": "Yoo",
+    "email": "Yoo@test.com",
+    "profileImage": "https://bit.ly/3euIgJj",
+    "password": "123456a",
+    "type": "mail",
+    "follow": [
+      "genhypen",
+      "enhypen1",
+      "enhypen2",
+      "enhypen3",
+      "enhypen4",
+      "enhypen5",
+      "enhypen6",
+      "enhypen7"
+    ],
+    "bookmark": [
+      "XbzfVUWdWBNJmhT2s2UGdEZnkj2TqC",
+      "HGL3AHZjSnuNsanFl4p7UyZRkWdpLy",
+      "91Zp5fDct9esQ9eQzQKkj2y7dbSguN",
+      "L7ODYr6o6XrtfECV4DigQ3Y4mZBu0N"
+    ],
+    "passwordUpdate": null
+  }
+]
