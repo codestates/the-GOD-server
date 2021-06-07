@@ -17,12 +17,12 @@ export const googleToken = async (
   const { data } = await axios.post('https://oauth2.googleapis.com/tokeninfo', {
     id_token: token,
   });
-  const { sub, name, email, profileImage } = data;
+  const { sub, name, email, picture } = data;
   return {
     sub,
     name,
     email,
-    profileImage,
+    profileImage: picture,
   };
 };
 
