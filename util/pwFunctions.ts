@@ -12,7 +12,7 @@ export const createPWD = (email: string, password: string) => {
     64,
     'sha512',
     (err: Error | null, key: Buffer) => {
-      console.log(key.toString('base64'));
+      // console.log(key.toString('base64'));
       return key.toString('base64');
     }
   );

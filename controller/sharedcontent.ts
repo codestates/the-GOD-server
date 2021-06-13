@@ -39,6 +39,7 @@ export const createSharedContents = async (req: Request, res: Response) => {
 
 export const getSharedContents = async (req: Request, res: Response) => {
   try {
+    const { tokenUser: user } = req;
     const { id } = req.query;
     const result = await findSharedContentById(id as string);
     if (!result) {
@@ -48,40 +49,47 @@ export const getSharedContents = async (req: Request, res: Response) => {
       return;
     }
 
-    const user = await findUserById(result.userId);
-    if (!user) {
-      res.status(400).send({ message: 'invalid request' });
-      return;
-    }
-
     if (result.contents.length === 0) {
       res.status(200).send({ result: { id, constants: [] }, message: 'ok' });
       return;
     }
 
-    let contents = await findContentsByIdList(result.contents);
-    if (!contents) {
+    // NOTE : 검색한 컨텐츠 결과는 순서대로 나오지 않는다.
+    let findContents = await findContentsByIdList(result.contents);
+    if (!findContents) {
       res.status(400).send({ message: 'invalid request' });
       return;
     }
 
-    contents = contents.map((content) => {
-      return {
-        ...content,
-        artist: {
-          ...content.artist,
-          isFollow: user.follow.includes(content.artist.id),
-        },
-        isBookmark: true,
-      };
-    });
+    // NOTE : 받아온 순서대로 정렬해야 하므로 result.contents 의 순서에 맞춰서 새로운 배열을 생성한다.
+    // NOTE : 추후에 문제가 생긴다면 수정할 것.
+    let contents = [];
+    for (let idx = 0; idx < result.contents.length; idx++) {
+      const findResult = findContents.find(
+        (content) => content.id === result.contents[idx]
+      );
+      if (findResult) contents.push(findResult);
+    }
+
+    if (user) {
+      contents = contents.map((content) => {
+        return {
+          ...content,
+          artist: {
+            ...content.artist,
+            isFollow: user.follow.includes(content.artist.id),
+          },
+          isBookmark: user.bookmark.includes(content.id),
+        };
+      });
+    }
 
     res.status(200).send({
-      result: { id: id, contents },
+      result: { id, contents },
       message: 'ok',
     });
-  } catch (err) {
-    console.error('find shared contents error', err.message);
+  } catch (err: any) {
+    console.error('find shared contents error : ', err.message);
     res.status(400).send({ message: 'invalid request' });
   }
 };
